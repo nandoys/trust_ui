@@ -47,9 +47,7 @@ class _LoginPageState extends State<LoginPage> {
 
     //context.<ServerBloc>read().
 
-    Timer.periodic(const Duration(seconds: 5), (timer) {
-      _serverBloc.add(availibleServer);
-    });
+    _serverBloc.add(availibleServer);
 
     return BlocProvider(
       create: (context) => _serverBloc,
@@ -178,13 +176,15 @@ class _LoginPageState extends State<LoginPage> {
                         }
                       }),
                       menuItems: [
-                        MenuItem(title: 'Nouvelle', action: 'create'),
-                        MenuItem(title: 'La Borne'),
-                        MenuItem(title: 'Trust'),
+                        MenuItem(title: 'Nouveau', action: 'create'),
+                        MenuItem(title: '192.168.0.100', onSelected: () {
+
+                        }),
+                        MenuItem(title: '127.0.0.1'),
                       ],
                       child: TextButton.icon(onPressed: () { print('object'); },
                         icon: const Icon(Icons.circle),
-                        label: const Text('organisation', style: TextStyle(color: Colors.white, fontSize: 12.0),),
+                        label: const Text('192.168.0.100', style: TextStyle(color: Colors.white, fontSize: 12.0),),
                         style: ButtonStyle(
                             iconSize: MaterialStateProperty.resolveWith((states) => 15.0),
                             iconColor: MaterialStateProperty.resolveWith((states) => Colors.blue),

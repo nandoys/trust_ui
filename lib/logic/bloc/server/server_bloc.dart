@@ -17,7 +17,9 @@ class ServerBloc extends Bloc<ServerEvent, ServerState> {
     on<StartServerCheckEvent>((event, emit) {
       _serverSubscription?.cancel();
 
-      _serverSubscription = _server.status().listen((status) => add(AvailibleServerEvent(status)));
+      _server.status().listen((response) {
+        _serverSubscription = response.asStream().listen((status) => add(AvailibleServerEvent(status)));
+      });
     });
 
     on<AvailibleServerEvent>((event, emit) {

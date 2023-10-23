@@ -4,30 +4,36 @@ class Server {
   Server();
 
   bool? hasError;
-  
-  Stream<bool> status() async* {
+
+  Stream<Future<bool>> status() {
     var client = http.Client();
 
-    try {
-      var response = await client.get(
-        Uri.http('127.0.0.1:8000', 'api/'),
-      );
+    Future<bool> request() async {
 
-      if (response.statusCode == 200) {
-        hasError = false;
-        yield true;
-      } else {
+      try {
+        var response = await client.get(
+          Uri.http('127.0.0.1:8000', 'api/'),
+        );
+
+        if (response.statusCode == 200) {
+          hasError = false;
+          return true;
+        } else {
+          hasError = true;
+          return false;
+        }
+      } on http.ClientException {
         hasError = true;
-        yield false;
       }
-    } on http.ClientException {
-      hasError = true;
-    } finally {
-      if(hasError == true) {
-        yield false;
-      }
+
+      return false;
     }
 
+    final stream =  Stream.periodic(const Duration(seconds: 5), (computationCount) {
+       return request();
+    },);
+
+    return stream;
 
   }
 }
