@@ -25,3 +25,12 @@ class ServerIsNotRunning extends ServerState {
   @override
   List<Object> get props => [];
 }
+
+class ServerAdding extends ServerState {
+  const ServerAdding({required this.adding}) : super(isRunning: false);
+
+  final bool adding;
+
+  @override
+  List<Object> get props => [];
+}

@@ -5,14 +5,14 @@ class Server {
 
   bool? hasError;
 
-  Stream<Future<bool>> status() {
+  Stream<Future<bool>> status({required String host, required String port}) {
     var client = http.Client();
 
     Future<bool> request() async {
-
+      String address = '${host.trim()}:${port.trim()}';
       try {
         var response = await client.get(
-          Uri.http('127.0.0.1:8000', 'api/'),
+          Uri.http(address, 'api/'),
         );
 
         if (response.statusCode == 200) {
@@ -29,11 +29,6 @@ class Server {
       return false;
     }
 
-    final stream =  Stream.periodic(const Duration(seconds: 5), (computationCount) {
-       return request();
-    },);
-
-    return stream;
-
+    return Stream.periodic(const Duration(seconds: 5), (computationCount) => request());
   }
 }

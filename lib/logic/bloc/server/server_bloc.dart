@@ -17,9 +17,10 @@ class ServerBloc extends Bloc<ServerEvent, ServerState> {
     on<StartServerCheckEvent>((event, emit) {
       _serverSubscription?.cancel();
 
-      _server.status().listen((response) {
+      _server.status(host: event.host, port: event.port).listen((response) {
         _serverSubscription = response.asStream().listen((status) => add(AvailibleServerEvent(status)));
       });
+
     });
 
     on<AvailibleServerEvent>((event, emit) {
@@ -32,6 +33,17 @@ class ServerBloc extends Bloc<ServerEvent, ServerState> {
           break;
         default:
           emit(const ServerIsNotRunning());
+      }
+    });
+
+    on<ServerAddedEvent>((event, emit) {
+      switch (event.isSuccessful) {
+        case true:
+          emit(const ServerAdding(adding: true));
+          break;
+        case false:
+          emit(const ServerAdding(adding: false));
+          break;
       }
     });
 
