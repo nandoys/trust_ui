@@ -6,9 +6,8 @@ abstract class ServerEvent extends Equatable {
 
 final class StartServerCheckEvent extends ServerEvent {
 
-  const StartServerCheckEvent({required this.host, required this.port});
-  final String host;
-  final String port;
+  const StartServerCheckEvent({required this.address});
+  final String address;
 
   @override
   List<Object?> get props => throw UnimplementedError();
@@ -17,8 +16,9 @@ final class StartServerCheckEvent extends ServerEvent {
 
 final class AvailibleServerEvent extends ServerEvent {
 
-  const AvailibleServerEvent(this._status);
+  const AvailibleServerEvent(this._status, this.address);
   final bool _status;
+  final String address;
 
   @override
   List<Object?> get props => throw UnimplementedError();
@@ -34,9 +34,8 @@ final class ServerChangedEvent extends ServerEvent {
 }
 
 final class ServerAddedEvent extends ServerEvent {
-  const ServerAddedEvent({required this.host, required this.port, required this.isSuccessful});
-  final String host;
-  final String port;
+  const ServerAddedEvent({required this.address, required this.isSuccessful});
+  final String address;
   final bool isSuccessful;
 
   @override

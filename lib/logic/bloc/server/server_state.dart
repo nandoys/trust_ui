@@ -1,29 +1,34 @@
 part of 'server_bloc.dart';
 
 abstract class ServerState extends Equatable {
-  const ServerState({required this.isRunning});
+  const ServerState({required this.isRunning, this.selectedServer});
   final bool? isRunning;
+  final String? selectedServer;
 }
 
 class ServerInitializing extends ServerState {
   const ServerInitializing() : super(isRunning: null);
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class ServerIsRunning extends ServerState {
-  const ServerIsRunning() : super(isRunning: true);
+   const ServerIsRunning(this.address) : super(isRunning: true, selectedServer: address);
+
+  final String address;
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [address];
 }
 
 class ServerIsNotRunning extends ServerState {
-  const ServerIsNotRunning() : super(isRunning: false);
+  const ServerIsNotRunning(this.address) : super(isRunning: false, selectedServer: address);
+
+  final String address;
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [address];
 }
 
 class ServerAdding extends ServerState {
@@ -32,5 +37,5 @@ class ServerAdding extends ServerState {
   final bool adding;
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [adding];
 }

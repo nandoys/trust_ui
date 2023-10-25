@@ -139,17 +139,20 @@ class _ServerPageState extends State<ServerPage> {
     if (prefs.getStringList('servers') != null) {
       List<String> servers = prefs.getStringList('servers') as List<String>;
 
-      if (servers.contains('$_serverHost:$_serverPort')) {
+      String address = '$_serverHost:$_serverPort';
+
+      if (servers.contains(address)) {
         // Le serveur existe déjà
-        serverBloc.add(ServerAddedEvent(host: _serverHost, port: _serverPort, isSuccessful: false));
+        serverBloc.add(ServerAddedEvent(address: address, isSuccessful: false));
       } else {
         servers.add('$_serverHost:$_serverPort');
         prefs.setStringList('servers', servers);
-        serverBloc.add(ServerAddedEvent(host: _serverHost, port: _serverPort, isSuccessful: true));
+        serverBloc.add(ServerAddedEvent(address: address, isSuccessful: true));
       }
     } else {
-      prefs.setStringList('servers', ['$_serverHost:$_serverPort']);
-      serverBloc.add(ServerAddedEvent(host: _serverHost, port: _serverPort, isSuccessful: true));
+      String address = '$_serverHost:$_serverPort';
+      prefs.setStringList('servers', [address]);
+      serverBloc.add(ServerAddedEvent(address: address, isSuccessful: true));
     }
   }
 }
