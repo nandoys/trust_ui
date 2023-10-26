@@ -1,42 +1,67 @@
 part of 'server_bloc.dart';
 
 abstract class ServerEvent extends Equatable {
-  const ServerEvent({required this.current, this.servers});
+  const ServerEvent({this.current, this.servers});
 
   final String? current;
   final List<String>? servers;
 }
 
-final class StartServerCheckEvent extends ServerEvent {
+final class AppStartedEvent extends ServerEvent {
 
-  const StartServerCheckEvent({required current, required servers}) : super(current: current, servers: servers);
+  const AppStartedEvent();
+
+  @override
+  List<Object?> get props => [];
+
+}
+
+final class ServerCheckEvent extends ServerEvent {
+
+  const ServerCheckEvent({required current, required servers}) : super(current: current, servers: servers);
 
   @override
   List<Object?> get props => [current, servers];
 
 }
 
-final class ServerAtivatedEvent extends ServerEvent {
-  const ServerAtivatedEvent({required servers, required current}) : super(current: current, servers: servers);
+final class ServerAtivateEvent extends ServerEvent {
+  const ServerAtivateEvent({required current}) : super(current: current);
 
   @override
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [];
 
 }
 
-final class ServerAddedEvent extends ServerEvent {
-  const ServerAddedEvent({required current, required servers}) :
-  super(current: current, servers: servers);
+final class ServerAddEvent extends ServerEvent {
+  const ServerAddEvent({required this.addValue});
+
+  final String addValue;
 
   @override
   List<Object?> get props => [current, servers];
 
 }
 
-final class ServerRemovedEvent extends ServerEvent {
-  const ServerRemovedEvent({required addressToDel, required current}) : super(current: current);
+final class ServerUpdateEvent extends ServerEvent {
+  const ServerUpdateEvent({required this.oldValue, required this.newValue});
+
+  final String oldValue;
+  final String newValue;
 
   @override
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [current, servers];
+
+}
+
+final class ServerRemoveEvent extends ServerEvent {
+
+  const ServerRemoveEvent({required this.deleteServer});
+
+  final String deleteServer;
+
+
+  @override
+  List<Object?> get props => [deleteServer];
 
 }

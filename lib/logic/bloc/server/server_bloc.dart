@@ -9,16 +9,19 @@ part 'server_event.dart';
 part 'server_state.dart';
 
 class ServerBloc extends Bloc<ServerEvent, ServerState> {
-  final Server server;
 
-  StreamSubscription<bool>? _serverSubscription;
+  ServerBloc() : super(const ServerState()) {
+    Server server = Server();
 
-  ServerBloc({required this.server}) : super(const ServerState()) {
+    on<AppStartedEvent>((event, emit) async {
+      final address = await server.getServers();
+      add(ServerCheckEvent(current: address['current'], servers: address['all']));
+    });
 
-    on<StartServerCheckEvent>((event, emit) async {
+    on<ServerCheckEvent>((event, emit) async {
       if (event.current == null) {
         await Future.delayed(const Duration(seconds: 2));
-        return emit(state.copyWith(status: ServerStatus.empty));
+        return emit(state.copyWith(status: ServerStatus.empty, servers: event.servers));
       }
       try {
         await server.status(event.current as String);
@@ -29,32 +32,54 @@ class ServerBloc extends Bloc<ServerEvent, ServerState> {
 
     });
 
-    // on<ServerAtivatedEvent>((event, emit) {
-    //   _serverSubscription?.cancel();
-    //   emit(ServerActivate(address: event.address));
-    //   server.status(event.address).listen((response) {
-    //     _serverSubscription = response.asStream().listen((status) =>
-    //         add(AvailibleServerEvent(status, event.address, event.servers)));
-    //   });
-    // });
-    //
-    on<ServerAddedEvent>((event, emit) {
-      add(StartServerCheckEvent(current: event.current, servers: event.servers));
+    on<ServerAtivateEvent>((event, emit) async {
+      final current = await server.activateServer(event.current as String);
+      emit(
+          state.copyWith(
+            status: ServerStatus.initial,
+            servers: state.servers,
+            current: current
+          )
+      );
+      add(ServerCheckEvent(current: current, servers: state.servers));
     });
 
-    //
-    // on<ServerRemovedEvent>((event, emit) {
-    //   server.removeServer(event.address).then((addresses) {
-    //     emit(ServerRemove(addresses: addresses));
-    //   });
-    //
-    // });
+    on<ServerAddEvent>((event, emit) async {
+      final address = await server.addServer(event.addValue);
+      add(ServerCheckEvent(current: address['current'], servers: address['all']));
+    });
+
+    on<ServerUpdateEvent>((event, emit) async {
+      final address = await server.updateServer(event.oldValue, event.newValue);
+      if (event.oldValue == state.current) {
+        return add(ServerCheckEvent(current: address['current'], servers: address['all']));
+      }
+      emit(state.copyWith(status: ServerStatus.updated, current: address['current'], servers: address['all']));
+    });
+
+    on<ServerRemoveEvent>((event, emit) async {
+      final address = await server.removeServer(event.deleteServer);
+
+      emit(
+          state.copyWith(
+              status: ServerStatus.removed,
+              current: address['current'],
+              servers: address['all']
+          )
+      );
+
+      if (List.of(address['all']).length == 1) {
+        emit(
+            state.copyWith(
+                status: ServerStatus.initial,
+                current: address['all'][0],
+                servers: address['all']
+            )
+        );
+        add(ServerCheckEvent(current: address['all'][0], servers: address['all']));
+      }
+    });
 
   }
 
-  @override
-  Future<void> close() {
-    _serverSubscription?.cancel();
-    return super.close();
-  }
 }
