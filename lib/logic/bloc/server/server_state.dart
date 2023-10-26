@@ -1,41 +1,23 @@
 part of 'server_bloc.dart';
 
-abstract class ServerState extends Equatable {
-  const ServerState({required this.isRunning, this.selectedServer});
-  final bool? isRunning;
-  final String? selectedServer;
-}
+enum ServerStatus {initial, success, failure, empty}
 
-class ServerInitializing extends ServerState {
-  const ServerInitializing() : super(isRunning: null);
 
-  @override
-  List<Object?> get props => [];
-}
+final class ServerState extends Equatable {
+  const ServerState({this.status = ServerStatus.initial, this.servers, this.current});
 
-class ServerIsRunning extends ServerState {
-   const ServerIsRunning(this.address) : super(isRunning: true, selectedServer: address);
+  final ServerStatus status;
+  final String? current;
+  final List<String>? servers;
 
-  final String address;
-
-  @override
-  List<Object?> get props => [address];
-}
-
-class ServerIsNotRunning extends ServerState {
-  const ServerIsNotRunning(this.address) : super(isRunning: false, selectedServer: address);
-
-  final String address;
+  ServerState copyWith({ServerStatus? status, String? current, List<String>? servers}) {
+    return ServerState(
+      status: status ?? this.status,
+      current: current ?? this.current,
+      servers: servers ?? this.servers
+    );
+  }
 
   @override
-  List<Object?> get props => [address];
-}
-
-class ServerAdding extends ServerState {
-  const ServerAdding({required this.adding}) : super(isRunning: false);
-
-  final bool adding;
-
-  @override
-  List<Object> get props => [adding];
+  List<Object?> get props => [status, current, servers];
 }

@@ -1,34 +1,54 @@
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Server {
   Server();
 
-  bool? hasError;
-
-  Stream<Future<bool>> status(String address) {
+  Future<bool> status(String address) async {
     var client = http.Client();
 
-    Future<bool> request() async {
-      try {
-        var response = await client.get(
-          Uri.http(address, 'api/'),
-        );
+    var response = await client.get(
+      Uri.http(address, 'api/'),
+    );
 
-        if (response.statusCode == 200) {
-          hasError = false;
-          return true;
-        } else {
-          hasError = true;
-          return false;
-        }
-      } on http.ClientException {
-        hasError = true;
-      }
-
-      return false;
+    if (response.statusCode == 200) {
+      return true;
     }
 
-    return Stream.periodic(const Duration(seconds: 5), (computationCount) => request());
+    throw Exception('erreur serveur');
   }
 
+  Future<List<String>?> getServers() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    List<String>? addresses = prefs.getStringList('servers');
+
+    return addresses;
+  }
+
+  Future<String?> getCurrentServer() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    String? address = prefs.getString('server');
+
+    return address;
+  }
+
+  Future removeServer(String address) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    List<String>? addresses = prefs.getStringList('servers');
+
+    addresses?.remove(address);
+
+    prefs.setStringList('servers', addresses!);
+
+    String? selectedServer = prefs.getString('server');
+
+    if(selectedServer == address) {
+      prefs.remove('server');
+    }
+
+    return addresses;
+  }
 }
