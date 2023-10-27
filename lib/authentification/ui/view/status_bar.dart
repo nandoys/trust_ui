@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:native_context_menu/native_context_menu.dart';
 
-import 'package:trust_app/logic/bloc/server/server_bloc.dart';
+import 'package:trust_app/authentification/bloc/server/server_bloc.dart';
 
-import 'package:trust_app/ui/page/server/server_page.dart';
-import 'package:trust_app/ui/widget/server/floating_snack_bar.dart';
+import 'package:trust_app/authentification/ui/page/server_page.dart';
+import 'package:trust_app/authentification/ui/widget/floating_snack_bar.dart';
 
 class StatusBar extends StatefulWidget {
   const StatusBar({super.key});
@@ -114,13 +114,18 @@ class _StatusBarState extends State<StatusBar> {
                       onItemSelected: (item) {
                         if (item.action == 'create') {
                           Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (_) =>
-                                      BlocProvider.value(
-                                        value: context.read<ServerBloc>(),
-                                        child: const ServerPage(),
-                                      )
-                              )
+                            PageRouteBuilder(
+                                pageBuilder: (_, animation, secondaryAnimation ) =>
+                                BlocProvider.value(
+                                  value: context.read<ServerBloc>(),
+                                  child: const ServerPage(),
+                                ),
+                                transitionsBuilder: (_, animation, secondaryAnimation, child) {
+                                  return child;
+                              },
+                                transitionDuration: const Duration(seconds: 0),
+                                reverseTransitionDuration: const Duration(seconds: 0)
+                            )
                           );
                         }
 

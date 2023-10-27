@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:native_context_menu/native_context_menu.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:trust_app/logic/bloc/server/server.dart';
-import 'package:trust_app/logic/bloc/server/server_bloc.dart';
-import 'package:trust_app/ui/view/authentification/login_form.dart';
-import 'package:trust_app/ui/view/authentification/status_bar.dart';
+import 'package:trust_app/authentification/ui/view/login_form.dart';
+import 'package:trust_app/authentification/ui/view/status_bar.dart';
 
-import 'package:trust_app/ui/view/server/get_server_loader.dart';
+import 'package:trust_app/authentification/bloc/server/server_bloc.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -36,10 +33,12 @@ class _LoginPageState extends State<LoginPage> {
               child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.25,
                 height: MediaQuery.of(context).size.height * 0.65,
-                child: const Card(
-                  color: Colors.white,
-                  elevation: 3,
-                  child: LoginForm(),
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12.0)
+                  ),
+                  child: const LoginForm(),
                 ),
               ),
             ),

@@ -3,7 +3,8 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:native_context_menu/native_context_menu.dart';
-import 'package:trust_app/logic/bloc/server/server.dart';
+
+import 'package:trust_app/authentification/repository/server.dart';
 
 part 'server_event.dart';
 part 'server_state.dart';
@@ -36,9 +37,9 @@ class ServerBloc extends Bloc<ServerEvent, ServerState> {
       final current = await server.activateServer(event.current as String);
       emit(
           state.copyWith(
-            status: ServerStatus.initial,
-            servers: state.servers,
-            current: current
+              status: ServerStatus.initial,
+              servers: state.servers,
+              current: current
           )
       );
       add(ServerCheckEvent(current: current, servers: state.servers));
@@ -46,6 +47,7 @@ class ServerBloc extends Bloc<ServerEvent, ServerState> {
 
     on<ServerAddEvent>((event, emit) async {
       final address = await server.addServer(event.addValue);
+      emit(state.copyWith(status: ServerStatus.initial, current: address['current'], servers: address['all']));
       add(ServerCheckEvent(current: address['current'], servers: address['all']));
     });
 

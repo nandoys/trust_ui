@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:trust_app/logic/bloc/server/server_bloc.dart';
+import 'package:trust_app/authentification/bloc/server/server_bloc.dart';
 
-import 'package:trust_app/logic/bloc/server/server.dart';
-import 'package:trust_app/ui/view/server/server_form.dart';
+import 'package:trust_app/authentification/ui/view/server_form.dart';
 
 class ServerPage extends StatefulWidget {
   const ServerPage({super.key, this.host, this.port});
@@ -21,18 +19,19 @@ class _ServerPageState extends State<ServerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white60.withOpacity(0.4),
       body: Center(
         child: SizedBox(
           width: MediaQuery.of(context).size.width * 0.26,
           height: MediaQuery.of(context).size.height * 0.65,
-          child: Card(
-            elevation: 3,
-            child: Scaffold(
-              appBar: AppBar(),
-              body: BlocProvider.value(
-                value: context.read<ServerBloc>(),
-                child: ServerForm(defaultHost: widget.host, defaultPort: widget.port,),
-              ),
+          child: Container(
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12.0)
+            ),
+            child: BlocProvider.value(
+              value: context.read<ServerBloc>(),
+              child: ServerForm(defaultHost: widget.host, defaultPort: widget.port,),
             ),
           ),
         ),

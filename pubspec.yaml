@@ -42,6 +42,7 @@ dependencies:
   equatable: ^2.0.5
   bloc: ^8.1.2
   breathing_collection: ^1.0.0+3
+  go_router: ^12.0.0
 
 dev_dependencies:
   flutter_test:

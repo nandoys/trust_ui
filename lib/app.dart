@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trust_app/ui/page/authentification/login.dart';
+import 'package:trust_app/authentification/ui/page/login.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
-        primarySwatch: Colors.blue,
+
       ),
       home: const LoginPage(),
     );

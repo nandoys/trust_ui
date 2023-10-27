@@ -1,5 +1,6 @@
 part of 'server_bloc.dart';
 
+
 enum ServerStatus {initial, success, failure, empty, removed, updated}
 
 
@@ -31,10 +32,10 @@ final class ServerState extends Equatable {
     });
 
     return ServerState(
-      status: status ?? this.status,
-      current: current,
-      servers: servers,
-      contextMenu: contextMenu
+        status: status ?? this.status,
+        current: current,
+        servers: servers,
+        contextMenu: contextMenu
     );
   }
 
