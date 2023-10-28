@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:native_context_menu/native_context_menu.dart';
 
-import 'package:trust_app/authentification/ui/view/login_form.dart';
-import 'package:trust_app/authentification/ui/view/status_bar.dart';
-
-import 'package:trust_app/authentification/bloc/server/server_bloc.dart';
+import 'package:trust_app/organisation//ui/view/login_form.dart';
+import 'package:trust_app/organisation//ui/view/status_bar.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

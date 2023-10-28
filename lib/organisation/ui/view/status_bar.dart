@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:native_context_menu/native_context_menu.dart';
 
-import 'package:trust_app/authentification/bloc/server/server_bloc.dart';
-import 'package:trust_app/authentification/ui/widget/floating_snack_bar.dart';
+import 'package:trust_app/organisation//bloc/server/server_bloc.dart';
+import 'package:trust_app/organisation//ui/widget/floating_snack_bar.dart';
 
 class StatusBar extends StatefulWidget {
   const StatusBar({super.key});

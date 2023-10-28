@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
-import 'package:trust_app/authentification/ui/page/login.dart';
+import 'package:trust_app/organisation//ui/page/login.dart';
 
-import 'authentification/bloc/server/server_bloc.dart';
-import 'authentification/ui/page/server.dart';
+import 'package:trust_app/organisation//bloc/server/server_bloc.dart';
+import 'package:trust_app/organisation//ui/page/server.dart';
 
 final _route = GoRouter(
     initialLocation: '/',
@@ -42,6 +43,14 @@ class MyApp extends StatelessWidget {
         child: MaterialApp.router(
           title: 'Trust Compta',
           debugShowCheckedModeBanner: false,
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('fr'),
+          ],
           routerConfig: _route,
           theme: ThemeData(
             useMaterial3: true,

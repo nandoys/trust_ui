@@ -1,0 +1,6 @@
+{
+  "logIn": "Log in",
+  "@logIn": {
+    "description": "To connect the user"
+  }
+}

@@ -4,7 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:native_context_menu/native_context_menu.dart';
 
-import 'package:trust_app/authentification/repository/server.dart';
+import 'package:trust_app/organisation//repository/server.dart';
 
 part 'server_event.dart';
 part 'server_state.dart';

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:trust_app/authentification/bloc/server/server_bloc.dart';
+import 'package:trust_app/organisation//bloc/server/server_bloc.dart';
 
-import 'package:trust_app/authentification/ui/view/server_form.dart';
+import 'package:trust_app/organisation//ui/view/server_form.dart';
 
 class ServerPage extends StatefulWidget {
   const ServerPage({super.key, this.host, this.port});
