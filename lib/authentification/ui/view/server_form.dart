@@ -20,17 +20,23 @@ class ServerForm extends StatelessWidget {
       _portController.text = defaultPort as String;
     }
 
+    final ServerBloc serverBloc = context.read<ServerBloc>();
+
     return Form(
       key: _formKey,
       child: BlocListener<ServerBloc, ServerState>(
         listener: (context, state) {
+
           if (state.status == ServerStatus.success) {
             Navigator.of(context).pop();
           }
-          else if (state.status == ServerStatus.updated) {
+
+          else if (state.isUpdating == true) {
+
             SnackBar notif = FloatingSnackBar(
-                color: Colors.green,
-                message: "Le serveur a été modifié avec succès"
+              color: Colors.blueAccent,
+              message: "Le serveur a été modifié avec succès",
+              messageDuration: const Duration(seconds: 2),
             );
             ScaffoldMessenger.of(context).showSnackBar(notif);
             Navigator.of(context).pop();
@@ -136,7 +142,8 @@ class ServerForm extends StatelessWidget {
                     children: [
                       BlocBuilder<ServerBloc, ServerState>(
                           builder: (context, state) =>
-                          context.read<ServerBloc>().state.status == ServerStatus.initial ?
+                          serverBloc.state.status == ServerStatus.initial ||
+                              serverBloc.state.isUpdating == true ?
                           const SizedBox(
                             height: 30,
                             width: 30,
@@ -152,14 +159,15 @@ class ServerForm extends StatelessWidget {
                                 String defaultAddress = '$defaultHost:$defaultPort';
 
                                 SnackBar notif = FloatingSnackBar(
-                                    color: Colors.black.withOpacity(0.78),
-                                    message: "Il n'y a aucune modification à éffectuer!!!"
+                                  color: Colors.black.withOpacity(0.75),
+                                  message: "Il n'y a aucune modification à éffectuer!!!",
+                                  messageDuration: const Duration(seconds: 2),
                                 );
 
-                                defaultHost == defaultPort ? context.read<ServerBloc>().add(
+                                defaultHost == defaultPort ? serverBloc.add(
                                     ServerAddEvent(addValue: editedAddress)
                                 ) : defaultAddress == editedAddress ? ScaffoldMessenger.of(context).showSnackBar(notif)
-                                    : context.read<ServerBloc>().add(
+                                    : serverBloc.add(
                                     ServerUpdateEvent(
                                         newValue: editedAddress,
                                         oldValue: defaultAddress
@@ -170,7 +178,6 @@ class ServerForm extends StatelessWidget {
                             child: Text(defaultHost == defaultPort ? 'Se connecter' : 'Modifier'),
                           )
                       ),
-
                     ],
                   ),
                 ),

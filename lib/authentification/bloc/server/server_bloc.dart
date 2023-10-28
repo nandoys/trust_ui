@@ -26,9 +26,19 @@ class ServerBloc extends Bloc<ServerEvent, ServerState> {
       }
       try {
         await server.status(event.current as String);
-        emit(state.copyWith(status: ServerStatus.success, current: event.current, servers: event.servers));
+        emit(state.copyWith(
+            status: ServerStatus.success,
+            current: event.current,
+            servers: event.servers,
+            isUpdating: false
+        ));
       } catch (_) {
-        emit(state.copyWith(status: ServerStatus.failure, current: event.current, servers: event.servers));
+        emit(state.copyWith(
+            status: ServerStatus.failure,
+            current: event.current,
+            servers: event.servers,
+            isUpdating: false
+        ));
       }
 
     });
@@ -54,9 +64,15 @@ class ServerBloc extends Bloc<ServerEvent, ServerState> {
     on<ServerUpdateEvent>((event, emit) async {
       final address = await server.updateServer(event.oldValue, event.newValue);
       if (event.oldValue == state.current) {
+        emit(state.copyWith(status: state.status, current: address['current'],
+            servers: address['all'], isUpdating: true));
         return add(ServerCheckEvent(current: address['current'], servers: address['all']));
       }
-      emit(state.copyWith(status: ServerStatus.updated, current: address['current'], servers: address['all']));
+      emit(state.copyWith(status: state.status, current: address['current'], servers: address['all'], isUpdating: true));
+      await Future.delayed(const Duration(seconds: 1), () {
+        emit(state.copyWith(status: state.status, current: address['current'],
+            servers: address['all'], isUpdating: false));
+      });
     });
 
     on<ServerRemoveEvent>((event, emit) async {
@@ -85,3 +101,4 @@ class ServerBloc extends Bloc<ServerEvent, ServerState> {
   }
 
 }
+

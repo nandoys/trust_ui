@@ -18,7 +18,8 @@ final class AppStartedEvent extends ServerEvent {
 
 final class ServerCheckEvent extends ServerEvent {
 
-  const ServerCheckEvent({required current, required servers}) : super(current: current, servers: servers);
+  const ServerCheckEvent({required current, required servers}) :
+        super(current: current, servers: servers);
 
   @override
   List<Object?> get props => [current, servers];

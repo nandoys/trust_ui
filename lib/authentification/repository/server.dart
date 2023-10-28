@@ -65,7 +65,9 @@ class Server {
 
     String? current = prefs.getString('server') == oldAddress ? newAddress : prefs.getString('server');
 
-    servers[servers.indexOf(oldAddress)] = newAddress;
+    if(servers.contains(oldAddress)) {
+      servers[servers.indexOf(oldAddress)] = newAddress;
+    }
 
     prefs.setStringList('servers', servers);
 

@@ -23,32 +23,22 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     //getServer();
-    return BlocProvider<ServerBloc>(
-      create: (context) => ServerBloc()..add(const AppStartedEvent()),
-      child: BlocBuilder<ServerBloc, ServerState>(
-        builder: (context, state) {
-          return Scaffold(
-            backgroundColor: Colors.white60.withOpacity(0.4),
-            body: Center(
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.25,
-                height: MediaQuery.of(context).size.height * 0.65,
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12.0)
-                  ),
-                  child: const LoginForm(),
-                ),
-              ),
+    return Scaffold(
+      backgroundColor: Colors.white60.withOpacity(0.4),
+      body: Center(
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.25,
+          height: MediaQuery.of(context).size.height * 0.65,
+          child: Container(
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12.0)
             ),
-            bottomNavigationBar: BlocProvider.value(
-              value: context.read<ServerBloc>(),
-              child: const StatusBar(),
-            ),
-          );
-        },
+            child: const LoginForm(),
+          ),
+        ),
       ),
+      bottomNavigationBar: const StatusBar(),
     );
   }
 

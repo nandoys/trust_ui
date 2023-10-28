@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:native_context_menu/native_context_menu.dart';
 
 import 'package:trust_app/authentification/bloc/server/server_bloc.dart';
-
-import 'package:trust_app/authentification/ui/page/server_page.dart';
 import 'package:trust_app/authentification/ui/widget/floating_snack_bar.dart';
 
 class StatusBar extends StatefulWidget {
@@ -19,8 +18,8 @@ class _StatusBarState extends State<StatusBar> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<ServerBloc, ServerState>(
-      listener: (context, state) {
+    return BlocConsumer<ServerBloc, ServerState>(
+        listener: (context, state) {
 
         if (state.status == ServerStatus.failure) {
           SnackBar notif = FloatingSnackBar(
@@ -39,9 +38,10 @@ class _StatusBarState extends State<StatusBar> {
           ScaffoldMessenger.of(context).showSnackBar(notif);
         }
       },
-      child: BlocBuilder<ServerBloc, ServerState>(
+        listenWhen: (prev, next) {
+          return prev.status != next.status;
+        },
         builder: (context, state) {
-          print(state);
           return SizedBox(
             height: 27,
             child: Container(
@@ -84,7 +84,7 @@ class _StatusBarState extends State<StatusBar> {
                       ? ContextMenuRegion(
                       onDismissed: () => {},
                       onItemSelected: (item) => {},
-                      menuItems: [],
+                      menuItems: const [],
                       child: TextButton.icon(
                         onPressed: () {
                           print('object');
@@ -113,24 +113,10 @@ class _StatusBarState extends State<StatusBar> {
                       onDismissed: () => {},
                       onItemSelected: (item) {
                         if (item.action == 'create') {
-                          Navigator.of(context).push(
-                            PageRouteBuilder(
-                                pageBuilder: (_, animation, secondaryAnimation ) =>
-                                BlocProvider.value(
-                                  value: context.read<ServerBloc>(),
-                                  child: const ServerPage(),
-                                ),
-                                transitionsBuilder: (_, animation, secondaryAnimation, child) {
-                                  return child;
-                              },
-                                transitionDuration: const Duration(seconds: 0),
-                                reverseTransitionDuration: const Duration(seconds: 0)
-                            )
-                          );
+                          context.goNamed('server');
                         }
 
                         if(item.title == 'Activer'){
-
                           context.read<ServerBloc>().add(
                               ServerAtivateEvent(current: item.action as String,)
                           );
@@ -138,15 +124,12 @@ class _StatusBarState extends State<StatusBar> {
 
                         if(item.title == 'Modifier'){
                           List<String> address = item.action.toString().split(':');
-
-                          Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (_) =>
-                                      BlocProvider.value(
-                                        value: context.read<ServerBloc>(),
-                                        child: ServerPage(host: address[0], port: address[1],),
-                                      )
-                              )
+                          context.goNamed(
+                              'server',
+                              queryParameters: {
+                                'host': address[0],
+                                'port': address[1]
+                              }
                           );
                         }
 
@@ -218,8 +201,7 @@ class _StatusBarState extends State<StatusBar> {
               ),
             ),
           );
-        },
-      ),
-    );
+        }
+        );
   }
 }
