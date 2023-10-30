@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:trust_app/organisation//bloc/server/server_bloc.dart';
+import 'package:trust_app/organisation/logic/bloc/server/server_bloc.dart';
 import 'package:trust_app/organisation//ui/widget/floating_snack_bar.dart';
 
 class ServerForm extends StatelessWidget {

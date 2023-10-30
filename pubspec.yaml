@@ -46,6 +46,14 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: any
+  rxdart: ^0.27.7
+
+  authentication_repository:
+    path: packages/authentication_repository
+  user_repository:
+    path: packages/user_repository
+  organisation_api:
+    path: packages/organisation_api
 
 dev_dependencies:
   flutter_test:

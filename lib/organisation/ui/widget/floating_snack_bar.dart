@@ -5,7 +5,6 @@ class FloatingSnackBar extends SnackBar {
     this.messageDuration = const Duration(seconds: 4)}):
   super(
         width: 450.0,
-        behavior: SnackBarBehavior.floating,
         showCloseIcon: true,
         duration: messageDuration,
         content: Text(

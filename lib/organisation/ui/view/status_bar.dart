@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:native_context_menu/native_context_menu.dart';
+import 'package:organisation_api/organisation_api.dart';
 
-import 'package:trust_app/organisation//bloc/server/server_bloc.dart';
-import 'package:trust_app/organisation//ui/widget/floating_snack_bar.dart';
+import 'package:trust_app/organisation/logic/bloc/server/server_bloc.dart';
+import 'package:trust_app/organisation/ui/widget/floating_snack_bar.dart';
+
+import 'package:trust_app/organisation/ui/widget/organisation_menu_context.dart';
+
+import 'package:trust_app/organisation/ui/widget/server_menu_context.dart';
 
 class StatusBar extends StatefulWidget {
   const StatusBar({super.key});
@@ -81,99 +85,14 @@ class _StatusBarState extends State<StatusBar> {
                   )
                       : const Divider(),
                   state.status == ServerStatus.success
-                      ? ContextMenuRegion(
-                      onDismissed: () => {},
-                      onItemSelected: (item) => {},
-                      menuItems: const [],
-                      child: TextButton.icon(
-                        onPressed: () {
-                          print('object');
-                        },
-                        icon: const Icon(Icons.circle),
-                        label: const Text(
-                          'organisation',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12.0),
-                        ),
-                        style: ButtonStyle(
-                            iconSize: MaterialStateProperty
-                                .resolveWith((states) => 15.0),
-                            iconColor: MaterialStateProperty
-                                .resolveWith(
-                                    (states) => Colors.blue),
-                            overlayColor: MaterialStateProperty
-                                .resolveWith((states) =>
-                            Colors.grey.shade900)),
-                      ))
+                      ? RepositoryProvider(
+                    create: (context) => OrganisationRepository(host: state.current as String, protocol: 'http'),
+                    child: const OrganisationMenuContext(),
+                  )
                       : const Divider(
                     thickness: 0.1,
                   ),
-                  ContextMenuRegion(
-                      onDismissed: () => {},
-                      onItemSelected: (item) {
-                        if (item.action == 'create') {
-                          context.goNamed('server');
-                        }
-
-                        if(item.title == 'Activer'){
-                          context.read<ServerBloc>().add(
-                              ServerAtivateEvent(current: item.action as String,)
-                          );
-                        }
-
-                        if(item.title == 'Modifier'){
-                          List<String> address = item.action.toString().split(':');
-                          context.goNamed(
-                              'server',
-                              queryParameters: {
-                                'host': address[0],
-                                'port': address[1]
-                              }
-                          );
-                        }
-
-                        if(item.title == 'Supprimer'){
-                          context.read<ServerBloc>().add(
-                              ServerRemoveEvent(
-                                  deleteServer: item.action as String
-                              )
-                          );
-                        }
-
-                      },
-                      menuItems: state.contextMenu as List<MenuItem>,
-                      child: TextButton.icon(
-                        onPressed: () {
-                          print('seveur bouton');
-                        },
-                        icon: const Icon(Icons.circle),
-                        label: Text(
-                          state.current != null ? state.current as String : 'Aucun Serveur',
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 12.0),
-                        ),
-                        style: ButtonStyle(
-                            iconSize: MaterialStateProperty
-                                .resolveWith(
-                                    (states) => 15.0),
-                            iconColor: MaterialStateProperty
-                                .resolveWith((states) {
-                              if (state.status == ServerStatus.success && state.current != null) {
-                                return Colors.green;
-                              } else if (state.status == ServerStatus.failure) {
-                                return Colors.red;
-                              }
-
-                              return Colors.blue;
-                            }),
-                            overlayColor:
-                            MaterialStateProperty
-                                .resolveWith((states) =>
-                            Colors
-                                .grey.shade900)),
-                      )),
+                  const ServerMenuContext(),
                 ],
               )
                   : const Row(

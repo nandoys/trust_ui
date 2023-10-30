@@ -1,16 +1,18 @@
 import 'dart:convert';
-import 'dart:ffi';
 
+import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:trust_app/utils.dart';
 
-class Organisation implements ModelLayer{
-  Organisation({required this.id, required this.name, required this.pays, required this.typeOrganisation,
-  this.address,  this.activities, this.email, this.telephone, this.logo, this.registre, this.idNat, this.numeroImpot,
+@immutable
+class Organisation extends Equatable {
+  const Organisation({required this.name, required this.pays, required this.typeOrganisation, this.id, this.address,
+    this.activities, this.email, this.telephone, this.logo, this.registre, this.idNat, this.numeroImpot,
     this.numeroSocial, this.numeroEmployeur });
 
-  final String id;
+  final String? id;
   final String name;
   final String? address;
   final Map<String, String> pays;
@@ -26,28 +28,7 @@ class Organisation implements ModelLayer{
   final String? numeroEmployeur;
 
   @override
-  Future creaData(host) {
-    // TODO: implement creaData
-    throw UnimplementedError();
-  }
-
-  @override
-  Future deleteData(host) {
-    // TODO: implement deleteData
-    throw UnimplementedError();
-  }
-
-  @override
-  Future readData(host) {
-    // TODO: implement readData
-    throw UnimplementedError();
-  }
-
-  @override
-  Future updateData(host) {
-    // TODO: implement updateData
-    throw UnimplementedError();
-  }
+  List<Object?> get props => [id];
 }
 
 class TypeOrganisation implements ModelLayer{
@@ -81,47 +62,61 @@ class TypeOrganisation implements ModelLayer{
   }
 }
 
-class Pays implements ModelLayer {
-  Pays({required this.id, required this.name, required this.phoneCode, required this.currency,
+class Country implements ModelLayer {
+  Country({required this.id, required this.name, required this.phoneCode, required this.currency,
     required this.languages});
+
+  // factory Country.fromJson(Map<String, dynamic> json) {
+  //   Currency currency = Currency(name: json['monnaie_locale']['intitule'],
+  //       symbol: json['monnaie_locale']['symbole'], codeIso: json['monnaie_locale']['code_iso'],
+  //       unit: json['monnaie_locale']['unite']);
+  //
+  //   return Country(
+  //     id: json['id'],
+  //     name: json['nom'],
+  //     phoneCode: json['indicatif'],
+  //
+  //   );
+  // }
 
   final String id;
   final String name;
   final String phoneCode;
-  final Currency currency;
+  final List<Currency> currency;
   final List<Language> languages;
 
   @override
   Future creaData(host) {
-    // TODO: implement creaData
     throw UnimplementedError();
   }
 
   @override
   Future deleteData(host) {
-    // TODO: implement deleteData
     throw UnimplementedError();
   }
 
   @override
-  Future readData(host) {
-    // TODO: implement readData
-    throw UnimplementedError();
+  Future readData(host) async {
+    var request = await http.get(
+      Uri.http(host, '/api/organisation/pays/'),
+    );
+    return jsonDecode(utf8.decode(request.bodyBytes));
   }
 
   @override
   Future updateData(host) {
-    // TODO: implement updateData
     throw UnimplementedError();
   }
 }
 
 class Currency implements ModelLayer {
-  Currency({required this.intitule, required this.symbol, required this.codeIso, required this.unit});
-  final String intitule;
+  Currency({required this.id, required this.name, required this.symbol, required this.codeIso, required this.unit});
+
+  final String id;
+  final String name;
   final String symbol;
   final String codeIso;
-  final Double unit;
+  final double unit;
 
   @override
   Future creaData(host) {
@@ -135,10 +130,19 @@ class Currency implements ModelLayer {
     throw UnimplementedError();
   }
 
+  static Future readAllData(host) async {
+    var request = await http.get(
+      Uri.http(host, '/api/parametres/devises/'),
+    );
+    return jsonDecode(utf8.decode(request.bodyBytes));
+  }
+
   @override
-  Future readData(host) {
-    // TODO: implement readData
-    throw UnimplementedError();
+  Future readData(host) async {
+    var request = await http.get(
+      Uri.http(host, '/api/parametres/devises/'),
+    );
+    return jsonDecode(utf8.decode(request.bodyBytes));
   }
 
   @override
@@ -189,25 +193,21 @@ class Activity implements ModelLayer {
 
   @override
   Future creaData(host) {
-    // TODO: implement creaData
     throw UnimplementedError();
   }
 
   @override
   Future deleteData(host) {
-    // TODO: implement deleteData
     throw UnimplementedError();
   }
 
   @override
   Future readData(host) {
-    // TODO: implement readData
     throw UnimplementedError();
   }
 
   @override
   Future updateData(host) {
-    // TODO: implement updateData
     throw UnimplementedError();
   }
 
