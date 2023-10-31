@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:trust_app/organisation/logic/bloc/server/server_bloc.dart';
 
 import 'package:trust_app/organisation//ui/view/server_form.dart';
+import 'package:trust_app/organisation/logic/cubit/server/context_menu/context_menu_cubit.dart';
 
 class ServerPage extends StatefulWidget {
-  const ServerPage({super.key, this.host, this.port});
+  const ServerPage({super.key, this.host, this.port, required this.protocol});
   final String? host;
   final String? port;
+  final String protocol;
 
   @override
   State<ServerPage> createState() => _ServerPageState();
@@ -30,8 +31,9 @@ class _ServerPageState extends State<ServerPage> {
                 borderRadius: BorderRadius.circular(12.0)
             ),
             child: BlocProvider.value(
-              value: context.read<ServerBloc>(),
-              child: ServerForm(defaultHost: widget.host, defaultPort: widget.port,),
+              value: context.read<ServerContextMenuCubit>(),
+              child: ServerForm(defaultHost: widget.host, defaultPort: widget.port,
+                protocol: widget.protocol.replaceFirst(RegExp(r'h'), 'H'),),
             ),
           ),
         ),

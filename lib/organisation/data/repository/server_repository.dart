@@ -26,23 +26,21 @@ class ServerRepository {
 
   }
 
-  Future<Map> getServers() async {
+  Future<List<String>?> getServers() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     List<String>? addresses = prefs.getStringList('servers');
-
-    String? address = prefs.getString('server');
-
-    return {'current': address, 'all': addresses};
+    return addresses;
   }
 
   Future<String?> getContextServer() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+
     String? address = prefs.getString('server');
     return address;
   }
 
-  Future<Map> addServer(String server) async {
+  Future<void> addServer(String server) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     if (prefs.getStringList('servers') != null) {
@@ -51,36 +49,27 @@ class ServerRepository {
       if (!servers.contains(server)) {
         servers.add(server);
         prefs.setStringList('servers', servers);
-        prefs.setString('server', server);
-        return {'current': server, 'all': servers};
       }
-
-      return {'current': prefs.getString('server'), 'all': servers};
-
     } else {
       prefs.setStringList('servers', [server]);
-      prefs.setString('server', server);
-
-      return {'current': server, 'all': [server]};
     }
   }
 
-  Future<String> activateServer(String server) async {
+  Future<void> activateServer(String server) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     prefs.setString('server', server);
-    return server;
   }
 
-  Future<Map> updateServer(String oldAddress, String newAddress) async {
+  Future<void> updateServer(String oldServer, String newServer) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     List<String> servers = prefs.getStringList('servers') as List<String>;
 
-    String? current = prefs.getString('server') == oldAddress ? newAddress : prefs.getString('server');
+    String? current = prefs.getString('server') == oldServer ? newServer : prefs.getString('server');
 
-    if(servers.contains(oldAddress)) {
-      servers[servers.indexOf(oldAddress)] = newAddress;
+    if(servers.contains(oldServer)) {
+      servers[servers.indexOf(oldServer)] = newServer;
     }
 
     prefs.setStringList('servers', servers);
@@ -88,25 +77,19 @@ class ServerRepository {
     if (current != null) {
       prefs.setString('server', current);
     }
-
-    return {'current': current, 'all': servers };
   }
 
-  Future<Map> removeServer(String address) async {
+  Future<void> removeServer(String server) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     List<String>? servers = prefs.getStringList('servers');
 
-    servers?.remove(address);
+    servers?.remove(server);
 
     prefs.setStringList('servers', servers!);
 
-    String? current = prefs.getString('server');
-
-    if(current == address) {
+    if(prefs.getString('server') == server) {
       prefs.remove('server');
     }
-
-    return {'current': prefs.getString('server'), 'all': servers};
   }
 }

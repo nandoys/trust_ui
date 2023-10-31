@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:native_context_menu/native_context_menu.dart';
 
 import 'package:trust_app/organisation/logic/cubit/server/connectivity/connectivity_status_cubit.dart';
+import 'package:trust_app/organisation/logic/cubit/server/context_menu/context_menu_cubit.dart';
 import 'package:trust_app/organisation/ui/widget/organisation_menu_context.dart';
 import 'package:trust_app/organisation/ui/widget/server_menu_context.dart';
 import 'package:trust_app/organisation/logic/cubit/server/context_server/context_server_cubit.dart';
@@ -22,11 +23,13 @@ class _StatusBarState extends State<StatusBar> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 27,
+      height: 30,
       child: Container(
         color: Colors.black,
         child: MultiBlocListener(listeners: [
-          BlocListener<ContextServerCubit, String?>(listener: (context, current_server) {}),
+          BlocListener<ContextServerCubit, String?>(listener: (context, currentServer) {
+
+          }),
           BlocListener<ConnectivityStatusCubit, ConnectivityStatus>(listener: (context, status) {
             if (status == ConnectivityStatus.connected) {
               SnackBar notif = FloatingSnackBar(
@@ -43,6 +46,9 @@ class _StatusBarState extends State<StatusBar> {
               );
               ScaffoldMessenger.of(context).showSnackBar(notif);
             }
+          }),
+          BlocListener<ServerContextMenuCubit, List<MenuItem>>(listener: (context, menus) {
+
           })
         ],
           child: BlocBuilder<ConnectivityStatusCubit, ConnectivityStatus>(builder: (context, status) {
@@ -97,7 +103,7 @@ class _StatusBarState extends State<StatusBar> {
                           '_selectedOrganisation',
                           style: TextStyle(
                               color: Colors.white,
-                              fontSize: 12.0),
+                              fontSize: 13.0),
                         ),
                       ),
                     ],

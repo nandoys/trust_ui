@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:native_context_menu/native_context_menu.dart';
-import 'package:organisation_api/organisation_api.dart';
-
-import 'package:trust_app/organisation/logic/bloc/organisation/organisation_bloc.dart';
-import 'package:trust_app/organisation/logic/bloc/server/server_bloc.dart';
 
 class OrganisationMenuContext extends StatelessWidget {
   const OrganisationMenuContext({super.key});
@@ -29,7 +24,7 @@ class OrganisationMenuContext extends StatelessWidget {
             'organisation',
             style: TextStyle(
                 color: Colors.white,
-                fontSize: 12.0),
+                fontSize: 14.0),
           ),
           style: ButtonStyle(
               iconSize: MaterialStateProperty

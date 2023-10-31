@@ -14,6 +14,5 @@ class ConnectivityStatusCubit extends Cubit<ConnectivityStatus> {
 
   void changeStatus(ConnectivityStatus status) {
     emit(status);
-    print('from ConnectivityStatusCubit cubit $status');
   }
 }
