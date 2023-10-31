@@ -11,15 +11,12 @@ class OrganisationMenuContext extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final OrganisationRepository repository = context.read<OrganisationRepository>();
-    print(context.read<ServerBloc>().state);
 
     return ContextMenuRegion(
         onDismissed: () => {},
         onItemSelected: (item) => {
           if (item.action == 'create') {
             //context.goNamed('organisation.signUp')
-        context.read<OrganisationBloc>().add(OrganisationEvent(repository: repository))
           }
         },
         menuItems: [MenuItem(title: 'title', action: 'create')],

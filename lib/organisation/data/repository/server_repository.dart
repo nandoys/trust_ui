@@ -1,21 +1,29 @@
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Server {
-  Server();
+import 'package:trust_app/organisation/logic/cubit/server/connectivity/connectivity_status_cubit.dart';
 
-  Future<bool> status(String address) async {
+class ServerRepository {
+  ServerRepository();
+
+  Stream<ConnectivityStatus> status(String address) async* {
     var client = http.Client();
 
-    var response = await client.get(
-      Uri.http(address, 'api/'),
-    );
+    try {
+      var response = await client.get(
+        Uri.http(address, 'api/'),
+      );
 
-    if (response.statusCode == 200) {
-      return true;
+      if (response.statusCode == 200) {
+        yield ConnectivityStatus.connected;
+      } else {
+        yield ConnectivityStatus.disconnected;
+      }
+
+    } on http.ClientException {
+      yield ConnectivityStatus.disconnected;
     }
 
-    throw Exception('erreur serveur');
   }
 
   Future<Map> getServers() async {
@@ -26,6 +34,12 @@ class Server {
     String? address = prefs.getString('server');
 
     return {'current': address, 'all': addresses};
+  }
+
+  Future<String?> getContextServer() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? address = prefs.getString('server');
+    return address;
   }
 
   Future<Map> addServer(String server) async {
