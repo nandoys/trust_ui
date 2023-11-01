@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:native_context_menu/native_context_menu.dart';
+import 'package:organisation_api/organisation_api.dart';
 
 import 'package:trust_app/home//ui/page/page.dart';
 import 'package:trust_app/home/data/repository/server_repository.dart';
@@ -48,26 +49,30 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MultiRepositoryProvider(
-        providers: [
-          RepositoryProvider(create: (context) => ServerRepository())
-        ],
-        child: MultiBlocProvider(
+    return RepositoryProvider(
+      create: (context) => ServerRepository(),
+      child: MultiBlocProvider(
           providers: [
-            BlocProvider<ConnectivityStatusCubit>(create: (context) => ConnectivityStatusCubit(
-                serverRepository: context.read<ServerRepository>())
+            BlocProvider(
+              create: (context) => ConnectivityStatusCubit(
+                    serverRepository: context.read<ServerRepository>()
+                ),
             ),
-            BlocProvider<ActiveServerCubit>(create: (context) => ActiveServerCubit(
-                serverRepository: context.read<ServerRepository>(),
-                statusCubit: context.read<ConnectivityStatusCubit>())..get()
+            BlocProvider<ActiveServerCubit>(
+              create: (context) => ActiveServerCubit(
+                  serverRepository: context.read<ServerRepository>(),
+                  statusCubit: context.read<ConnectivityStatusCubit>()
+              )..get(),
             ),
-            BlocProvider(create: (context) => ServerContextMenuCubit(
-                initial: [
-                  MenuItem(title: 'Nouveau (Http)', action: 'create http'),
-                  MenuItem(title: 'Nouveau (Https)', action: 'create https')
-                ],
-                serverRepository: context.read<ServerRepository>(),
-                activeServer: context.read<ActiveServerCubit>()),
+            BlocProvider(
+              create: (context) => ServerContextMenuCubit(
+                  initial: [
+                    MenuItem(title: 'Nouveau (Http)', action: 'create http'),
+                    MenuItem(title: 'Nouveau (Https)', action: 'create https')
+                  ],
+                  serverRepository: context.read<ServerRepository>(),
+                  activeServer: context.read<ActiveServerCubit>()
+              ),
             )
           ],
           child: MaterialApp.router(
@@ -86,8 +91,8 @@ class MyApp extends StatelessWidget {
                 useMaterial3: true,
                 snackBarTheme: const SnackBarThemeData(behavior: SnackBarBehavior.floating)
             ),
-          ),
-        )
+          )
+      ),
     );
   }
 }

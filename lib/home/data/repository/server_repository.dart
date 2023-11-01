@@ -97,8 +97,6 @@ class ServerRepository {
 
     List<String>? servers = prefs.getStringList('servers');
 
-    print(server);
-
     servers?.remove(server);
 
     prefs.setStringList('servers', servers!);

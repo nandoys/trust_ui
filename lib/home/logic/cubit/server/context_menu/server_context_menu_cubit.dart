@@ -23,7 +23,7 @@ class ServerContextMenuCubit extends Cubit<List<MenuItem>> {
         MenuItem(title: 'Nouveau (Https)', action: 'create https')
       ];
       List<MenuItem> serverMenu = servers.map((server) {
-        if (activeServer.state != server) {
+        if (activeServer.state.fullAddress != server) {
           return MenuItem(title: server, items: [
             MenuItem(title: 'Activer', action: server),
             MenuItem(title: 'Modifier', action: server),
@@ -56,7 +56,7 @@ class ServerContextMenuCubit extends Cubit<List<MenuItem>> {
   void updateServer(String oldServer, String newServer) {
     serverRepository.updateServer(oldServer, newServer);
     getServers();
-    if (formatActiveServer(oldServer) == activeServer.state) {
+    if (formatActiveServer(oldServer) == activeServer.state.fullAddress) {
       activeServer.get();
     }
   }
@@ -64,7 +64,7 @@ class ServerContextMenuCubit extends Cubit<List<MenuItem>> {
   void removeServer(String server) {
     serverRepository.removeServer(formatServers(server));
     getServers();
-    if (server == activeServer.state) {
+    if (server == activeServer.state.fullAddress) {
       activeServer.get();
     }
   }

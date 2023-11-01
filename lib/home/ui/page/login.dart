@@ -21,7 +21,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
 
-    return BlocListener<ActiveServerCubit, String?>(
+    return BlocListener<ActiveServerCubit, ActiveServerState>(
       listener: (context, currentServer) {
         context.read<ServerContextMenuCubit>().getServers();
       },

@@ -46,32 +46,31 @@ class ServerMenuContext extends StatelessWidget {
             }
           },
           menuItems: menus,
-          child: TextButton.icon(
-            onPressed: () {
-              if (activeServerCubit.state != null) {
-                menuServerCubit.activateServer(activeServerCubit.state as String);
-              }
-            },
-            icon: BlocBuilder<ConnectivityStatusCubit, ConnectivityStatus>(builder: (context, status) {
-              if (status == ConnectivityStatus.connected) {
-                return const Icon(Icons.circle, color: Colors.green,);
-              }
-              else if (status == ConnectivityStatus.disconnected) {
-                return const Icon(Icons.circle, color: Colors.red,);
-              }
-              return const Icon(Icons.circle, color: Colors.blue,);
-            }),
-            label: BlocBuilder<ActiveServerCubit, String?>(builder: (context, currentServer) {
-              return Text(currentServer ?? 'Aucun serveur',
+          child: BlocBuilder<ActiveServerCubit, ActiveServerState>(builder: (context, activeServer) {
+            return TextButton.icon(
+              onPressed: () {
+                activeServer is ActiveServerSelected ?
+                menuServerCubit.activateServer(activeServer.fullAddress as String) : null;
+              },
+              icon: BlocBuilder<ConnectivityStatusCubit, ConnectivityStatus>(builder: (context, status) {
+                if (status == ConnectivityStatus.connected) {
+                  return const Icon(Icons.circle, color: Colors.green,);
+                }
+                else if (status == ConnectivityStatus.disconnected) {
+                  return const Icon(Icons.circle, color: Colors.red,);
+                }
+                return const Icon(Icons.circle, color: Colors.blue,);
+              }),
+              label: Text(activeServer.fullAddress ?? 'Aucun serveur',
                 style: const TextStyle(
                     color: Colors.white,
                     fontSize: 14.0),
-              );
-            }),
-            style: ButtonStyle(
-                iconSize: MaterialStateProperty.resolveWith((states) => 15.0),
-                overlayColor: MaterialStateProperty.resolveWith((states) => Colors.grey.shade900)),
-          ));
+              ),
+              style: ButtonStyle(
+                  iconSize: MaterialStateProperty.resolveWith((states) => 15.0),
+                  overlayColor: MaterialStateProperty.resolveWith((states) => Colors.grey.shade900)),
+            );
+          }));
     });
   }
 }

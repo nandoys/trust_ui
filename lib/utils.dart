@@ -5,7 +5,7 @@ String getProtocol(String toSplit) {
   return protocol.substring(1, serverSplit[0].length-1);
 }
 
-/// get server address from format "[[protocol]] host:port"
+/// get server address from format "[[protocol]] host:port" to "host:port"
 String getServerAddress(String toSplit) {
   final serverSplit = toSplit.split(' ');
   return serverSplit[1];

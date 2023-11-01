@@ -22,7 +22,7 @@ class _StatusBarState extends State<StatusBar> {
       child: Container(
         color: Colors.black,
         child: MultiBlocListener(listeners: [
-          BlocListener<ActiveServerCubit, String?>(listener: (context, currentServer) {
+          BlocListener<ActiveServerCubit, ActiveServerState>(listener: (context, currentServer) {
 
           }),
           BlocListener<ConnectivityStatusCubit, ConnectivityStatus>(listener: (context, status) {
@@ -72,39 +72,12 @@ class _StatusBarState extends State<StatusBar> {
                 ],
               );
             } else {
-              return Row(
+              return const Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Row(
-                    children: [
-                      SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: Container(
-                              color: Colors.purple.shade300,
-                              child: const Center(
-                                child: Text(
-                                    '_selectedOrganisation[0]',
-                                    style: TextStyle(
-                                      fontWeight:
-                                      FontWeight.w500,
-                                    )),
-                              ))),
-                      const Padding(
-                        padding:
-                        EdgeInsets.only(left: 8.0),
-                        child: Text(
-                          '_selectedOrganisation',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 13.0),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const OrganisationMenuContext(),
-                  const ServerMenuContext(),
+                  OrganisationContextMenu(),
+                  ServerMenuContext(),
                 ],
               );
             }

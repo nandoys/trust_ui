@@ -6,37 +6,34 @@ import 'package:http/http.dart' as http;
 import 'package:organisation_api/organisation_api.dart';
 
 class OrganisationRepository {
-  OrganisationRepository({required this.host, required this.protocol}) {}
+  OrganisationRepository({required this.protocol, required this.host, required this.port}) {}
 
-  final _organisationStreamController = BehaviorSubject<List<Organisation>>.seeded(const []);
-  final String host;
-  final String protocol;
-
-  /// Provides a [Stream] of all organisations.
-  Stream<List<Organisation>> getOrganisations() => _organisationStreamController.asBroadcastStream();
+  final String? protocol;
+  final String? host;
+  final String? port;
   
-  Future<void> getAll() async {
-    final Uri url;
-    if (protocol == 'http') {
-      url = Uri.http(host, '/api/organisation');
-    }
-    else {
-      url = Uri.https(host, '/api/organisation');
-    }
+  Future<List<Organisation>?> getOrganisations() async {
+   if (protocol != null && host != null && port != null) {
+     final Uri url;
+     if (protocol == 'Http') {
+       url = Uri.http('$host:$port', '/api/organisation');
+     }
+     else {
+       url = Uri.https('$host:$port', '/api/organisation');
+     }
 
-    http.Response response = await http.get(url);
+     http.Response response = await http.get(url);
 
-    if (response.statusCode == 200) {
-      final dynamic json = jsonDecode(utf8.decode(response.bodyBytes));
-      List<Organisation> organisations = List.from(json).map((e) => Organisation.fromJson(e)).toList();
-      _organisationStreamController.add(organisations);
-    } else {
-      _organisationStreamController.add([]);
-    }
+     if (response.statusCode == 200) {
+       final dynamic json = jsonDecode(utf8.decode(response.bodyBytes));
+       return List.from(json).map((e) => Organisation.fromJson(e)).toList();
+     } else {
+       throw Exception("Quelque chose s'est mal passé");
+     }
+   }
+   return null;
+
   }
 
-  void close() {
-    _organisationStreamController.close();
-  }
 }
 

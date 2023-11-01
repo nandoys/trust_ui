@@ -13,11 +13,11 @@ class OrganisationBloc extends Bloc<OrganisationEvent, OrganisationState> {
       // serverBloc.stream.listen((event) {
       //   print("boss this is your state ${event.status}");
       // });
-      event.repository.getAll();
-
-      event.repository.getOrganisations().forEach((element) {
-        print(element);
-      });
+      // event.repository.getAll();
+      //
+      // event.repository.getOrganisations().forEach((element) {
+      //   print(element);
+      // });
 
     });
   }
