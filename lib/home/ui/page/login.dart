@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:native_context_menu/native_context_menu.dart';
 
-import 'package:trust_app/organisation//ui/view/login_form.dart';
-import 'package:trust_app/organisation//ui/view/status_bar.dart';
-import 'package:trust_app/organisation/logic/cubit/server/context_menu/context_menu_cubit.dart';
-import 'package:trust_app/organisation/logic/cubit/server/context_server/context_server_cubit.dart';
+import 'package:trust_app/home//ui/view/view.dart';
+import 'package:trust_app/home/logic/cubit/cubit.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -23,7 +21,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
 
-    return BlocListener<ContextServerCubit, String?>(
+    return BlocListener<ActiveServerCubit, String?>(
       listener: (context, currentServer) {
         context.read<ServerContextMenuCubit>().getServers();
       },

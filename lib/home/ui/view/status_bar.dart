@@ -2,13 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:native_context_menu/native_context_menu.dart';
 
-import 'package:trust_app/organisation/logic/cubit/server/connectivity/connectivity_status_cubit.dart';
-import 'package:trust_app/organisation/logic/cubit/server/context_menu/context_menu_cubit.dart';
-import 'package:trust_app/organisation/ui/widget/organisation_menu_context.dart';
-import 'package:trust_app/organisation/ui/widget/server_menu_context.dart';
-import 'package:trust_app/organisation/logic/cubit/server/context_server/context_server_cubit.dart';
-
-import 'package:trust_app/organisation/ui/widget/floating_snack_bar.dart';
+import 'package:trust_app/home/ui/widget/widget.dart';
+import 'package:trust_app/home/logic/cubit/cubit.dart';
 
 class StatusBar extends StatefulWidget {
   const StatusBar({super.key});
@@ -27,7 +22,7 @@ class _StatusBarState extends State<StatusBar> {
       child: Container(
         color: Colors.black,
         child: MultiBlocListener(listeners: [
-          BlocListener<ContextServerCubit, String?>(listener: (context, currentServer) {
+          BlocListener<ActiveServerCubit, String?>(listener: (context, currentServer) {
 
           }),
           BlocListener<ConnectivityStatusCubit, ConnectivityStatus>(listener: (context, status) {

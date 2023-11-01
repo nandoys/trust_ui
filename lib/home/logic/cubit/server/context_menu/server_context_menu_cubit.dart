@@ -1,24 +1,29 @@
 import 'package:bloc/bloc.dart';
 import 'package:native_context_menu/native_context_menu.dart';
 
-import 'package:trust_app/organisation/data/repository/server_repository.dart';
-import 'package:trust_app/organisation/logic/cubit/server/context_server/context_server_cubit.dart';
+import 'package:trust_app/home/data/repository/server_repository.dart';
+import 'package:trust_app/home/logic/cubit/cubit.dart';
+
+import 'package:trust_app/utils.dart';
 
 class ServerContextMenuCubit extends Cubit<List<MenuItem>> {
-  ServerContextMenuCubit({required this.serverRepository, required this.contextServer, required this.initial})
+  ServerContextMenuCubit({required this.serverRepository, required this.activeServer, required this.initial})
       : super(initial);
 
   final ServerRepository serverRepository;
-  final ContextServerCubit contextServer;
-  List<MenuItem> initial;
+  final ActiveServerCubit activeServer;
+  final List<MenuItem> initial;
 
   void getServers() async {
     List<String>? servers = await serverRepository.getServers();
 
     if (servers != null) {
-      List<MenuItem> menus = initial;
+      List<MenuItem> menus = [
+        MenuItem(title: 'Nouveau (Http)', action: 'create http'),
+        MenuItem(title: 'Nouveau (Https)', action: 'create https')
+      ];
       List<MenuItem> serverMenu = servers.map((server) {
-        if (contextServer.state != server) {
+        if (activeServer.state != server) {
           return MenuItem(title: server, items: [
             MenuItem(title: 'Activer', action: server),
             MenuItem(title: 'Modifier', action: server),
@@ -44,21 +49,23 @@ class ServerContextMenuCubit extends Cubit<List<MenuItem>> {
 
   void activateServer(String server) {
     serverRepository.activateServer(server);
-    contextServer.getContextServer();
+    activeServer.get();
     getServers();
   }
 
   void updateServer(String oldServer, String newServer) {
     serverRepository.updateServer(oldServer, newServer);
     getServers();
-    if (oldServer == contextServer.state) {
-      contextServer.getContextServer();
+    if (formatActiveServer(oldServer) == activeServer.state) {
+      activeServer.get();
     }
   }
 
   void removeServer(String server) {
-    serverRepository.removeServer(server);
+    serverRepository.removeServer(formatServers(server));
     getServers();
-    contextServer.getContextServer();
+    if (server == activeServer.state) {
+      activeServer.get();
+    }
   }
 }

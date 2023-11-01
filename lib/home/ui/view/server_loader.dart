@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class WaitServerLoader extends StatelessWidget {
   const WaitServerLoader({super.key});
 

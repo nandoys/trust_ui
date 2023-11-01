@@ -4,13 +4,9 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:native_context_menu/native_context_menu.dart';
 
-import 'package:trust_app/organisation//ui/page/login.dart';
-import 'package:trust_app/organisation/data/repository/server_repository.dart';
-import 'package:trust_app/organisation//ui/page/server.dart';
-import 'package:trust_app/organisation/logic/cubit/server/connectivity/connectivity_status_cubit.dart';
-import 'package:trust_app/organisation/ui/page/sign_up.dart';
-import 'organisation/logic/cubit/server/context_menu/context_menu_cubit.dart';
-import 'organisation/logic/cubit/server/context_server/context_server_cubit.dart';
+import 'package:trust_app/home//ui/page/page.dart';
+import 'package:trust_app/home/data/repository/server_repository.dart';
+import 'package:trust_app/home/logic/cubit/cubit.dart';
 
 final _route = GoRouter(
     initialLocation: '/',
@@ -30,7 +26,7 @@ final _route = GoRouter(
                   String? port = route.uri.queryParameters['port'];
                   String? protocol = route.uri.queryParameters['protocol'];
 
-                  return NoTransitionPage(child: ServerPage(host: host, port: port, protocol: protocol as String,));
+                  return NoTransitionPage(child: ServerPage(host: host, port: port, protocol: protocol,));
                 }
           ),
             GoRoute(
@@ -61,17 +57,17 @@ class MyApp extends StatelessWidget {
             BlocProvider<ConnectivityStatusCubit>(create: (context) => ConnectivityStatusCubit(
                 serverRepository: context.read<ServerRepository>())
             ),
-            BlocProvider<ContextServerCubit>(create: (context) => ContextServerCubit(
+            BlocProvider<ActiveServerCubit>(create: (context) => ActiveServerCubit(
                 serverRepository: context.read<ServerRepository>(),
-                statusCubit: context.read<ConnectivityStatusCubit>())..getContextServer()
+                statusCubit: context.read<ConnectivityStatusCubit>())..get()
             ),
             BlocProvider(create: (context) => ServerContextMenuCubit(
-              initial: [
-                MenuItem(title: 'Nouveau (Http)', action: 'create http'),
-                MenuItem(title: 'Nouveau (Https)', action: 'create https')
-              ],
-              serverRepository: context.read<ServerRepository>(),
-              contextServer: context.read<ContextServerCubit>()),
+                initial: [
+                  MenuItem(title: 'Nouveau (Http)', action: 'create http'),
+                  MenuItem(title: 'Nouveau (Https)', action: 'create https')
+                ],
+                serverRepository: context.read<ServerRepository>(),
+                activeServer: context.read<ActiveServerCubit>()),
             )
           ],
           child: MaterialApp.router(

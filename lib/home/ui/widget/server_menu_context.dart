@@ -3,16 +3,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:native_context_menu/native_context_menu.dart';
 
-import 'package:trust_app/organisation/logic/cubit/server/connectivity/connectivity_status_cubit.dart';
-import 'package:trust_app/organisation/logic/cubit/server/context_server/context_server_cubit.dart';
-import 'package:trust_app/organisation/logic/cubit/server/context_menu/context_menu_cubit.dart';
+import 'package:trust_app/home/logic/cubit/cubit.dart';
+
+import 'package:trust_app/utils.dart';
 
 class ServerMenuContext extends StatelessWidget {
   const ServerMenuContext({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final contextServerCubit = context.read<ContextServerCubit>();
+    final activeServerCubit = context.read<ActiveServerCubit>();
     final menuServerCubit = context.read<ServerContextMenuCubit>();
 
     return BlocBuilder<ServerContextMenuCubit, List<MenuItem>>(builder: (context, menus) {
@@ -32,13 +32,12 @@ class ServerMenuContext extends StatelessWidget {
             }
 
             if(item.title == 'Modifier'){
-              List<String> address = item.action.toString().split(':');
+              final serverPart = item.action.toString().split(' ');
+              final protocol = getProtocol(item.action.toString());
+              List<String> address = serverPart[1].split(':');
               context.goNamed(
                   'server',
-                  queryParameters: {
-                    'host': address[0],
-                    'port': address[1]
-                  }
+                  queryParameters: { 'host': address[0], 'port': address[1], 'protocol': protocol}
               );
             }
 
@@ -49,8 +48,8 @@ class ServerMenuContext extends StatelessWidget {
           menuItems: menus,
           child: TextButton.icon(
             onPressed: () {
-              if (contextServerCubit.state != null) {
-                menuServerCubit.activateServer(contextServerCubit.state as String);
+              if (activeServerCubit.state != null) {
+                menuServerCubit.activateServer(activeServerCubit.state as String);
               }
             },
             icon: BlocBuilder<ConnectivityStatusCubit, ConnectivityStatus>(builder: (context, status) {
@@ -62,7 +61,7 @@ class ServerMenuContext extends StatelessWidget {
               }
               return const Icon(Icons.circle, color: Colors.blue,);
             }),
-            label: BlocBuilder<ContextServerCubit, String?>(builder: (context, currentServer) {
+            label: BlocBuilder<ActiveServerCubit, String?>(builder: (context, currentServer) {
               return Text(currentServer ?? 'Aucun serveur',
                 style: const TextStyle(
                     color: Colors.white,

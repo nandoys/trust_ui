@@ -1,17 +1,20 @@
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:trust_app/organisation/logic/cubit/server/connectivity/connectivity_status_cubit.dart';
+import 'package:trust_app/home/logic/cubit/cubit.dart';
+
+import 'package:trust_app/utils.dart';
 
 class ServerRepository {
   ServerRepository();
 
-  Stream<ConnectivityStatus> status(String address) async* {
+  Stream<ConnectivityStatus> status(String server) async* {
     var client = http.Client();
 
     try {
+      final protocol = getProtocol(server);
       var response = await client.get(
-        Uri.http(address, 'api/'),
+        protocol == 'Http' ? Uri.http(getServerAddress(server), 'api/') : Uri.https(getServerAddress(server), 'api/'),
       );
 
       if (response.statusCode == 200) {
@@ -19,8 +22,7 @@ class ServerRepository {
       } else {
         yield ConnectivityStatus.disconnected;
       }
-
-    } on http.ClientException {
+    } catch (e) {
       yield ConnectivityStatus.disconnected;
     }
 
@@ -30,14 +32,22 @@ class ServerRepository {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     List<String>? addresses = prefs.getStringList('servers');
-    return addresses;
+
+    return addresses?.map((address) => formatActiveServer(address)).toList();
   }
 
-  Future<String?> getContextServer() async {
+  Future<String?> getActiveServer() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     String? address = prefs.getString('server');
-    return address;
+    List<String>? servers = prefs.getStringList('servers');
+    if (address != null) {
+      if (servers != null && servers.contains(formatServers(address))) {
+        return address;
+      }
+    }
+
+    return null;
   }
 
   Future<void> addServer(String server) async {
@@ -66,7 +76,10 @@ class ServerRepository {
 
     List<String> servers = prefs.getStringList('servers') as List<String>;
 
-    String? current = prefs.getString('server') == oldServer ? newServer : prefs.getString('server');
+    final oldFormated = formatActiveServer(oldServer);
+    final newFormated = formatActiveServer(newServer);
+
+    String? current = prefs.getString('server') == oldFormated ? newFormated : prefs.getString('server');
 
     if(servers.contains(oldServer)) {
       servers[servers.indexOf(oldServer)] = newServer;
@@ -84,11 +97,15 @@ class ServerRepository {
 
     List<String>? servers = prefs.getStringList('servers');
 
+    print(server);
+
     servers?.remove(server);
 
     prefs.setStringList('servers', servers!);
 
-    if(prefs.getString('server') == server) {
+    final activeServer = prefs.getString('server');
+
+    if(activeServer!= null && formatServers(activeServer) == server) {
       prefs.remove('server');
     }
   }

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:native_context_menu/native_context_menu.dart';
-import 'package:trust_app/organisation//ui/widget/floating_snack_bar.dart';
+import 'package:trust_app/home//ui/widget/widget.dart';
 
-import 'package:trust_app/organisation/logic/cubit/server/context_menu/context_menu_cubit.dart';
+import 'package:trust_app/home/logic/cubit/cubit.dart';
 
 class ServerForm extends StatelessWidget {
   ServerForm({super.key, this.defaultHost, this.defaultPort, required this.protocol});
@@ -13,7 +13,7 @@ class ServerForm extends StatelessWidget {
   final _portController = TextEditingController();
   final String? defaultHost;
   final String? defaultPort;
-  final String protocol;
+  final String? protocol;
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +63,7 @@ class ServerForm extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                 Text(
-                  defaultHost == defaultPort ? 'Nouveau Serveur ${protocol}' : 'Modifier Serveur',
+                  defaultHost == defaultPort ? 'Nouveau Serveur $protocol' : 'Modifier Serveur $protocol',
                   style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 15.0
@@ -94,7 +94,8 @@ class ServerForm extends StatelessWidget {
 
                                 bool serverExist = false;
                                 menus?.forEach((menu) {
-                                  if (menu.title == '$value:${_portController.text}' && oldAddress != newAddress ) {
+                                  if (menu.title == '[$protocol] $value:${_portController.text}'
+                                      && oldAddress != newAddress ) {
                                     serverExist = true;
                                   }
                                 });
@@ -154,8 +155,8 @@ class ServerForm extends StatelessWidget {
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             _formKey.currentState?.save();
-                            String editedAddress = '${_hostController.text}:${_portController.text}';
-                            String defaultAddress = '$defaultHost:$defaultPort';
+                            String editedAddress = '$protocol:${_hostController.text}:${_portController.text}';
+                            String defaultAddress = '$protocol:$defaultHost:$defaultPort';
 
                             SnackBar notif = FloatingSnackBar(
                               color: Colors.black.withOpacity(0.75),
@@ -178,44 +179,6 @@ class ServerForm extends StatelessWidget {
                         },
                         child: Text(defaultHost == defaultPort ? 'Ajouter' : 'Modifier'),
                       )
-                      // BlocBuilder<ServerBloc, ServerState>(
-                      //     builder: (context, state) =>
-                      //     serverBloc.state.status == ServerStatus.initial ||
-                      //         serverBloc.state.isUpdating == true ?
-                      //     const SizedBox(
-                      //       height: 30,
-                      //       width: 30,
-                      //       child: CircularProgressIndicator(
-                      //         color: Colors.blue,
-                      //       ),
-                      //     ) :
-                      //     TextButton(
-                      //       onPressed: () {
-                      //         if (_formKey.currentState!.validate()) {
-                      //           _formKey.currentState?.save();
-                      //           String editedAddress = '${_hostController.text}:${_portController.text}';
-                      //           String defaultAddress = '$defaultHost:$defaultPort';
-                      //
-                      //           SnackBar notif = FloatingSnackBar(
-                      //             color: Colors.black.withOpacity(0.75),
-                      //             message: "Il n'y a aucune modification à éffectuer!!!",
-                      //             messageDuration: const Duration(seconds: 2),
-                      //           );
-                      //
-                      //           defaultHost == defaultPort ? serverBloc.add(
-                      //               ServerAddEvent(addValue: editedAddress)
-                      //           ) : defaultAddress == editedAddress ? ScaffoldMessenger.of(context).showSnackBar(notif)
-                      //               : serverBloc.add(
-                      //               ServerUpdateEvent(
-                      //                   newValue: editedAddress,
-                      //                   oldValue: defaultAddress
-                      //               )
-                      //           );
-                      //         }
-                      //       },
-                      //       child: Text(defaultHost == defaultPort ? 'Se connecter' : 'Modifier'),
-                      //     )
-                      // ),
                     ],
                   ),
                 ),

@@ -1,12 +1,29 @@
-abstract class  ModelLayer {
+/// get protocol from format "[[protocol]] host:port"
+String getProtocol(String toSplit) {
+  final serverSplit = toSplit.split(' ');
+  final protocol = serverSplit[0];
+  return protocol.substring(1, serverSplit[0].length-1);
+}
 
-  Future creaData(host) async {}
+/// get server address from format "[[protocol]] host:port"
+String getServerAddress(String toSplit) {
+  final serverSplit = toSplit.split(' ');
+  return serverSplit[1];
+}
 
-  Future deleteData(host) async {}
+/// Format from "protocol:host:port"  to "[[protocol]] host:port"
+String formatActiveServer(String toSplit) {
+  final serverSplit = toSplit.split(':');
+  final protocol = serverSplit[0];
+  final host = serverSplit[1];
+  final port = serverSplit[2];
+  return '[$protocol] $host:$port';
+}
 
-  static Future readAllData(host) async {}
-
-  Future readData (host) async {}
-
-  Future updateData(host) async {}
+/// Format from "[[protocol]] host:port" to "protocol:host:port"
+String formatServers(String toSplit) {
+  final serverSplit = toSplit.split(' ');
+  final protocol = getProtocol(toSplit);
+  final server = serverSplit[1];
+  return '$protocol:$server';
 }
