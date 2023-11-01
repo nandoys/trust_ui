@@ -31,8 +31,8 @@ class OrganisationRepository {
        throw Exception("Quelque chose s'est mal passé");
      }
    }
-   return null;
 
+   return null;
   }
 
 }

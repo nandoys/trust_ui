@@ -12,7 +12,6 @@ class ServerMenuContext extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final activeServerCubit = context.read<ActiveServerCubit>();
     final menuServerCubit = context.read<ServerContextMenuCubit>();
 
     return BlocBuilder<ServerContextMenuCubit, List<MenuItem>>(builder: (context, menus) {

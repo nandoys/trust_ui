@@ -25,8 +25,8 @@ class _StatusBarState extends State<StatusBar> {
           BlocListener<ActiveServerCubit, ActiveServerState>(listener: (context, currentServer) {
 
           }),
-          BlocListener<ConnectivityStatusCubit, ConnectivityStatus>(listener: (context, status) {
-            if (status == ConnectivityStatus.connected) {
+          BlocListener<ConnectivityStatusCubit, ConnectivityStatus>(listener: (context, connectivityStatus) {
+            if (connectivityStatus == ConnectivityStatus.connected) {
               SnackBar notif = FloatingSnackBar(
                   color: Colors.green,
                   message: "La connexion avec le serveur établie avec succès"
@@ -34,7 +34,7 @@ class _StatusBarState extends State<StatusBar> {
 
               ScaffoldMessenger.of(context).showSnackBar(notif);
             }
-            else if (status == ConnectivityStatus.disconnected) {
+            else if (connectivityStatus == ConnectivityStatus.disconnected) {
               SnackBar notif = FloatingSnackBar(
                   color: Colors.red,
                   message: "La connexion avec le serveur a échoué, veuillez réessayer"
@@ -46,8 +46,8 @@ class _StatusBarState extends State<StatusBar> {
 
           })
         ],
-          child: BlocBuilder<ConnectivityStatusCubit, ConnectivityStatus>(builder: (context, status) {
-            if (status == ConnectivityStatus.loading) {
+          child: BlocBuilder<ConnectivityStatusCubit, ConnectivityStatus>(builder: (context, connectivityStatus) {
+            if (connectivityStatus == ConnectivityStatus.loading) {
               return const Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -72,13 +72,18 @@ class _StatusBarState extends State<StatusBar> {
                 ],
               );
             } else {
-              return const Row(
+              List<Widget> children;
+
+              if (connectivityStatus == ConnectivityStatus.connected) {
+                children = [const OrganisationContextMenu(), const ServerMenuContext()];
+              } else {
+                children = [const ServerMenuContext()];
+              }
+
+              return Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  OrganisationContextMenu(),
-                  ServerMenuContext(),
-                ],
+                children: children,
               );
             }
           }),
