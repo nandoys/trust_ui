@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:native_context_menu/native_context_menu.dart';
 import 'package:organisation_api/organisation_api.dart';
 import 'package:trust_app/home/logic/cubit/cubit.dart';
@@ -54,7 +55,7 @@ class OrganisationContextMenu extends StatelessWidget {
                     onDismissed: () => {},
                     onItemSelected: (item) => {
                       if (item.action == 'create') {
-                        //context.goNamed('organisation.signUp')
+                        context.goNamed('organisation.signUp')
                       } else if (item.action is Organisation) {
                         context.read<ActiveOrganisationCubit>().active(item.action as Organisation)
                       }

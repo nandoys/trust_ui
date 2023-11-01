@@ -54,6 +54,7 @@ dependencies:
     path: packages/user_repository
   organisation_api:
     path: packages/organisation_api
+  meta: ^1.9.1
 
 dev_dependencies:
   flutter_test:
@@ -79,8 +80,8 @@ flutter:
   generate: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+  assets:
+     - assets/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

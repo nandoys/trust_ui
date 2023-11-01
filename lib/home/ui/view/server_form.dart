@@ -29,27 +29,7 @@ class ServerForm extends StatelessWidget {
     return Form(
       key: _formKey,
       child: BlocListener<ServerContextMenuCubit, List<MenuItem>?>(
-        listener: (context, state) {
-
-          // if (state.status == ServerStatus.success) {
-          //   Navigator.of(context).pop();
-          // }
-          //
-          // else if (state.isUpdating == true) {
-          //
-          //   SnackBar notif = FloatingSnackBar(
-          //     color: Colors.blueAccent,
-          //     message: "Le serveur a été modifié avec succès",
-          //     messageDuration: const Duration(seconds: 2),
-          //   );
-          //   ScaffoldMessenger.of(context).showSnackBar(notif);
-          //   Navigator.of(context).pop();
-          // }
-          //
-          // else if (state.status == ServerStatus.failure) {
-          //   Navigator.of(context).pop();
-          // }
-        },
+        listener: (context, state) {},
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[

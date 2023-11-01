@@ -10,9 +10,28 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: AppBar(),
-        body: Container(color: Colors.purple, child: const Text('Some'),)
+        backgroundColor: Colors.white60.withOpacity(0.4),
+        body: Center(
+          child: SizedBox.fromSize(
+            size: Size(width * 0.80, height * 0.80),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12.0),
+                color: Colors.white,
+              ),
+              child: Column(
+                children: [
+                  AppBar(shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.0)
+                  ),)
+                ],
+              ),
+            ),
+          ),
+        )
     );
   }
 }
