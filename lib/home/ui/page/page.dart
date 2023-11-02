@@ -1,3 +1,3 @@
 export 'login.dart';
 export 'server.dart';
-export 'sign_up.dart';
+export 'signup.dart';

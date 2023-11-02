@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:native_context_menu/native_context_menu.dart';
-import 'package:organisation_api/organisation_api.dart';
 
 import 'package:trust_app/home//ui/page/page.dart';
 import 'package:trust_app/home/data/repository/server_repository.dart';
@@ -34,8 +33,11 @@ final _route = GoRouter(
                 path: 'organisation/sign-up',
                 name: 'organisation.signUp',
                 pageBuilder: (context, route) {
+                  String? host = route.uri.queryParameters['host'];
+                  String? port = route.uri.queryParameters['port'];
+                  String? protocol = route.uri.queryParameters['protocol'];
 
-                  return const NoTransitionPage(child: SignUpPage());
+                  return NoTransitionPage(child: SignUpPage(protocol: protocol, host: host, port: port,));
                 }
           ),
           ]

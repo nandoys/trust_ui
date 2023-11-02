@@ -1,8 +1,4 @@
-import 'package:equatable/equatable.dart';
-
-import 'package:organisation_api/src/models/currency.dart';
-
-import 'package:organisation_api/src/models/language.dart';
+part of 'organisation.dart';
 
 class Country extends Equatable {
   Country({required this.id, required this.name, required this.phoneCode, required this.localCurrency,

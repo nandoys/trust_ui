@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:trust_app/home//ui/view/view.dart';
-import 'package:trust_app/home/logic/cubit/server/context_menu/server_context_menu_cubit.dart';
+import 'package:trust_app/home/logic/cubit/cubit.dart';
 
 class ServerPage extends StatefulWidget {
   const ServerPage({super.key, this.host, this.port, required this.protocol});
@@ -16,9 +16,9 @@ class ServerPage extends StatefulWidget {
 
 class _ServerPageState extends State<ServerPage> {
 
-
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Colors.white60.withOpacity(0.4),
       body: Center(

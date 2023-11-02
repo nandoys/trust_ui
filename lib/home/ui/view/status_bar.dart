@@ -17,6 +17,7 @@ class _StatusBarState extends State<StatusBar> {
 
   @override
   Widget build(BuildContext context) {
+
     return SizedBox(
       height: 30,
       child: Container(

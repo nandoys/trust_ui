@@ -1,12 +1,10 @@
 import 'dart:convert';
-
-import 'package:rxdart/rxdart.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:organisation_api/organisation_api.dart';
 
 class OrganisationRepository {
-  OrganisationRepository({required this.protocol, required this.host, required this.port}) {}
+  OrganisationRepository({required this.protocol, required this.host, required this.port});
 
   final String? protocol;
   final String? host;

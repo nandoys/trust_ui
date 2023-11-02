@@ -1,8 +1,9 @@
 import 'package:equatable/equatable.dart';
-import 'package:json_annotation/json_annotation.dart';
-import 'package:organisation_api/src/models/country.dart';
+import 'currency.dart';
+import 'language.dart';
 
 part 'activity.dart';
+part 'country.dart';
 
 class Organisation extends Equatable {
   const Organisation({required this.name, required this.country, required this.typeOrganisation, this.id, this.address,
