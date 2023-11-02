@@ -42,6 +42,13 @@ class SignUpForm extends StatelessWidget {
                   child: TextFormField(
                       autofocus: true,
                       controller: nameController,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Veuillez entrer le nom de votre organisation";
+                        }
+
+                        return null;
+                      },
                       decoration: const InputDecoration(
                           filled: true,
                           isDense: true,
@@ -220,7 +227,11 @@ class SignUpForm extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: FilledButton(
-                    onPressed: (){},
+                    onPressed: (){
+                      if (_formKey.currentState!.validate()) {
+                        _formKey.currentState?.save();
+                      }
+                    },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.resolveWith(
                               (states) => Colors.blue),

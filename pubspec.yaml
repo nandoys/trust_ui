@@ -55,6 +55,7 @@ dependencies:
   organisation_api:
     path: packages/organisation_api
   meta: ^1.9.1
+  form_validator: ^2.1.1
 
 dev_dependencies:
   flutter_test:
