@@ -6,9 +6,9 @@ import 'package:trust_app/home/logic/cubit/cubit.dart';
 
 import 'package:trust_app/utils.dart';
 
-class OrganisationCubit extends Cubit<bool> {
+class OrganisationCubit extends Cubit<Organisation?> {
   OrganisationCubit({required this.organisationRepository, required this.connectivityStatus, required this.apiStatus})
-      : super(false);
+      : super(null);
   final OrganisationRepository organisationRepository;
   final ConnectivityStatusCubit connectivityStatus;
   final OrganisationApiStatusCubit apiStatus;
@@ -16,6 +16,12 @@ class OrganisationCubit extends Cubit<bool> {
   void create(Organisation organisation) async {
     try {
       Organisation? response = await organisationRepository.add(organisation);
+
+      if (response != null) {
+        emit(response);
+      } else {
+        emit(null);
+      }
 
       if (connectivityStatus.state == ConnectivityStatus.disconnected){
         connectivityStatus.changeStatus(ConnectivityStatus.connected);
