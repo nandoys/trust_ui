@@ -4,6 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_validator/form_validator.dart';
 import 'package:organisation_api/organisation_api.dart';
 import 'package:trust_app/home/logic/cubit/cubit.dart';
+import 'package:trust_app/utils.dart';
+
+import 'package:trust_app/home/ui/widget/widget.dart';
 
 class SignUpForm extends StatefulWidget {
   const SignUpForm({super.key});
@@ -16,8 +19,6 @@ class _SignUpFormState extends State<SignUpForm> {
   final _formKey = GlobalKey<FormState>();
 
   final nameController = TextEditingController();
-
-  TypeOrganisation? typeOrganisation;
 
   Country? country;
 
@@ -33,7 +34,7 @@ class _SignUpFormState extends State<SignUpForm> {
 
   final taxController = TextEditingController();
 
-  final socialServiceController = TextEditingController();
+  final socialSecurityController = TextEditingController();
 
   final employerController = TextEditingController();
 
@@ -58,126 +59,24 @@ class _SignUpFormState extends State<SignUpForm> {
               children: [
                 Flexible(child: Padding(
                   padding: const EdgeInsets.all(12.0),
-                  child: TextFormField(
-                      autofocus: true,
-                      controller: nameController,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return "Veuillez entrer le nom de votre organisation";
-                        }
-
-                        return null;
-                      },
-                      decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-                          filled: true,
-                          isDense: true,
-                          labelText: "Nom de l'organisation*")
-                  ),
+                  child: NameField(controller: nameController,),
                 ),),
-                Flexible(child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: BlocBuilder<TypeOrganisationMenuCubit, List<TypeOrganisation>>(
-                      builder: (context, typeMenus) {
-                        return LayoutBuilder(builder: (context, constraints) {
-                          return DropdownSearch<TypeOrganisation>(
-                            items: typeMenus,
-                            itemAsString: (TypeOrganisation typeOrganisation) => typeOrganisation.name,
-                            validator: (value) {
-                              if(value == null) {
-                                return "Veuillez choisir le type d'organisation";
-                              }
-                              return null;
-                            },
-                            onChanged: (value) {
-                              typeOrganisation = value;
-                            },
-                            dropdownDecoratorProps: const DropDownDecoratorProps(
-                                dropdownSearchDecoration: InputDecoration(
-                                    isDense: true,
-                                    filled: true,
-                                    labelText: 'Type organisation*'
-                                )
-                            ),
-                            popupProps: PopupProps.menu(
-                              containerBuilder: (context, widget) {
-                                return SizedBox(
-                                  height: 100,
-                                  child: widget,);
-                              },
-                                emptyBuilder: (context, text) {
-                                  return const Center(
-                                    child: SizedBox(
-                                      height: 50.0,
-                                      child: Text('Aucun type trouvé'),
-                                    ),
-                                  );
-                                }
-                            ),
-                          );
-                        });
-                      }
-                  ),
+                const Flexible(child: Padding(
+                  padding: EdgeInsets.all(12.0),
+                  child: TypeOrganisationField(),
                 ),),
               ],
             ),
 
             Row(
               children: [
-                Flexible(child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: BlocBuilder<CountryMenuCubit, List<Country>>(
-                        builder: (context, countriesMenu) {
-                          return LayoutBuilder(builder: (context, constraint) {
-                            return DropdownSearch<Country>(
-                              items: countriesMenu,
-                              itemAsString: (Country country) => country.name,
-                              validator: (value) {
-                                if(value == null) {
-                                  return "Veuillez choisir le pays";
-                                }
-                                return null;
-                              },
-                              onChanged: (value) {
-                                country = value;
-                              },
-                              dropdownDecoratorProps: const DropDownDecoratorProps(
-                                dropdownSearchDecoration: InputDecoration(
-                                  isDense: true,
-                                  filled: true,
-                                  labelText: 'Pays*'
-                                )
-                              ),
-                              popupProps: PopupProps.menu(
-                                  emptyBuilder: (context, text) {
-                                    return const Center(
-                                      child: SizedBox(
-                                        height: 50.0,
-                                        child: Text('Aucun pays trouvé'),
-                                      ),
-                                    );
-                                  }
-                              ),
-                            );
-                          });
-                        }
-                    )
+                const Flexible(child: Padding(
+                    padding: EdgeInsets.all(12.0),
+                    child: CountryField()
                 )),
                 Flexible(child: Padding(
                   padding: const EdgeInsets.all(12.0),
-                  child: TextFormField(
-                      controller: addressController,
-                      keyboardType: TextInputType.streetAddress,
-                    validator: ValidationBuilder(localeName: 'fr', optional: true).regExp(
-                        RegExp(r'^[a-zA-Z0-9/,°.-]+$'),
-                        'Veuillez entrer un numéro valide [a-z A-Z 0-9 ,°-./]'
-                    ).build(),
-                      decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-                          filled: true,
-                          isDense: true,
-                          labelText: "Adresse physique"),
-                  ),
+                  child: AddressField(controller: addressController,),
                 ))
               ],
             ),
@@ -186,33 +85,11 @@ class _SignUpFormState extends State<SignUpForm> {
               children: [
                 Flexible(child: Padding(
                   padding: const EdgeInsets.all(12.0),
-                  child: TextFormField(
-                      controller: emailController,
-                      keyboardType: TextInputType.emailAddress,
-                      validator: ValidationBuilder(localeName: 'fr', optional: true).email(
-                        'Veuillez entrer une adresse valide'
-                      ).build(),
-                      decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-                          filled: true,
-                          isDense: true,
-                          labelText: "Adresse email")
-                  ),
+                  child: EmailField(controller: emailController,),
                 ),),
                 Flexible(child: Padding(
                   padding: const EdgeInsets.all(12.0),
-                  child: TextFormField(
-                      controller: phoneController,
-                      keyboardType: TextInputType.phone,
-                      validator: ValidationBuilder(localeName: 'fr', optional: true).regExp(
-                        RegExp(r'^(\d+)$'), 'Veuillez entrer un numéro valide').phone(
-                          'Veuillez entrer un numéro valide').build(),
-                      decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-                          filled: true,
-                          isDense: true,
-                          labelText: "Téléphone")
-                  ),
+                  child: PhoneField(controller: phoneController,),
                 ))
               ],
             ),
@@ -229,35 +106,11 @@ class _SignUpFormState extends State<SignUpForm> {
               children: [
                 Flexible(child: Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: TextFormField(
-                    controller: registerController,
-                    validator: ValidationBuilder(localeName: 'fr', optional: true).regExp(
-                        RegExp(r'^[a-zA-Z0-9/.]+$'),
-                        'Veuillez entrer un numéro valide [a-z A-Z 0-9 . /]'
-                    ).build(),
-                    decoration: const InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-                        filled: true,
-                        isDense: true,
-                        labelText: "Numéro d'enregistrement",
-                        hintText: 'Registre de commerce, personnalité juridique'
-                    ),
-                  ),
+                  child: RegisterField(controller: registerController,),
                 ),),
                 Flexible(child: Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: TextFormField(
-                      controller: idNatController,
-                      validator: ValidationBuilder(localeName: 'fr', optional: true).regExp(
-                          RegExp(r'^[a-zA-Z0-9/.]+$'),
-                          'Veuillez entrer un numéro valide [a-z A-Z 0-9 . /]'
-                      ).build(),
-                      decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-                          filled: true,
-                          isDense: true,
-                          labelText: "Identification Nationale")
-                  ),
+                  child: IdNatField(controller: idNatController,),
                 ),)
               ],
             ),
@@ -266,33 +119,11 @@ class _SignUpFormState extends State<SignUpForm> {
               children: [
                 Flexible(child: Padding(
                   padding: const EdgeInsets.all(12.0),
-                  child: TextFormField(
-                      controller: taxController,
-                      validator: ValidationBuilder(localeName: 'fr', optional: true).regExp(
-                          RegExp(r'^[a-zA-Z0-9/.]+$'),
-                          'Veuillez entrer un numéro valide [a-z A-Z 0-9 . /]'
-                      ).build(),
-                      decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-                          filled: true,
-                          isDense: true,
-                          labelText: "Numéro Impôt")
-                  ),
+                  child: TaxField(controller: taxController,),
                 ),),
                 Flexible(child: Padding(
                   padding: const EdgeInsets.all(12.0),
-                  child: TextFormField(
-                      controller: socialServiceController,
-                      validator: ValidationBuilder(localeName: 'fr', optional: true).regExp(
-                          RegExp(r'^[a-zA-Z0-9/.]+$'),
-                          'Veuillez entrer un numéro valide [a-z A-Z 0-9 . /]'
-                      ).build(),
-                      decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-                          filled: true,
-                          isDense: true,
-                          labelText: "Numéro Sécurité sociale")
-                  ),
+                  child: SocialSecurityField(controller: socialSecurityController,),
                 ),)
               ],
             ),
@@ -302,18 +133,7 @@ class _SignUpFormState extends State<SignUpForm> {
                 Flexible(
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
-                    child: TextFormField(
-                        controller: employerController,
-                        validator: ValidationBuilder(localeName: 'fr', optional: true).regExp(
-                            RegExp(r'^[a-zA-Z0-9/.]+$'),
-                            'Veuillez entrer un numéro valide [a-z A-Z 0-9 . /]'
-                        ).build(),
-                        decoration: const InputDecoration(
-                            contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-                            filled: true,
-                            isDense: true,
-                            labelText: "Numéro employeur")
-                    ),
+                    child: EmployerField(controller: employerController,),
                   ),
                 ),
                 Flexible(child: Container())
@@ -323,33 +143,10 @@ class _SignUpFormState extends State<SignUpForm> {
             Row(children: [
               Padding(
                 padding: const EdgeInsets.all(12.0),
-                child: FilledButton(
-                    onPressed: (){
-                      if (_formKey.currentState!.validate()) {
-                        _formKey.currentState?.save();
-                        Organisation organisation = Organisation(
-                            name: nameController.text,
-                            address: addressController.text != '' ? addressController.text : null,
-                            country: country as Country,
-                            email: emailController.text != '' ? emailController.text : null,
-                            telephone: phoneController.text != '' ? phoneController.text : null,
-                            typeOrganisation: typeOrganisation as TypeOrganisation,
-                            register: registerController.text != '' ? registerController.text : null,
-                            idNat: idNatController.text != '' ? idNatController.text : null,
-                            numeroImpot: taxController.text != '' ? taxController.text : null,
-                            numeroSocial: socialServiceController.text != '' ? socialServiceController.text : null,
-                            numeroEmployeur: employerController.text != '' ? employerController.text : null
-                        );
-                        context.read<OrganisationCubit>().create(organisation);
-                      }
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.resolveWith(
-                              (states) => Colors.blue),
-
-                    ),
-                    child: const Text('Enregistrer')
-                ),
+                child: SubmitButton(formKey: _formKey, name: nameController, address: addressController,
+                  email: employerController, phone: phoneController, register: registerController,
+                  idNat: idNatController, socialSecurity: socialSecurityController, tax: taxController,
+                  employer: employerController,),
               )
             ],)
           ],

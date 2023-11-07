@@ -50,6 +50,7 @@ class _SignUpPageState extends State<SignUpPage> {
         child: MultiBlocProvider(
             providers: [
               BlocProvider(create: (context) => CountryApiStatusCubit()),
+              BlocProvider(create: (context) => SelectedCountryCubit()),
               BlocProvider(
                   create: (context) => CountryMenuCubit(
                       countryRepository: context.read<CountryRepository>(),
@@ -58,6 +59,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   )..getAll()
               ),
               BlocProvider(create: (context) => TypeOrganisationApiStatusCubit()),
+              BlocProvider(create: (context) => SelectedTypeOrganisationCubit()),
               BlocProvider(
                   create: (context) => TypeOrganisationMenuCubit(
                       typeOrganisationRepository: context.read<TypeOrganisationRepository>(),
@@ -96,7 +98,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               borderRadius: BorderRadius.circular(10.0),
                             ),
                           ),
-                          SliverToBoxAdapter(
+                          const SliverToBoxAdapter(
                             child: SignUpForm(),
                           )
                         ],
