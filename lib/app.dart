@@ -42,6 +42,12 @@ final _route = GoRouter(
           ),
           ]
       ),
+      GoRoute(path: '/organisation/create-user-admin',
+        name: 'createAdmin',
+        pageBuilder: (context, route) {
+          return const NoTransitionPage(child: CreateUserAdminPage());
+        }
+      )
     ]
 );
 

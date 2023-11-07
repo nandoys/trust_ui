@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:native_context_menu/native_context_menu.dart';
 
 import 'package:trust_app/home//ui/view/view.dart';
 import 'package:trust_app/home/logic/cubit/cubit.dart';
@@ -13,10 +12,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-
-  List<MenuItem> organisationMenu = [
-    MenuItem(title: 'Nouvelle', action: 'create')
-  ];
 
   @override
   Widget build(BuildContext context) {
