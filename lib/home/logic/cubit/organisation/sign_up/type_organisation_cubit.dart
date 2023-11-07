@@ -7,7 +7,7 @@ import 'package:trust_app/home/logic/cubit/server/server_cubit.dart';
 import 'package:trust_app/home/logic/cubit/organisation/api_status/api_status_cubit.dart';
 import 'package:trust_app/utils.dart';
 
-class TypeOrganisationMenuCubit extends Cubit<List<DropdownMenuEntry<dynamic>>> {
+class TypeOrganisationMenuCubit extends Cubit<List<TypeOrganisation>> {
   TypeOrganisationMenuCubit({required this.typeOrganisationRepository, required this.connectivityStatus,
   required this.apiStatus}) : super([]);
 
@@ -20,16 +20,7 @@ class TypeOrganisationMenuCubit extends Cubit<List<DropdownMenuEntry<dynamic>>> 
     if (connectivityStatus.state == ConnectivityStatus.connected) {
       try {
         final typeOrganisation = await typeOrganisationRepository.getTypeOrganisation();
-
-        if (typeOrganisation != null && typeOrganisation.isNotEmpty) {
-          List<DropdownMenuEntry<dynamic>> menus = typeOrganisation.map((type) {
-            return DropdownMenuEntry(value: type.id, label: type.name);
-          }).toList();
-
-          emit(menus);
-          apiStatus.changeStatus(ApiStatus.succeeded);
-        }
-
+          emit(typeOrganisation);
       }
       on http.ClientException {
         connectivityStatus.changeStatus(ConnectivityStatus.disconnected);

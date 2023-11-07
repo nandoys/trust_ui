@@ -39,6 +39,12 @@ class _SignUpPageState extends State<SignUpPage> {
                   context) => CountryRepository(
                   protocol: activeServer.state.protocol, host: activeServer.state.host, port: activeServer.state.port
               )
+          ),
+          RepositoryProvider(
+              create: (
+                  context) => OrganisationRepository(
+                  protocol: activeServer.state.protocol, host: activeServer.state.host, port: activeServer.state.port
+              )
           )
         ],
         child: MultiBlocProvider(
@@ -58,6 +64,14 @@ class _SignUpPageState extends State<SignUpPage> {
                       connectivityStatus: context.read<ConnectivityStatusCubit>(),
                       apiStatus: context.read<TypeOrganisationApiStatusCubit>()
                   )..getAll()
+              ),
+              BlocProvider(create: (context) => OrganisationApiStatusCubit()),
+              BlocProvider(
+                  create: (context) => OrganisationCubit(
+                      organisationRepository: context.read<OrganisationRepository>(),
+                      connectivityStatus: context.read<ConnectivityStatusCubit>(),
+                      apiStatus: context.read<OrganisationApiStatusCubit>()
+                  )
               ),
             ],
             child: Scaffold(

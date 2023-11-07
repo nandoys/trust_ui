@@ -10,7 +10,7 @@ class CountryRepository {
   final String? host;
   final String? port;
 
-  Future<List<Country>?> getCountries() async {
+  Future<List<Country>> getCountries() async {
     if (protocol != null && host != null && port != null) {
       final Uri url;
       if (protocol == 'Http') {
@@ -30,7 +30,7 @@ class CountryRepository {
       }
     }
 
-    return null;
+    return [];
   }
 
 }

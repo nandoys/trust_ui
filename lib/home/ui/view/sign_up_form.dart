@@ -1,21 +1,40 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:form_validator/form_validator.dart';
+import 'package:organisation_api/organisation_api.dart';
 import 'package:trust_app/home/logic/cubit/cubit.dart';
 
-class SignUpForm extends StatelessWidget {
-  SignUpForm({super.key});
+class SignUpForm extends StatefulWidget {
+  const SignUpForm({super.key});
 
+  @override
+  State<SignUpForm> createState() => _SignUpFormState();
+}
+
+class _SignUpFormState extends State<SignUpForm> {
   final _formKey = GlobalKey<FormState>();
+
   final nameController = TextEditingController();
-  final typeOrganisationController = TextEditingController();
-  final countryController = TextEditingController();
+
+  TypeOrganisation? typeOrganisation;
+
+  Country? country;
+
   final addressController = TextEditingController();
+
   final emailController = TextEditingController();
+
   final phoneController = TextEditingController();
+
   final registerController = TextEditingController();
+
   final idNatController = TextEditingController();
+
   final taxController = TextEditingController();
+
   final socialServiceController = TextEditingController();
+
   final employerController = TextEditingController();
 
   @override
@@ -50,6 +69,7 @@ class SignUpForm extends StatelessWidget {
                         return null;
                       },
                       decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
                           filled: true,
                           isDense: true,
                           labelText: "Nom de l'organisation*")
@@ -57,21 +77,43 @@ class SignUpForm extends StatelessWidget {
                 ),),
                 Flexible(child: Padding(
                   padding: const EdgeInsets.all(12.0),
-                  child: BlocBuilder<TypeOrganisationMenuCubit, List<DropdownMenuEntry<dynamic>>>(
+                  child: BlocBuilder<TypeOrganisationMenuCubit, List<TypeOrganisation>>(
                       builder: (context, typeMenus) {
                         return LayoutBuilder(builder: (context, constraints) {
-                          return DropdownMenu(
-                            dropdownMenuEntries: typeMenus,
-                            controller: typeOrganisationController,
-                            enableSearch: true,
-                            enableFilter: true,
-                            width: constraints.maxWidth,
-                            inputDecorationTheme: const InputDecorationTheme(
-                              isDense: true,
-                              filled: true,
+                          return DropdownSearch<TypeOrganisation>(
+                            items: typeMenus,
+                            itemAsString: (TypeOrganisation typeOrganisation) => typeOrganisation.name,
+                            validator: (value) {
+                              if(value == null) {
+                                return "Veuillez choisir le type d'organisation";
+                              }
+                              return null;
+                            },
+                            onChanged: (value) {
+                              typeOrganisation = value;
+                            },
+                            dropdownDecoratorProps: const DropDownDecoratorProps(
+                                dropdownSearchDecoration: InputDecoration(
+                                    isDense: true,
+                                    filled: true,
+                                    labelText: 'Type organisation*'
+                                )
                             ),
-                            label: const Text("Type d'organisation*"),
-                            hintText: 'Déterminera le plan comptable',
+                            popupProps: PopupProps.menu(
+                              containerBuilder: (context, widget) {
+                                return SizedBox(
+                                  height: 100,
+                                  child: widget,);
+                              },
+                                emptyBuilder: (context, text) {
+                                  return const Center(
+                                    child: SizedBox(
+                                      height: 50.0,
+                                      child: Text('Aucun type trouvé'),
+                                    ),
+                                  );
+                                }
+                            ),
                           );
                         });
                       }
@@ -84,21 +126,38 @@ class SignUpForm extends StatelessWidget {
               children: [
                 Flexible(child: Padding(
                     padding: const EdgeInsets.all(12.0),
-                    child: BlocBuilder<CountryMenuCubit, List<DropdownMenuEntry<dynamic>>>(
-                        builder: (context, countryMenu) {
+                    child: BlocBuilder<CountryMenuCubit, List<Country>>(
+                        builder: (context, countriesMenu) {
                           return LayoutBuilder(builder: (context, constraint) {
-                            return DropdownMenu(
-                              dropdownMenuEntries: countryMenu,
-                              controller: countryController,
-                              enableFilter: true,
-                              enableSearch: true,
-                              width: constraint.maxWidth,
-                              inputDecorationTheme: const InputDecorationTheme(
-                                isDense: true,
-                                filled: true,
+                            return DropdownSearch<Country>(
+                              items: countriesMenu,
+                              itemAsString: (Country country) => country.name,
+                              validator: (value) {
+                                if(value == null) {
+                                  return "Veuillez choisir le pays";
+                                }
+                                return null;
+                              },
+                              onChanged: (value) {
+                                country = value;
+                              },
+                              dropdownDecoratorProps: const DropDownDecoratorProps(
+                                dropdownSearchDecoration: InputDecoration(
+                                  isDense: true,
+                                  filled: true,
+                                  labelText: 'Pays*'
+                                )
                               ),
-                              label: const Text("Pays*"),
-                              hintText: 'Déterminera la fiscalité, monnaie locale...',
+                              popupProps: PopupProps.menu(
+                                  emptyBuilder: (context, text) {
+                                    return const Center(
+                                      child: SizedBox(
+                                        height: 50.0,
+                                        child: Text('Aucun pays trouvé'),
+                                      ),
+                                    );
+                                  }
+                              ),
                             );
                           });
                         }
@@ -109,10 +168,15 @@ class SignUpForm extends StatelessWidget {
                   child: TextFormField(
                       controller: addressController,
                       keyboardType: TextInputType.streetAddress,
+                    validator: ValidationBuilder(localeName: 'fr', optional: true).regExp(
+                        RegExp(r'^[a-zA-Z0-9/,°.-]+$'),
+                        'Veuillez entrer un numéro valide [a-z A-Z 0-9 ,°-./]'
+                    ).build(),
                       decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
                           filled: true,
                           isDense: true,
-                          labelText: "Adresse physique")
+                          labelText: "Adresse physique"),
                   ),
                 ))
               ],
@@ -125,7 +189,11 @@ class SignUpForm extends StatelessWidget {
                   child: TextFormField(
                       controller: emailController,
                       keyboardType: TextInputType.emailAddress,
+                      validator: ValidationBuilder(localeName: 'fr', optional: true).email(
+                        'Veuillez entrer une adresse valide'
+                      ).build(),
                       decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
                           filled: true,
                           isDense: true,
                           labelText: "Adresse email")
@@ -136,7 +204,11 @@ class SignUpForm extends StatelessWidget {
                   child: TextFormField(
                       controller: phoneController,
                       keyboardType: TextInputType.phone,
+                      validator: ValidationBuilder(localeName: 'fr', optional: true).regExp(
+                        RegExp(r'^(\d+)$'), 'Veuillez entrer un numéro valide').phone(
+                          'Veuillez entrer un numéro valide').build(),
                       decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
                           filled: true,
                           isDense: true,
                           labelText: "Téléphone")
@@ -159,7 +231,12 @@ class SignUpForm extends StatelessWidget {
                   padding: const EdgeInsets.all(10.0),
                   child: TextFormField(
                     controller: registerController,
+                    validator: ValidationBuilder(localeName: 'fr', optional: true).regExp(
+                        RegExp(r'^[a-zA-Z0-9/.]+$'),
+                        'Veuillez entrer un numéro valide [a-z A-Z 0-9 . /]'
+                    ).build(),
                     decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
                         filled: true,
                         isDense: true,
                         labelText: "Numéro d'enregistrement",
@@ -171,7 +248,12 @@ class SignUpForm extends StatelessWidget {
                   padding: const EdgeInsets.all(10.0),
                   child: TextFormField(
                       controller: idNatController,
+                      validator: ValidationBuilder(localeName: 'fr', optional: true).regExp(
+                          RegExp(r'^[a-zA-Z0-9/.]+$'),
+                          'Veuillez entrer un numéro valide [a-z A-Z 0-9 . /]'
+                      ).build(),
                       decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
                           filled: true,
                           isDense: true,
                           labelText: "Identification Nationale")
@@ -186,7 +268,12 @@ class SignUpForm extends StatelessWidget {
                   padding: const EdgeInsets.all(12.0),
                   child: TextFormField(
                       controller: taxController,
+                      validator: ValidationBuilder(localeName: 'fr', optional: true).regExp(
+                          RegExp(r'^[a-zA-Z0-9/.]+$'),
+                          'Veuillez entrer un numéro valide [a-z A-Z 0-9 . /]'
+                      ).build(),
                       decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
                           filled: true,
                           isDense: true,
                           labelText: "Numéro Impôt")
@@ -196,7 +283,12 @@ class SignUpForm extends StatelessWidget {
                   padding: const EdgeInsets.all(12.0),
                   child: TextFormField(
                       controller: socialServiceController,
+                      validator: ValidationBuilder(localeName: 'fr', optional: true).regExp(
+                          RegExp(r'^[a-zA-Z0-9/.]+$'),
+                          'Veuillez entrer un numéro valide [a-z A-Z 0-9 . /]'
+                      ).build(),
                       decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
                           filled: true,
                           isDense: true,
                           labelText: "Numéro Sécurité sociale")
@@ -212,7 +304,12 @@ class SignUpForm extends StatelessWidget {
                     padding: const EdgeInsets.all(12.0),
                     child: TextFormField(
                         controller: employerController,
+                        validator: ValidationBuilder(localeName: 'fr', optional: true).regExp(
+                            RegExp(r'^[a-zA-Z0-9/.]+$'),
+                            'Veuillez entrer un numéro valide [a-z A-Z 0-9 . /]'
+                        ).build(),
                         decoration: const InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
                             filled: true,
                             isDense: true,
                             labelText: "Numéro employeur")
@@ -230,6 +327,20 @@ class SignUpForm extends StatelessWidget {
                     onPressed: (){
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState?.save();
+                        Organisation organisation = Organisation(
+                            name: nameController.text,
+                            address: addressController.text != '' ? addressController.text : null,
+                            country: country as Country,
+                            email: emailController.text != '' ? emailController.text : null,
+                            telephone: phoneController.text != '' ? phoneController.text : null,
+                            typeOrganisation: typeOrganisation as TypeOrganisation,
+                            register: registerController.text != '' ? registerController.text : null,
+                            idNat: idNatController.text != '' ? idNatController.text : null,
+                            numeroImpot: taxController.text != '' ? taxController.text : null,
+                            numeroSocial: socialServiceController.text != '' ? socialServiceController.text : null,
+                            numeroEmployeur: employerController.text != '' ? employerController.text : null
+                        );
+                        context.read<OrganisationCubit>().create(organisation);
                       }
                     },
                     style: ButtonStyle(

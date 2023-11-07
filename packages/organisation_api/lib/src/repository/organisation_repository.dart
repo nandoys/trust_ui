@@ -33,5 +33,32 @@ class OrganisationRepository {
    return null;
   }
 
+  Future<Organisation?> add(Organisation organisation) async {
+    if (protocol != null && host != null && port != null) {
+      final Uri url;
+      if (protocol == 'Http') {
+        url = Uri.http('$host:$port', '/api/organisation/');
+      }
+      else {
+        url = Uri.https('$host:$port', '/api/organisation/');
+      }
+
+      http.Response response = await http.post(url,
+          body: jsonEncode(organisation.toJson()), headers: {
+          "Content-Type": "application/json; charset=utf-8",
+        },
+      );
+
+      if (response.statusCode == 201) {
+        final dynamic json = jsonDecode(utf8.decode(response.bodyBytes));
+        return Organisation.fromJson(json);
+      } else {
+        throw Exception("Quelque chose s'est mal passé");
+      }
+    }
+
+    return null;
+  }
+
 }
 

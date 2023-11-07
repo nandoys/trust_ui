@@ -9,7 +9,7 @@ class TypeOrganisationRepository {
   final String? host;
   final String? port;
 
-  Future<List<TypeOrganisation>?> getTypeOrganisation() async {
+  Future<List<TypeOrganisation>> getTypeOrganisation() async {
     if (protocol != null && host != null && port != null) {
       final Uri url;
       if (protocol == 'Http') {
@@ -29,6 +29,6 @@ class TypeOrganisationRepository {
       }
     }
 
-    return null;
+    return [];
   }
 }

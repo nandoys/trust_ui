@@ -6,8 +6,8 @@ part 'activity.dart';
 part 'country.dart';
 
 class Organisation extends Equatable {
-  const Organisation({required this.name, required this.country, required this.typeOrganisation, this.id, this.address,
-    this.activities, this.email, this.telephone, this.logo, this.registre, this.idNat, this.numeroImpot,
+  Organisation({required this.name, required this.country, required this.typeOrganisation, this.id, this.address,
+    this.activities, this.email, this.telephone, this.logo, this.register, this.idNat, this.numeroImpot,
     this.numeroSocial, this.numeroEmployeur });
 
   factory Organisation.fromJson(Map<String, dynamic> json) {
@@ -17,7 +17,7 @@ class Organisation extends Equatable {
 
     return Organisation(
       id: json['id'], name: json['nom'], address: json['adresse'], email: json['email'], telephone: json['telephone'],
-      logo: json['logo'], registre: json['registre'], idNat: json['id_nat'], numeroImpot: json['numero_impot'],
+      logo: json['logo'], register: json['registre'], idNat: json['id_nat'], numeroImpot: json['numero_impot'],
       numeroSocial: json['numero_social'], numeroEmployeur: json['numero_employeur'], activities: activities,
       country: country, typeOrganisation: typeOrganisation,
     );
@@ -25,19 +25,29 @@ class Organisation extends Equatable {
 
 
   final String? id;
-  final String name;
-  final String? address;
-  final Country country;
-  final List<Activity>? activities;
-  final String? email;
-  final String? telephone;
-  final String? logo;
-  final TypeOrganisation typeOrganisation;
-  final String? registre;
-  final String? idNat;
-  final String? numeroImpot;
-  final String? numeroSocial;
-  final String? numeroEmployeur;
+  late final String name;
+  late final String? address;
+  late final Country country;
+  late final List<Activity>? activities;
+  late final String? email;
+  late final String? telephone;
+  late final String? logo;
+  late final TypeOrganisation typeOrganisation;
+  late final String? register;
+  late final String? idNat;
+  late final String? numeroImpot;
+  late final String? numeroSocial;
+  late final String? numeroEmployeur;
+
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic>  data = {
+      'nom': name, 'adresse': address, 'country_id': country.id, 'activites': activities, 'email': email,
+      'telephone': telephone, 'type_organisation_id': typeOrganisation.id, 'register': register, 'id_nat': idNat,
+      'numero_impot': numeroImpot, 'numero_social': numeroSocial, 'numero_employeur': numeroEmployeur};
+
+    return data;
+
+  }
 
   @override
   List<Object?> get props => [id];
