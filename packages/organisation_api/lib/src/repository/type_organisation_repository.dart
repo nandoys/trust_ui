@@ -7,7 +7,7 @@ class TypeOrganisationRepository {
   TypeOrganisationRepository({required this.protocol, required this.host, required this.port});
   final String? protocol;
   final String? host;
-  final String? port;
+  final int? port;
 
   Future<List<TypeOrganisation>> getTypeOrganisation() async {
     if (protocol != null && host != null && port != null) {

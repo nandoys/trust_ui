@@ -8,7 +8,7 @@ class CountryRepository {
 
   final String? protocol;
   final String? host;
-  final String? port;
+  final int? port;
 
   Future<List<Country>> getCountries() async {
     if (protocol != null && host != null && port != null) {

@@ -23,7 +23,7 @@ final _route = GoRouter(
                 name: 'server',
                 pageBuilder: (context, route) {
                   String? host = route.uri.queryParameters['host'];
-                  String? port = route.uri.queryParameters['port'];
+                  int? port = route.uri.queryParameters['port'] as int?;
                   String? protocol = route.uri.queryParameters['protocol'];
 
                   return NoTransitionPage(child: ServerPage(host: host, port: port, protocol: protocol,));
@@ -31,10 +31,10 @@ final _route = GoRouter(
           ),
             GoRoute(
                 path: 'organisation/sign-up',
-                name: 'organisation.signUp',
+                name: 'signUp',
                 pageBuilder: (context, route) {
                   String? host = route.uri.queryParameters['host'];
-                  String? port = route.uri.queryParameters['port'];
+                  int? port = int.tryParse(route.uri.queryParameters['port']!);
                   String? protocol = route.uri.queryParameters['protocol'];
 
                   return NoTransitionPage(child: SignUpPage(protocol: protocol, host: host, port: port,));

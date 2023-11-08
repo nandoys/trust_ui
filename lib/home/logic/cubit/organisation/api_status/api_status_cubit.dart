@@ -27,3 +27,12 @@ class CountryApiStatusCubit extends Cubit<ApiStatus> {
   }
 
 }
+
+class UserRoleApiStatusCubit extends Cubit<ApiStatus> {
+  UserRoleApiStatusCubit() : super(ApiStatus.requesting);
+
+  void changeStatus(ApiStatus status) {
+    emit(status);
+  }
+
+}

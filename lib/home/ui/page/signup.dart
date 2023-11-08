@@ -9,7 +9,7 @@ class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key, this.host, this.port, this.protocol});
 
   final String? host;
-  final String? port;
+  final int? port;
   final String? protocol;
 
   @override

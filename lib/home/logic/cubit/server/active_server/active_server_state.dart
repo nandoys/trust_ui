@@ -5,7 +5,7 @@ abstract class ActiveServerState {
   const ActiveServerState({this.protocol, this.host, this.port, this.fullAddress});
   final String? protocol;
   final String? host;
-  final String? port;
+  final int? port;
   final String? fullAddress;
 }
 

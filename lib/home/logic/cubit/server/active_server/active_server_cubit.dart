@@ -22,7 +22,7 @@ class ActiveServerCubit extends Cubit<ActiveServerState> {
       final url = formatServers(activeServer).split(':');
       final protocol = url[0];
       final host = url[1];
-      final port = url[2];
+      final port = int.parse(url[2]);
 
       emit(ActiveServerSelected(protocol: protocol, host: host, port: port, fullAddress: activeServer));
       serverRepository.status(activeServer).listen((status) {

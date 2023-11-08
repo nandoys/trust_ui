@@ -1,4 +1,4 @@
-name: authentication_repository
+name: authentication_api
 description: Dart package which manages the authentication domain.
 publish_to: none
 
@@ -8,3 +8,7 @@ environment:
 dependencies:
   http: ^1.1.0
   shared_preferences: ^2.2.2
+  organisation_api:
+    path: ../organisation_api
+  user_api:
+    path: ../user_api

@@ -49,10 +49,10 @@ dependencies:
   intl: any
   rxdart: ^0.27.7
 
-  authentication_repository:
-    path: packages/authentication_repository
-  user_repository:
-    path: packages/user_repository
+  authentication_api:
+    path: packages/authentication_api
+  user_api:
+    path: packages/user_api
   organisation_api:
     path: packages/organisation_api
   meta: ^1.9.1

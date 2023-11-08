@@ -12,7 +12,7 @@ class ServerForm extends StatelessWidget {
   final _hostController = TextEditingController();
   final _portController = TextEditingController();
   final String? defaultHost;
-  final String? defaultPort;
+  final int? defaultPort;
   final String? protocol;
 
   @override

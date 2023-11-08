@@ -8,19 +8,18 @@ class OrganisationRepository {
 
   final String? protocol;
   final String? host;
-  final String? port;
+  final int? port;
   
   Future<List<Organisation>?> getOrganisations() async {
    if (protocol != null && host != null && port != null) {
-     final Uri url;
-     if (protocol == 'Http') {
-       url = Uri.http('$host:$port', '/api/organisation');
-     }
-     else {
-       url = Uri.https('$host:$port', '/api/organisation');
-     }
+     final uri = Uri(
+         scheme: protocol?.toLowerCase(),
+         host: host,
+         port: port,
+         path: '/api/organisation'
+     );
 
-     http.Response response = await http.get(url);
+     http.Response response = await http.get(uri);
 
      if (response.statusCode == 200) {
        final dynamic json = jsonDecode(utf8.decode(response.bodyBytes));
@@ -35,15 +34,15 @@ class OrganisationRepository {
 
   Future<Organisation?> add(Organisation organisation) async {
     if (protocol != null && host != null && port != null) {
-      final Uri url;
-      if (protocol == 'Http') {
-        url = Uri.http('$host:$port', '/api/organisation/');
-      }
-      else {
-        url = Uri.https('$host:$port', '/api/organisation/');
-      }
 
-      http.Response response = await http.post(url,
+      final uri = Uri(
+          scheme: protocol?.toLowerCase(),
+          host: host,
+          port: port,
+          path: '/api/organisation/'
+      );
+
+      http.Response response = await http.post(uri,
           body: jsonEncode(organisation.toJson()), headers: {
           "Content-Type": "application/json; charset=utf-8",
         },
@@ -58,6 +57,32 @@ class OrganisationRepository {
     }
 
     return null;
+  }
+
+  Future<bool> isSetupCompleted(Organisation organisation) async {
+    if (protocol != null && host != null && port != null) {
+
+      final uri = Uri(
+          scheme: protocol?.toLowerCase(),
+          host: host,
+          port: port,
+          path: '/api/organisation/utilisateur/existe',
+          queryParameters: {'org_id': organisation.id, 'field': 'superuser'}
+      );
+
+      http.Response response = await http.get(uri);
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> json = jsonDecode(utf8.decode(response.bodyBytes));
+        return json['superuser'] ?? false;
+      }
+      else {
+        print(response.statusCode);
+        throw Exception("Quelque chose s'est mal passé");
+      }
+    }
+
+    return false;
   }
 
 }

@@ -7,7 +7,7 @@ import 'package:trust_app/home/logic/cubit/cubit.dart';
 class ServerPage extends StatefulWidget {
   const ServerPage({super.key, this.host, this.port, required this.protocol});
   final String? host;
-  final String? port;
+  final int? port;
   final String? protocol;
 
   @override

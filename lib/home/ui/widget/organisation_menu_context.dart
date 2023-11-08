@@ -14,8 +14,11 @@ class OrganisationContextMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return BlocProvider(
-      create: (context) => OrganisationApiStatusCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => OrganisationApiStatusCubit()),
+        BlocProvider(create: (context) => UserRoleApiStatusCubit()),
+      ],
       child: RepositoryProvider(
         create: (context) => OrganisationRepository(
             protocol: context.read<ActiveServerCubit>().state.protocol,
@@ -30,25 +33,51 @@ class OrganisationContextMenu extends StatelessWidget {
           )..get(),
           child: BlocProvider(
             create: (context) => ActiveOrganisationCubit(
-                organisationMenu: context.read<OrganisationContextMenuCubit>()
+                organisationMenu: context.read<OrganisationContextMenuCubit>(),
+                organisationRepository: context.read<OrganisationRepository>(),
+                connectivityStatus: context.read<ConnectivityStatusCubit>(),
+                apiStatus: context.read<UserRoleApiStatusCubit>()
             ),
             child: BlocBuilder<OrganisationContextMenuCubit, List<MenuItem>>(
                 builder: (context, menus) {
                   String? protocol;
                   String? host;
-                  String? port;
+                  int? port;
 
-                  return BlocListener<OrganisationApiStatusCubit, ApiStatus>(
-                    listener: (context, apiStatus) {
-                      if (apiStatus == ApiStatus.failed) {
-                        SnackBar notif = FloatingSnackBar(
-                            color: Colors.red,
-                            messageDuration: const Duration(seconds: 8),
-                            message: "Impossible de récupérer la liste des organisations, veuillez informer le concepteur"
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(notif);
-                      }
-                    },
+                  return MultiBlocListener(
+                    listeners: [
+                      BlocListener<OrganisationApiStatusCubit, ApiStatus>(
+                        listener: (context, apiStatus) {
+                          if (apiStatus == ApiStatus.failed) {
+                            SnackBar notif = FloatingSnackBar(
+                                color: Colors.red,
+                                messageDuration: const Duration(seconds: 8),
+                                message: "Impossible de récupérer la liste des organisations, veuillez informer le concepteur"
+                            );
+                            ScaffoldMessenger.of(context).showSnackBar(notif);
+                          }
+                          },
+                      ),
+                      BlocListener<UserRoleApiStatusCubit, ApiStatus>(
+                        listener: (context, apiStatus) {
+                          if (apiStatus == ApiStatus.failed) {
+                            SnackBar notif = FloatingSnackBar(
+                                color: Colors.red,
+                                messageDuration: const Duration(seconds: 8),
+                                message: "Impossible de communiquer avec l'api, pour vérifier cette organisation"
+                            );
+                            ScaffoldMessenger.of(context).showSnackBar(notif);
+                          }
+                        },
+                      ),
+                      BlocListener<ActiveOrganisationCubit, Organisation?>(
+                          listener: (context, organisation) {
+                            if (organisation == null) {
+                              context.goNamed('createAdmin');
+                            }
+                          }
+                      )
+                    ],
                     child: ContextMenuRegion(
                       onDismissed: () => {},
                       onItemSelected: (item) => {
@@ -56,9 +85,9 @@ class OrganisationContextMenu extends StatelessWidget {
                           protocol = context.read<ActiveServerCubit>().state.protocol,
                           host = context.read<ActiveServerCubit>().state.host,
                           port = context.read<ActiveServerCubit>().state.port,
-                          context.goNamed('organisation.signUp', queryParameters: {
-                            'protocol': protocol, 'host':host, 'port': port
-                          }, extra: context.read<OrganisationRepository>())
+                          context.goNamed('signUp', queryParameters: {
+                            'protocol': protocol, 'host':host, 'port': port.toString()
+                          })
                         } else if (item.action is Organisation) {
                           context.read<ActiveOrganisationCubit>().active(item.action as Organisation)
                         }
