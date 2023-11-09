@@ -15,7 +15,32 @@ class UserRepository {
    return null;
   }
 
-  Future<bool> isSetupCompleted(Organisation organisation) async {
+  Future<User?> add(User user) async {
+    if (protocol != null && host != null && port != null) {
+      final uri = Uri(
+          scheme: protocol?.toLowerCase(),
+          host: host,
+          port: port,
+          path: 'api/get-started/organisation/utilisateur'
+      );
+
+      http.Response response = await http.post(uri,
+        body: jsonEncode(user.toJson()), headers: {
+          "Content-Type": "application/json; charset=utf-8",
+        },
+      );
+
+      if (response.statusCode == 201) {
+        final dynamic json = jsonDecode(utf8.decode(response.bodyBytes));
+        return User.fromJson(json);
+      } else {
+        throw Exception("Quelque chose s'est mal passé");
+      }
+    }
+    return null;
+  }
+
+  Future<bool> checkField(Organisation organisation, String field, String value) async {
     if (protocol != null && host != null && port != null) {
 
       final uri = Uri(
@@ -23,14 +48,14 @@ class UserRepository {
           host: host,
           port: port,
           path: '/api/organisation/utilisateur/existe',
-          queryParameters: {'org_id': organisation.id, 'field': 'superuser'}
+          queryParameters: {'org_id': organisation.id, 'field': field, 'value': value}
       );
 
       http.Response response = await http.get(uri);
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> json = jsonDecode(utf8.decode(response.bodyBytes));
-        return json['superuser'] ?? false;
+        return json[field] ?? false;
       }
       else {
         print(response.statusCode);

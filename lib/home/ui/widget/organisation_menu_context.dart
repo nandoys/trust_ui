@@ -25,19 +25,28 @@ class OrganisationContextMenu extends StatelessWidget {
             host: context.read<ActiveServerCubit>().state.host,
             port: context.read<ActiveServerCubit>().state.port
         ),
-        child: BlocProvider(
-          create: (context) => OrganisationContextMenuCubit(
-              organisationRepository: context.read<OrganisationRepository>(),
-              connectivityStatus: context.read<ConnectivityStatusCubit>(),
-              apiStatus: context.read<OrganisationApiStatusCubit>()
-          )..get(),
-          child: BlocProvider(
-            create: (context) => ActiveOrganisationCubit(
-                organisationMenu: context.read<OrganisationContextMenuCubit>(),
-                organisationRepository: context.read<OrganisationRepository>(),
-                connectivityStatus: context.read<ConnectivityStatusCubit>(),
-                apiStatus: context.read<UserRoleApiStatusCubit>()
-            ),
+        child: MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (context) => OrganisationContextMenuCubit(
+                    organisationRepository: context.read<OrganisationRepository>(),
+                    connectivityStatus: context.read<ConnectivityStatusCubit>(),
+                    apiStatus: context.read<OrganisationApiStatusCubit>()
+                )..get()
+              ),
+              BlocProvider(
+                create: (context) => SetupOrganisationCubit()
+              ),
+              BlocProvider(
+                create: (context) => ActiveOrganisationCubit(
+                    organisationMenu: context.read<OrganisationContextMenuCubit>(),
+                    organisationRepository: context.read<OrganisationRepository>(),
+                    connectivityStatus: context.read<ConnectivityStatusCubit>(),
+                    apiStatus: context.read<UserRoleApiStatusCubit>(),
+                    setup: context.read<SetupOrganisationCubit>()
+                )
+              )
+            ],
             child: BlocBuilder<OrganisationContextMenuCubit, List<MenuItem>>(
                 builder: (context, menus) {
                   String? protocol;
@@ -56,7 +65,7 @@ class OrganisationContextMenu extends StatelessWidget {
                             );
                             ScaffoldMessenger.of(context).showSnackBar(notif);
                           }
-                          },
+                        },
                       ),
                       BlocListener<UserRoleApiStatusCubit, ApiStatus>(
                         listener: (context, apiStatus) {
@@ -70,12 +79,11 @@ class OrganisationContextMenu extends StatelessWidget {
                           }
                         },
                       ),
-                      BlocListener<ActiveOrganisationCubit, Organisation?>(
-                          listener: (context, organisation) {
-                            if (organisation == null) {
-                              context.goNamed('createAdmin');
-                            }
-                          }
+                      BlocListener<SetupOrganisationCubit, Organisation?>(
+                        listener: (context, organisation) {
+                          context.goNamed('createAdmin', extra: organisation);
+                        },
+                        listenWhen: (previous, current) => current != null,
                       )
                     ],
                     child: ContextMenuRegion(
@@ -126,9 +134,7 @@ class OrganisationContextMenu extends StatelessWidget {
                     ),
                   );
                 }
-            ),
-          ),
-        ),
+            )),
       ),
     );
   }

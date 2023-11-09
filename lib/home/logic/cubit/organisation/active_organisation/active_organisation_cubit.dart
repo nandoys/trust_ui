@@ -7,23 +7,25 @@ import 'package:trust_app/utils.dart';
 
 class ActiveOrganisationCubit extends Cubit<Organisation?> {
   ActiveOrganisationCubit({required this.organisationMenu, required this.organisationRepository,
-  required this.connectivityStatus, required this.apiStatus}) : super(null);
+  required this.connectivityStatus, required this.apiStatus, required this.setup}) : super(null);
 
   final OrganisationContextMenuCubit organisationMenu;
   final OrganisationRepository organisationRepository;
   final ConnectivityStatusCubit connectivityStatus;
   final UserRoleApiStatusCubit apiStatus;
+  final SetupOrganisationCubit setup;
 
   void active(Organisation organisation) async {
 
     if (connectivityStatus.state == ConnectivityStatus.connected) {
       try {
         final bool setupStatus = await organisationRepository.isSetupCompleted(organisation);
-
         if (setupStatus) {
           emit(organisation);
+          setup.emit(null);
         } else {
           emit(null);
+          setup.emit(organisation);
         }
       }
       on http.ClientException {

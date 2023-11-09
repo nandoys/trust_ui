@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:native_context_menu/native_context_menu.dart';
+import 'package:organisation_api/organisation_api.dart';
 
 import 'package:trust_app/home//ui/page/page.dart';
 import 'package:trust_app/home/data/repository/server_repository.dart';
@@ -45,7 +46,8 @@ final _route = GoRouter(
       GoRoute(path: '/organisation/create-user-admin',
         name: 'createAdmin',
         pageBuilder: (context, route) {
-          return const NoTransitionPage(child: CreateUserAdminPage());
+          final Organisation organisation = route.extra as Organisation;
+          return NoTransitionPage(child: CreateUserAdminPage(organisation: organisation,));
         }
       )
     ]

@@ -1,26 +1,61 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:organisation_api/organisation_api.dart';
+
+import 'package:trust_app/home/logic/cubit/cubit.dart';
 import 'package:trust_app/home//ui/view/view.dart';
+import 'package:user_api/user_api.dart';
 
 class CreateUserAdminPage extends StatelessWidget {
-  const CreateUserAdminPage({super.key});
+  const CreateUserAdminPage({super.key, required this.organisation});
+
+  final Organisation organisation;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white60.withOpacity(0.4),
-      body: Center(
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width * 0.25,
-          height: MediaQuery.of(context).size.height * 0.65,
-          child: Container(
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12.0)
-            ),
-            child: CreateUserAdminForm(),
-          ),
-        ),
-      ),
+    ActiveServerCubit activeServer = context.read<ActiveServerCubit>();
+
+    return MultiRepositoryProvider(
+        providers: [
+          RepositoryProvider(create: (context) => UserRepository(
+              protocol: activeServer.state.protocol,
+              host: activeServer.state.host,
+              port: activeServer.state.port)
+          )
+        ],
+        child: MultiBlocProvider(
+            providers: [
+              BlocProvider(create: (context) => UserFieldApiStatusCubit()),
+              BlocProvider(create: (context) => CheckUsernameCubit(
+                  userRepository: context.read<UserRepository>(),
+                  connectivityStatus: context.read<ConnectivityStatusCubit>(),
+                  apiStatus: context.read<UserFieldApiStatusCubit>()
+              )),
+              BlocProvider(create: (context) => EmailFieldApiStatusCubit()),
+              BlocProvider(create: (context) => CheckEmailCubit(
+                  userRepository: context.read<UserRepository>(),
+                  connectivityStatus: context.read<ConnectivityStatusCubit>(),
+                  apiStatus: context.read<UserFieldApiStatusCubit>()
+              )),
+              BlocProvider(create: (context) => PasswordHideCubit()),
+            ],
+            child: Scaffold(
+              backgroundColor: Colors.white60.withOpacity(0.4),
+              body: Center(
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.25,
+                  height: MediaQuery.of(context).size.height * 0.65,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12.0)
+                    ),
+                    child: CreateUserAdminForm(organisation: organisation,),
+                  ),
+                ),
+              ),
+            )
+        )
     );
   }
 }

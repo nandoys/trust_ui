@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:authentication_api/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:user_api/user_repository.dart';
+import 'package:user_api/user_api.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';

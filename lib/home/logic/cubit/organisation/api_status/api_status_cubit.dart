@@ -36,3 +36,30 @@ class UserRoleApiStatusCubit extends Cubit<ApiStatus> {
   }
 
 }
+
+class UserFieldApiStatusCubit extends Cubit<ApiStatus> {
+  UserFieldApiStatusCubit() : super(ApiStatus.requesting);
+
+  void changeStatus(ApiStatus status) {
+    emit(status);
+  }
+
+}
+
+class EmailFieldApiStatusCubit extends Cubit<ApiStatus> {
+  EmailFieldApiStatusCubit() : super(ApiStatus.requesting);
+
+  void changeStatus(ApiStatus status) {
+    emit(status);
+  }
+
+}
+
+class CreateAdminUserApiStatusCubit extends Cubit<ApiStatus> {
+  CreateAdminUserApiStatusCubit() : super(ApiStatus.requesting);
+
+  void changeStatus(ApiStatus status) {
+    emit(status);
+  }
+
+}

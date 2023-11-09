@@ -36,9 +36,9 @@ class _SignUpFormState extends State<SignUpForm> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<OrganisationCubit, Organisation?>(
+    return BlocListener<SetupOrganisationCubit, Organisation?>(
       listener: (context, organisation) {
-        context.goNamed('createAdmin');
+        context.goNamed('createAdmin', extra: organisation);
       },
       listenWhen: (previous, current) => current != null,
       child: Form(
