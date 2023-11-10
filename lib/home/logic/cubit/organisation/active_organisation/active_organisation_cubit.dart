@@ -19,6 +19,7 @@ class ActiveOrganisationCubit extends Cubit<Organisation?> {
 
     if (connectivityStatus.state == ConnectivityStatus.connected) {
       try {
+        apiStatus.changeStatus(ApiStatus.requesting);
         final bool setupStatus = await organisationRepository.isSetupCompleted(organisation);
         if (setupStatus) {
           emit(organisation);
@@ -36,4 +37,55 @@ class ActiveOrganisationCubit extends Cubit<Organisation?> {
       }
     }
   }
+
+  void setCurrent(Organisation? organisation) async {
+    if (connectivityStatus.state == ConnectivityStatus.connected) {
+      await organisationRepository.keepInMemory(organisation);
+    }
+  }
+
+  void getCurrent() async {
+    if (connectivityStatus.state == ConnectivityStatus.connected) {
+      String? organisationId = await organisationRepository.getOrganisationInMemory();
+
+      Organisation? current;
+
+      for (var menu in organisationMenu.state) {
+
+        if(menu.action is Organisation) {
+          final Organisation organisation = menu.action as Organisation;
+
+          if (organisationId == organisation.id) {
+            try {
+              final bool setupStatus = await organisationRepository.isSetupCompleted(organisation);
+              if (setupStatus) {
+                current = organisation;
+              }
+            }
+            on http.ClientException {
+              connectivityStatus.changeStatus(ConnectivityStatus.disconnected);
+            }
+            catch (e) {
+              apiStatus.changeStatus(ApiStatus.failed);
+            }
+
+            break;
+          }
+        }
+      }
+
+      emit(current);
+    }
+  }
+
+  void removeCurrent() async {
+    if (connectivityStatus.state == ConnectivityStatus.connected) {
+      bool isRemoved = await organisationRepository.removeOrganisationInMemory();
+
+      if (isRemoved) {
+        emit(null);
+      }
+    }
+  }
+
 }

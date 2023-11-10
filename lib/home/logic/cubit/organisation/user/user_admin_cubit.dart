@@ -7,8 +7,7 @@ import 'package:trust_app/home/logic/cubit/cubit.dart';
 import 'package:trust_app/utils.dart';
 
 class UserAdminCubit extends Cubit<User?> {
-  UserAdminCubit({required this.userRepository, required this.connectivityStatus, required this.apiStatus})
-      : super(null);
+  UserAdminCubit({required this.userRepository, required this.connectivityStatus, required this.apiStatus}) : super(null);
 
   final UserRepository userRepository;
   final ConnectivityStatusCubit connectivityStatus;
@@ -16,6 +15,7 @@ class UserAdminCubit extends Cubit<User?> {
 
   void create(User user) async {
     try {
+      apiStatus.changeStatus(ApiStatus.requesting);
       User? response = await userRepository.add(user);
 
       if (response != null) {

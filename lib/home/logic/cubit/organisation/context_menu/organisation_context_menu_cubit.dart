@@ -41,8 +41,4 @@ class OrganisationContextMenuCubit extends Cubit<List<MenuItem>> {
     }
   }
 
-  void add(Organisation organisation) {
-
-  }
-
 }

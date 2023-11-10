@@ -22,32 +22,39 @@ class SubmitButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FilledButton(
-        onPressed: (){
-          if (formKey.currentState!.validate()) {
-            formKey.currentState?.save();
-            Organisation organisation = Organisation(
-                name: name.text,
-                address: address.text != '' ? address.text : null,
-                country: context.read<SelectedCountryCubit>().state as Country,
-                email: email.text != '' ? email.text : null,
-                telephone: phone.text != '' ? phone.text : null,
-                typeOrganisation: context.read<SelectedTypeOrganisationCubit>().state as TypeOrganisation,
-                register: register.text != '' ? register.text : null,
-                idNat: idNat.text != '' ? idNat.text : null,
-                numeroImpot: tax.text != '' ? tax.text : null,
-                numeroSocial: socialSecurity.text != '' ? socialSecurity.text : null,
-                numeroEmployeur: employer.text != '' ? employer.text : null
-            );
-            context.read<OrganisationCubit>().create(organisation);
-          }
-        },
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.resolveWith(
-                  (states) => Colors.blue),
+    return BlocBuilder<SignupLoadingCubit, bool>(builder: (context, loading) {
+      return FilledButton(
+          onPressed: !loading ? (){
+            if (formKey.currentState!.validate()) {
+              formKey.currentState?.save();
+              Organisation organisation = Organisation(
+                  name: name.text,
+                  address: address.text != '' ? address.text : null,
+                  country: context.read<SelectedCountryCubit>().state as Country,
+                  email: email.text != '' ? email.text : null,
+                  telephone: phone.text != '' ? phone.text : null,
+                  typeOrganisation: context.read<SelectedTypeOrganisationCubit>().state as TypeOrganisation,
+                  register: register.text != '' ? register.text : null,
+                  idNat: idNat.text != '' ? idNat.text : null,
+                  numeroImpot: tax.text != '' ? tax.text : null,
+                  numeroSocial: socialSecurity.text != '' ? socialSecurity.text : null,
+                  numeroEmployeur: employer.text != '' ? employer.text : null
+              );
+              context.read<OrganisationCubit>().create(organisation);
+              context.read<SignupLoadingCubit>().change(true);
+            }
+          } : null,
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.resolveWith(
+                    (states) => Colors.blue),
 
-        ),
-        child: const Text('Enregistrer')
-    );
+          ),
+          child: !loading ? const Text('Enregistrer') : const SizedBox(
+              width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white,)
+          )
+      );
+    });
   }
+
+
 }

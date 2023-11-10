@@ -68,13 +68,15 @@ class _SignUpPageState extends State<SignUpPage> {
                   )..getAll()
               ),
               BlocProvider(create: (context) => OrganisationApiStatusCubit()),
+              BlocProvider(create: (context) => SignupLoadingCubit()),
               BlocProvider(
                   create: (context) => OrganisationCubit(
                       organisationRepository: context.read<OrganisationRepository>(),
                       connectivityStatus: context.read<ConnectivityStatusCubit>(),
-                      apiStatus: context.read<OrganisationApiStatusCubit>()
+                      apiStatus: context.read<OrganisationApiStatusCubit>(),
                   )
               ),
+              BlocProvider(create: (context) => SetupOrganisationCubit()),
             ],
             child: Scaffold(
                 backgroundColor: Colors.white60.withOpacity(0.4),

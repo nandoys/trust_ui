@@ -47,11 +47,20 @@ class OrganisationContextMenu extends StatelessWidget {
                 )
               )
             ],
-            child: BlocBuilder<OrganisationContextMenuCubit, List<MenuItem>>(
+            child: BlocConsumer<OrganisationContextMenuCubit, List<MenuItem>>(
+                listener: (context, menus) {
+                  if(menus.length > 1) {
+                    context.read<ActiveOrganisationCubit>().getCurrent();
+                  }
+                  else if (menus.length == 1) {
+                    context.read<ActiveOrganisationCubit>().removeCurrent();
+                  }
+                },
                 builder: (context, menus) {
                   String? protocol;
                   String? host;
                   int? port;
+                  ActiveOrganisationCubit activeOrganisation = context.read<ActiveOrganisationCubit>();
 
                   return MultiBlocListener(
                     listeners: [
@@ -73,15 +82,24 @@ class OrganisationContextMenu extends StatelessWidget {
                             SnackBar notif = FloatingSnackBar(
                                 color: Colors.red,
                                 messageDuration: const Duration(seconds: 8),
-                                message: "Impossible de communiquer avec l'api, pour vérifier cette organisation"
+                                message: "Impossible de communiquer avec l'api, pour vérifier votre organisation"
                             );
                             ScaffoldMessenger.of(context).showSnackBar(notif);
                           }
                         },
                       ),
+                      BlocListener<ActiveOrganisationCubit, Organisation?>(
+                        listener: (context, organisation) {
+                          context.read<ActiveOrganisationCubit>().setCurrent(organisation);
+                        },
+                        listenWhen: (previous, current) => current != null,
+                      ),
                       BlocListener<SetupOrganisationCubit, Organisation?>(
                         listener: (context, organisation) {
-                          context.goNamed('createAdmin', extra: organisation);
+                          context.goNamed('createAdmin', extra: {
+                            'organisation': organisation,
+                            'activeOrganisationCubit': context.read<ActiveOrganisationCubit>()
+                          });
                         },
                         listenWhen: (previous, current) => current != null,
                       )
@@ -95,42 +113,45 @@ class OrganisationContextMenu extends StatelessWidget {
                           port = context.read<ActiveServerCubit>().state.port,
                           context.goNamed('signUp', queryParameters: {
                             'protocol': protocol, 'host':host, 'port': port.toString()
-                          })
+                          }, extra: context.read<ActiveOrganisationCubit>())
                         } else if (item.action is Organisation) {
-                          context.read<ActiveOrganisationCubit>().active(item.action as Organisation)
+                          activeOrganisation.active(item.action as Organisation)
                         }
                       },
                       menuItems: menus,
-                      child: TextButton.icon(
-                          onPressed: () {},
-                          icon: SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: Container(
-                                  color: Colors.purple.shade300,
-                                  child: const Center(
-                                    child: Text(
-                                        'F',
-                                        style: TextStyle(
-                                          fontWeight:
-                                          FontWeight.w500,
-                                        )
-                                    ),
-                                  )
-                              )
-                          ),
-                          label: const Text(
-                            'organisation',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14.0),
-                          ),
-                          style: ButtonStyle(
-                              iconSize: MaterialStateProperty.resolveWith((states) => 15.0),
-                              iconColor: MaterialStateProperty.resolveWith((states) => Colors.blue),
-                              overlayColor: MaterialStateProperty.resolveWith((states) => Colors.grey.shade900)
-                          )
-                      ),
+                      child: BlocBuilder<ActiveOrganisationCubit, Organisation?>(builder: (context, organisation) {
+                        return TextButton.icon(
+                            onPressed: () {},
+                            icon: SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: Container(
+                                    color: Colors.blue.shade900,
+                                    child: Center(
+                                      child: Text(
+                                          activeOrganisation.state?.name.substring(0, 1) ?? 'A',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.white,
+                                          )
+                                      ),
+                                    )
+                                )
+                            ),
+                            label: Text(
+                              activeOrganisation.state?.name ?? 'Aucune organisation',
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14.0
+                              ),
+                            ),
+                            style: ButtonStyle(
+                                iconSize: MaterialStateProperty.resolveWith((states) => 15.0),
+                                iconColor: MaterialStateProperty.resolveWith((states) => Colors.white),
+                                overlayColor: MaterialStateProperty.resolveWith((states) => Colors.grey.shade900)
+                            )
+                        );
+                      }),
                     ),
                   );
                 }

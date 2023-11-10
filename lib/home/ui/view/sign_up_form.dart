@@ -5,6 +5,7 @@ import 'package:organisation_api/organisation_api.dart';
 import 'package:trust_app/home/logic/cubit/cubit.dart';
 
 import 'package:trust_app/home/ui/widget/widget.dart';
+import 'package:trust_app/utils.dart';
 
 class SignUpForm extends StatefulWidget {
   const SignUpForm({super.key});
@@ -36,123 +37,143 @@ class _SignUpFormState extends State<SignUpForm> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SetupOrganisationCubit, Organisation?>(
-      listener: (context, organisation) {
-        context.goNamed('createAdmin', extra: organisation);
-      },
-      listenWhen: (previous, current) => current != null,
-      child: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Row(
+    return MultiBlocListener(
+        listeners: [
+          BlocListener<OrganisationCubit, Organisation?>(
+            listener: (context, organisation) {
+              context.read<SignupLoadingCubit>().change(false);
+              context.goNamed('createAdmin', extra: {
+                'organisation': organisation,
+                'activeOrganisationCubit': context.read<ActiveOrganisationCubit>()
+              });
+            },
+            listenWhen: (previous, current) => current != null,
+          ),
+          BlocListener<OrganisationApiStatusCubit, ApiStatus>(
+            listener: (context, organisation) {
+              SnackBar notif = FloatingSnackBar(
+                  color: Colors.red,
+                  message: "Impossible de créer l'organisation."
+              );
+
+              ScaffoldMessenger.of(context).showSnackBar(notif);
+              context.read<SignupLoadingCubit>().change(false);
+            },
+            listenWhen: (previous, current) => current == ApiStatus.failed,
+          ),
+        ],
+        child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: EdgeInsets.all(12.0),
-                  child: Text('Information générale', textAlign: TextAlign.start,
-                      style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w500)),
+                const Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(12.0),
+                      child: Text('Information générale', textAlign: TextAlign.start,
+                          style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w500)),
+                    ),
+                  ],
                 ),
-              ],
-            ),
 
-            Row(
-              children: [
-                Flexible(child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: NameField(controller: nameController,),
-                ),),
-                const Flexible(child: Padding(
-                  padding: EdgeInsets.all(12.0),
-                  child: TypeOrganisationField(),
-                ),),
-              ],
-            ),
+                Row(
+                  children: [
+                    Flexible(child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: NameField(controller: nameController,),
+                    ),),
+                    const Flexible(child: Padding(
+                      padding: EdgeInsets.all(12.0),
+                      child: TypeOrganisationField(),
+                    ),),
+                  ],
+                ),
 
-            Row(
-              children: [
-                const Flexible(child: Padding(
-                    padding: EdgeInsets.all(12.0),
-                    child: CountryField()
-                )),
-                Flexible(child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: AddressField(controller: addressController,),
-                ))
-              ],
-            ),
+                Row(
+                  children: [
+                    const Flexible(child: Padding(
+                        padding: EdgeInsets.all(12.0),
+                        child: CountryField()
+                    )),
+                    Flexible(child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: AddressField(controller: addressController,),
+                    ))
+                  ],
+                ),
 
-            Row(
-              children: [
-                Flexible(child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: EmailField(controller: emailController,),
-                ),),
-                Flexible(child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: PhoneField(controller: phoneController,),
-                ))
-              ],
-            ),
+                Row(
+                  children: [
+                    Flexible(child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: EmailField(controller: emailController,),
+                    ),),
+                    Flexible(child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: PhoneField(controller: phoneController,),
+                    ))
+                  ],
+                ),
 
-            const Row(children: [
-              Flexible(child: Padding(
-                padding: EdgeInsets.only(left: 10.0, top: 10.0, bottom: 6.0),
-                child: Text('Information légale', textAlign: TextAlign.start,
-                  style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w500),),
-              ))
-            ],),
+                const Row(children: [
+                  Flexible(child: Padding(
+                    padding: EdgeInsets.only(left: 10.0, top: 10.0, bottom: 6.0),
+                    child: Text('Information légale', textAlign: TextAlign.start,
+                      style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w500),),
+                  ))
+                ],),
 
-            Row(
-              children: [
-                Flexible(child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: RegisterField(controller: registerController,),
-                ),),
-                Flexible(child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: IdNatField(controller: idNatController,),
-                ),)
-              ],
-            ),
+                Row(
+                  children: [
+                    Flexible(child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: RegisterField(controller: registerController,),
+                    ),),
+                    Flexible(child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: IdNatField(controller: idNatController,),
+                    ),)
+                  ],
+                ),
 
-            Row(
-              children: [
-                Flexible(child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: TaxField(controller: taxController,),
-                ),),
-                Flexible(child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: SocialSecurityField(controller: socialSecurityController,),
-                ),)
-              ],
-            ),
+                Row(
+                  children: [
+                    Flexible(child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: TaxField(controller: taxController,),
+                    ),),
+                    Flexible(child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: SocialSecurityField(controller: socialSecurityController,),
+                    ),)
+                  ],
+                ),
 
-            Row(
-              children: [
-                Flexible(
-                  child: Padding(
+                Row(
+                  children: [
+                    Flexible(
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: EmployerField(controller: employerController,),
+                      ),
+                    ),
+                    Flexible(child: Container())
+                  ],
+                ),
+
+                Row(children: [
+                  Padding(
                     padding: const EdgeInsets.all(12.0),
-                    child: EmployerField(controller: employerController,),
-                  ),
-                ),
-                Flexible(child: Container())
+                    child: SubmitButton(formKey: _formKey, name: nameController, address: addressController,
+                      email: employerController, phone: phoneController, register: registerController,
+                      idNat: idNatController, socialSecurity: socialSecurityController, tax: taxController,
+                      employer: employerController,),
+                  )
+                ],)
               ],
-            ),
-
-            Row(children: [
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: SubmitButton(formKey: _formKey, name: nameController, address: addressController,
-                  email: employerController, phone: phoneController, register: registerController,
-                  idNat: idNatController, socialSecurity: socialSecurityController, tax: taxController,
-                  employer: employerController,),
-              )
-            ],)
-          ],
+            )
         )
-    ),
     );
   }
 }

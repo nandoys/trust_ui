@@ -8,6 +8,7 @@ import 'package:organisation_api/organisation_api.dart';
 import 'package:trust_app/home//ui/page/page.dart';
 import 'package:trust_app/home/data/repository/server_repository.dart';
 import 'package:trust_app/home/logic/cubit/cubit.dart';
+import 'package:user_api/user_api.dart';
 
 final _route = GoRouter(
     initialLocation: '/',
@@ -38,17 +39,39 @@ final _route = GoRouter(
                   int? port = int.tryParse(route.uri.queryParameters['port']!);
                   String? protocol = route.uri.queryParameters['protocol'];
 
-                  return NoTransitionPage(child: SignUpPage(protocol: protocol, host: host, port: port,));
+                  ActiveOrganisationCubit activeOrganisationCubit = route.extra as ActiveOrganisationCubit;
+
+                  return NoTransitionPage(
+                      child: BlocProvider.value(
+                        value: activeOrganisationCubit,
+                        child: SignUpPage(protocol: protocol, host: host, port: port,),
+                      )
+                  );
                 }
           ),
           ]
       ),
-      GoRoute(path: '/organisation/create-user-admin',
+      GoRoute(path: '/organisation/create-admin-user',
         name: 'createAdmin',
         pageBuilder: (context, route) {
-          final Organisation organisation = route.extra as Organisation;
-          return NoTransitionPage(child: CreateUserAdminPage(organisation: organisation,));
+          Map<String, dynamic> extra = route.extra as Map<String, dynamic>;
+          final Organisation organisation = extra['organisation'] as Organisation;
+          final ActiveOrganisationCubit activeOrganisation = extra['activeOrganisationCubit'] as ActiveOrganisationCubit;
+
+          return NoTransitionPage(
+              child: BlocProvider.value(
+                  value: activeOrganisation,
+                  child: CreateUserAdminPage(organisation: organisation,)
+              )
+          );
         }
+      ),
+      GoRoute(path: '/start',
+          name: 'start',
+          pageBuilder: (context, route) {
+            final User user = route.extra as User;
+            return NoTransitionPage(child: HomePage(user: user,));
+          }
       )
     ]
 );

@@ -9,12 +9,17 @@ class LoginForm extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          const Text('Connexion'),
+          const Text('Connexion',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15.0)
+          ),
           Padding(
             padding: const EdgeInsets.all(12.0),
             child: TextFormField(
               autofocus: true,
               decoration: const InputDecoration(
+                  contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
                   filled: true,
                   isDense: true,
                   labelText: 'Utilisateur'),
@@ -24,6 +29,7 @@ class LoginForm extends StatelessWidget {
             padding: const EdgeInsets.all(12.0),
             child: TextFormField(
               decoration: InputDecoration(
+                contentPadding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
                 filled: true,
                 isDense: true,
                 labelText: 'Mot de passe',

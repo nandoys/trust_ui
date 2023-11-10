@@ -61,6 +61,7 @@ class ServerForm extends StatelessWidget {
                               autofocus: true,
                               controller: _hostController,
                               decoration: const InputDecoration(
+                                  contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
                                   filled: true,
                                   isDense: true,
                                   labelText: 'Adresse IP ou nom de domaine*'),
@@ -118,6 +119,7 @@ class ServerForm extends StatelessWidget {
                                 _portController.text = value as String;
                               },
                               decoration: const InputDecoration(
+                                  contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
                                   filled: true,
                                   isDense: true,
                                   labelText: 'Port*'),

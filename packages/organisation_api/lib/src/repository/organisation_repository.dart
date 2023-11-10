@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:organisation_api/organisation_api.dart';
 
@@ -77,12 +78,34 @@ class OrganisationRepository {
         return json['superuser'] ?? false;
       }
       else {
-        print(response.statusCode);
         throw Exception("Quelque chose s'est mal passé");
       }
     }
 
     return false;
+  }
+
+  Future<bool> keepInMemory(Organisation? organisation) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    if (organisation != null) {
+      prefs.setString('organisation', organisation.id as String);
+      return true;
+    }
+
+    return false;
+  }
+
+  Future<String?> getOrganisationInMemory() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    return  prefs.getString('organisation');
+  }
+
+  Future<bool> removeOrganisationInMemory() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    return  prefs.remove('organisation');
   }
 
 }
