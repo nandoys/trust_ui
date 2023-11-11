@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:native_context_menu/native_context_menu.dart';
 
 import 'package:server_api/server_api.dart';
-import 'package:trust_app/utils.dart';
+import 'package:utils/utils.dart';
 
 class ServerMenuContext extends StatelessWidget {
   const ServerMenuContext({super.key});

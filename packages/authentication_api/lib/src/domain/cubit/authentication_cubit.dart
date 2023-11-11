@@ -19,13 +19,16 @@ class AuthenticationCubit extends Cubit<AuthenticationStatus> {
   final UserCubit userCubit;
 
   void login(String username, String password, Organisation? organisation) async {
+    apiStatus.changeStatus(ApiStatus.requesting);
 
     if (connectivityStatus.state == ConnectivityStatus.connected) {
       try {
-        apiStatus.changeStatus(ApiStatus.requesting);
         User? user = await authenticationRepository.logIn(username: username, password: password);
 
+        apiStatus.changeStatus(ApiStatus.succeeded);
+
         if (user != null) {
+
           if (user.organisation == organisation) {
             emit(AuthenticationStatus.authenticated);
 
@@ -34,25 +37,29 @@ class AuthenticationCubit extends Cubit<AuthenticationStatus> {
             emit(AuthenticationStatus.unauthenticated);
             userCubit.loggedUser(null);
           }
-
-        } else {
-          emit(AuthenticationStatus.unauthenticated);
-          userCubit.loggedUser(null);
         }
       }
       on http.ClientException {
+        emit(AuthenticationStatus.anonymous);
         connectivityStatus.changeStatus(ConnectivityStatus.disconnected);
         userCubit.loggedUser(null);
+        apiStatus.changeStatus(ApiStatus.failed);
       }
       on UserNotFound {
         emit(AuthenticationStatus.unauthenticated);
         userCubit.loggedUser(null);
+        apiStatus.changeStatus(ApiStatus.succeeded);
       }
       catch (e) {
-        emit(AuthenticationStatus.unauthenticated);
+        emit(AuthenticationStatus.anonymous);
         userCubit.loggedUser(null);
         apiStatus.changeStatus(ApiStatus.failed);
       }
+    }
+    else {
+      apiStatus.changeStatus(ApiStatus.failed);
+      connectivityStatus.changeStatus(ConnectivityStatus.loading);
+      connectivityStatus.changeStatus(ConnectivityStatus.disconnected);
     }
   }
 }

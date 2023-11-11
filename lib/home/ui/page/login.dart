@@ -5,8 +5,10 @@ import 'package:go_router/go_router.dart';
 import 'package:organisation_api/organisation_api.dart';
 
 import 'package:server_api/server_api.dart';
-import 'package:trust_app/home//ui/view/view.dart';
+import 'package:trust_app/home/ui/view/view.dart';
+import 'package:trust_app/home/ui/widget/widget.dart';
 import 'package:user_api/user_api.dart';
+import 'package:utils/utils.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -90,20 +92,26 @@ class _LoginPageState extends State<LoginPage> {
             ],
             child: MultiBlocListener(
               listeners: [
-                BlocListener<UserCubit, User?>(
-                  listener: (context, user){
+                BlocListener<LoginApiStatusCubit, ApiStatus>(
+                  listener: (context, apiStatus){
                     context.read<SubmitLoginFormLoadingCubit>().change(false);
                     final authStatus = context.read<AuthenticationCubit>().state;
+                    final user = context.read<UserCubit>().state;
 
                     if(user != null && authStatus == AuthenticationStatus.authenticated) {
-                      //context.goNamed('start', extra: user);
-                      print(authStatus);
-                      print(user);
-                    } else {
-                      print(authStatus);
-                      print(user);
+                      context.goNamed('start', extra: user);
+                    }
+
+                    else if(user == null && authStatus == AuthenticationStatus.unauthenticated) {
+
+                      SnackBar notif = FloatingSnackBar(
+                          color: Colors.red,
+                          message: "Utilisateur et/ou Mot de passe incorrect!"
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(notif);
                     }
                   },
+                  listenWhen: (previous, current) => current != ApiStatus.requesting,
                 ),
               ],
               child: Scaffold(
