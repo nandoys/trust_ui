@@ -13,3 +13,5 @@ dependencies:
   shared_preferences: ^2.2.2
   organisation_api:
     path: ../organisation_api
+  server_api:
+    path: ../server_api

@@ -15,3 +15,5 @@ dependencies:
     path: ../organisation_api
   user_api:
     path: ../user_api
+  server_api:
+    path: ../server_api
