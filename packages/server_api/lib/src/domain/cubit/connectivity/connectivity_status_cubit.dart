@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 
-import 'package:trust_app/home/data/repository/server_repository.dart';
+import 'package:server_api/src/data/data.dart';
 
 part 'connectivity_status_state.dart';
 

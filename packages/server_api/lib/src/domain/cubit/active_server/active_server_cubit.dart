@@ -1,9 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
-import 'package:trust_app/home/data/repository/server_repository.dart';
-import 'package:trust_app/home/logic/cubit/cubit.dart';
-import 'package:trust_app/utils.dart';
+import 'package:server_api/src/data/repository/repository.dart';
+import 'package:server_api/src/domain/domain.dart';
+import 'package:server_api/src/utils.dart';
 
 part 'active_server_state.dart';
 

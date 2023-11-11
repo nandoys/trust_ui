@@ -1,10 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:native_context_menu/native_context_menu.dart';
 
-import 'package:trust_app/home/data/repository/server_repository.dart';
-import 'package:trust_app/home/logic/cubit/cubit.dart';
+import 'package:server_api/src/data/data.dart';
+import 'package:server_api/src/domain/domain.dart';
 
-import 'package:trust_app/utils.dart';
+import 'package:server_api/src/utils.dart';
 
 class ServerContextMenuCubit extends Cubit<List<MenuItem>> {
   ServerContextMenuCubit({required this.serverRepository, required this.activeServer, required this.initial})

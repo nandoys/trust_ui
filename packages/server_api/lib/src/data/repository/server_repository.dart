@@ -1,9 +1,9 @@
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:trust_app/home/logic/cubit/cubit.dart';
+import 'package:server_api/src/domain/domain.dart';
 
-import 'package:trust_app/utils.dart';
+import 'package:server_api/src/utils.dart';
 
 class ServerRepository {
   ServerRepository();

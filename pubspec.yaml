@@ -48,16 +48,17 @@ dependencies:
     sdk: flutter
   intl: any
   rxdart: ^0.27.7
-
+  meta: ^1.9.1
+  form_validator: ^2.1.1
+  dropdown_search: ^5.0.6
+  server_api:
+    path: packages/server_api
   authentication_api:
     path: packages/authentication_api
   user_api:
     path: packages/user_api
   organisation_api:
     path: packages/organisation_api
-  meta: ^1.9.1
-  form_validator: ^2.1.1
-  dropdown_search: ^5.0.6
 
 dev_dependencies:
   flutter_test:
