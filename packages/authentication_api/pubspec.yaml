@@ -8,6 +8,9 @@ environment:
 dependencies:
   http: ^1.1.0
   shared_preferences: ^2.2.2
+  equatable: ^2.0.5
+  bloc: ^8.1.2
+  rxdart: ^0.27.7
   organisation_api:
     path: ../organisation_api
   user_api:

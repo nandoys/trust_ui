@@ -12,7 +12,7 @@ class LoginForm extends StatelessWidget {
           const Text('Connexion',
               style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 15.0)
+                  fontSize: 20.0)
           ),
           Padding(
             padding: const EdgeInsets.all(12.0),
@@ -46,10 +46,13 @@ class LoginForm extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.all(12.0),
-            child: TextButton(
-              onPressed: () {
-                print('pressed');
-              },
+            child: FilledButton(
+              onPressed: () {  },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.resolveWith(
+                        (states) => Colors.blue),
+
+              ),
               child: const Text('Se connecter'),
             ),
           ),
