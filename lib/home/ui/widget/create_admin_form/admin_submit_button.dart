@@ -27,13 +27,12 @@ class AdminSubmitForm extends StatelessWidget {
                 password: passwordController.text,
                 organisation: organisation
             );
-            context.read<UserAdminCubit>().create(user);
+            context.read<UserCubit>().createAdminUser(user);
             context.read<SubmitCreateUserAdminFormLoadingCubit>().change(true);
           }
         } : null,
         style: ButtonStyle(
-          backgroundColor:
-          MaterialStateProperty.resolveWith((states) => Colors.blue),
+          backgroundColor: MaterialStateProperty.resolveWith((states) => Colors.blue),
         ),
         child: !loading ? const Text('Enregistrer') : const SizedBox(
           width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white,)

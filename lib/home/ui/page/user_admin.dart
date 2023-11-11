@@ -25,8 +25,7 @@ class CreateUserAdminPage extends StatelessWidget {
           RepositoryProvider(create: (context) => UserRepository(
               protocol: activeServer.state.protocol,
               host: activeServer.state.host,
-              port: activeServer.state.port)
-          )
+              port: activeServer.state.port))
         ],
         child: MultiBlocProvider(
             providers: [
@@ -45,7 +44,7 @@ class CreateUserAdminPage extends StatelessWidget {
               BlocProvider(create: (context) => PasswordHideCubit()),
               BlocProvider(create: (context) => CreateAdminUserApiStatusCubit()),
               BlocProvider(create: (context) => SubmitCreateUserAdminFormLoadingCubit()),
-              BlocProvider(create: (context) => UserAdminCubit(
+              BlocProvider(create: (context) => UserCubit(
                 userRepository: context.read<UserRepository>(),
                 connectivityStatus: context.read<ConnectivityStatusCubit>(),
                 apiStatus: context.read<CreateAdminUserApiStatusCubit>()
@@ -54,7 +53,7 @@ class CreateUserAdminPage extends StatelessWidget {
             ],
             child: MultiBlocListener(
                 listeners: [
-                  BlocListener<UserAdminCubit, User?>(
+                  BlocListener<UserCubit, User?>(
                     listener: (context, user){
                       context.read<SubmitCreateUserAdminFormLoadingCubit>().change(false);
                       if(user != null) {

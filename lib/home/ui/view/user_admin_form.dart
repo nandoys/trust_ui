@@ -7,10 +7,10 @@ class CreateUserAdminForm extends StatelessWidget {
   CreateUserAdminForm({super.key, required this.organisation});
 
   final Organisation organisation;
-  final userController = TextEditingController(text: 'grnandoy');
-  final emailController = TextEditingController(text: 'grnandoy@gmail.com');
-  final passwordController = TextEditingController(text: '@Bc12345');
-  final verifyPasswordController = TextEditingController(text: '@Bc12345');
+  final userController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final verifyPasswordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   @override

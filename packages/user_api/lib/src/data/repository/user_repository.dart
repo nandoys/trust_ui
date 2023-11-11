@@ -15,7 +15,7 @@ class UserRepository {
    return null;
   }
 
-  Future<User?> add(User user) async {
+  Future<User?> addAdmin(User user) async {
     if (protocol != null && host != null && port != null) {
       final uri = Uri(
           scheme: protocol?.toLowerCase(),

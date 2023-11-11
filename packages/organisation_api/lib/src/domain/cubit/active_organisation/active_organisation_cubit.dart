@@ -3,7 +3,6 @@ import 'package:http/http.dart' as http;
 
 import 'package:server_api/server_api.dart';
 import 'package:organisation_api/organisation_api.dart';
-import 'package:organisation_api/src/domain/domain.dart';
 import 'package:utils/utils.dart';
 
 class ActiveOrganisationCubit extends Cubit<Organisation?> {

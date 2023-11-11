@@ -54,12 +54,3 @@ class EmailFieldApiStatusCubit extends Cubit<ApiStatus> {
   }
 
 }
-
-class CreateAdminUserApiStatusCubit extends Cubit<ApiStatus> {
-  CreateAdminUserApiStatusCubit() : super(ApiStatus.requesting);
-
-  void changeStatus(ApiStatus status) {
-    emit(status);
-  }
-
-}

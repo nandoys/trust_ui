@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:organisation_api/organisation_api.dart';
+
+import 'package:trust_app/home/ui/widget/widget.dart';
 
 class LoginForm extends StatelessWidget {
-  const LoginForm({super.key});
+  LoginForm({super.key});
+
+  final _usernameController = TextEditingController(text: 'grnandoy');
+  final _passwordController = TextEditingController(text: '@Bc12345');
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return Form(
+      key: _formKey,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -16,44 +24,18 @@ class LoginForm extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.all(12.0),
-            child: TextFormField(
-              autofocus: true,
-              decoration: const InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-                  filled: true,
-                  isDense: true,
-                  labelText: 'Utilisateur'),
-            ),
+            child: LoginUsernameField(controller: _usernameController),
           ),
           Padding(
             padding: const EdgeInsets.all(12.0),
-            child: TextFormField(
-              decoration: InputDecoration(
-                contentPadding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-                filled: true,
-                isDense: true,
-                labelText: 'Mot de passe',
-                suffixIcon: GestureDetector(
-                    onTap: () {
-
-                    },
-                    child: const Icon(1 == 1
-                        ? Icons.visibility
-                        : Icons.visibility_off)),
-              ),
-              obscureText: true,
-            ),
+            child: LoginPasswordField(controller: _passwordController,),
           ),
           Padding(
             padding: const EdgeInsets.all(12.0),
-            child: FilledButton(
-              onPressed: () {  },
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.resolveWith(
-                        (states) => Colors.blue),
-
-              ),
-              child: const Text('Se connecter'),
+            child: LoginButton(
+              formKey: _formKey,
+              usernameController: _usernameController,
+              passwordController: _passwordController,
             ),
           ),
         ],

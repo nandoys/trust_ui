@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:user_api/user_api.dart';
 
-import 'exception.dart';
+import '../../exception.dart';
 
 enum AuthenticationStatus { anonymous, authenticated, unauthenticated }
 
@@ -32,11 +32,11 @@ class AuthenticationRepository {
           path: '/api/organisation/utilisateur/login'
       );
 
-      http.Response response = await http.post(uri,body: {
-        'username': username, 'password': password
-      }, headers: {
-        "Content-Type": "application/json; charset=utf-8",
-      });
+      http.Response response = await http.post(
+          uri,
+          body: jsonEncode({'username': username, 'password': password}),
+          headers: {"Content-Type": "application/json; charset=utf-8",}
+      );
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> json = jsonDecode(utf8.decode(response.bodyBytes));
