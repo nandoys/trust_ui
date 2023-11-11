@@ -2,8 +2,8 @@ import 'package:authentication_api/authentication_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:server_api/server_api.dart';
 import 'package:trust_app/home//ui/view/view.dart';
-import 'package:trust_app/home/logic/cubit/cubit.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

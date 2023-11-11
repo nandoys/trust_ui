@@ -17,3 +17,5 @@ dependencies:
     path: ../user_api
   server_api:
     path: ../server_api
+  utils:
+    path: ../utils

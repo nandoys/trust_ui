@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:native_context_menu/native_context_menu.dart';
 
+import 'package:server_api/server_api.dart';
 import 'package:trust_app/home/ui/widget/widget.dart';
-import 'package:trust_app/home/logic/cubit/cubit.dart';
 
 class StatusBar extends StatefulWidget {
   const StatusBar({super.key});

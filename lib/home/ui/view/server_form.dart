@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:native_context_menu/native_context_menu.dart';
+
+import 'package:server_api/server_api.dart';
 import 'package:trust_app/home//ui/widget/widget.dart';
 
-import 'package:trust_app/home/logic/cubit/cubit.dart';
 
 class ServerForm extends StatelessWidget {
   ServerForm({super.key, this.defaultHost, this.defaultPort, required this.protocol});

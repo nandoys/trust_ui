@@ -4,7 +4,7 @@ import 'package:native_context_menu/native_context_menu.dart';
 import 'package:server_api/src/data/data.dart';
 import 'package:server_api/src/domain/domain.dart';
 
-import 'package:server_api/src/utils.dart';
+import 'package:utils/utils.dart';
 
 class ServerContextMenuCubit extends Cubit<List<MenuItem>> {
   ServerContextMenuCubit({required this.serverRepository, required this.activeServer, required this.initial})

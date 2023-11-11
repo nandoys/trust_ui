@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'package:trust_app/home/logic/cubit/cubit.dart';
+import 'package:user_api/user_api.dart';
 
 class VerifyPasswordField extends StatelessWidget {
   VerifyPasswordField({super.key, required this.controller, required this.passwordController});

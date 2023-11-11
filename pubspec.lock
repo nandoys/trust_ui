@@ -486,6 +486,13 @@ packages:
       relative: true
     source: path
     version: "0.0.0"
+  utils:
+    dependency: "direct main"
+    description:
+      path: "packages/utils"
+      relative: true
+    source: path
+    version: "0.0.0"
   vector_math:
     dependency: transitive
     description:

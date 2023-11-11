@@ -2,8 +2,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:server_api/src/domain/domain.dart';
-
-import 'package:server_api/src/utils.dart';
+import 'package:utils/utils.dart';
 
 class ServerRepository {
   ServerRepository();

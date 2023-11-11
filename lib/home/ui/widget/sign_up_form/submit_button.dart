@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:organisation_api/organisation_api.dart';
 
-import 'package:trust_app/home/logic/cubit/cubit.dart';
-
 class SubmitButton extends StatelessWidget {
   const SubmitButton({super.key, required this.formKey, required this.name, required this.address, required this.email,
     required this.phone, required this.register, required this.idNat, required this.tax, required this.socialSecurity,

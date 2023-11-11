@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_validator/form_validator.dart';
+import 'package:user_api/user_api.dart';
 
-import 'package:trust_app/home/logic/cubit/cubit.dart';
 
 class PasswordField extends StatelessWidget {
   PasswordField({super.key, required this.controller});

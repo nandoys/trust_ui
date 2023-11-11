@@ -1,4 +1,4 @@
 library organisation_api;
 
-export 'src/models/models.dart';
-export 'src/repository/repository.dart';
+export 'src/data/data.dart';
+export 'src/domain/domain.dart';

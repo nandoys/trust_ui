@@ -12,8 +12,11 @@ dependencies:
   shared_preferences: ^2.2.2
   json_annotation: ^4.8.1
   rxdart: ^0.27.7
+  native_context_menu: ^0.2.2+5
   server_api:
     path: ../server_api
+  utils:
+    path: ../utils
 
 dev_dependencies:
   json_serializable: ^6.7.1

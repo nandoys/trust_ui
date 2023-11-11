@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:organisation_api/organisation_api.dart';
+import 'package:user_api/user_api.dart';
 
-import 'package:trust_app/home/logic/cubit/cubit.dart';
 
 class UsernameField extends StatelessWidget {
   UsernameField({super.key, required this.controller, required this.organisation});

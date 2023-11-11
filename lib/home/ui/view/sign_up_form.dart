@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:organisation_api/organisation_api.dart';
-import 'package:trust_app/home/logic/cubit/cubit.dart';
 
 import 'package:trust_app/home/ui/widget/widget.dart';
-import 'package:trust_app/utils.dart';
+import 'package:utils/utils.dart';
 
 class SignUpForm extends StatefulWidget {
   const SignUpForm({super.key});

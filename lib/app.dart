@@ -6,8 +6,7 @@ import 'package:native_context_menu/native_context_menu.dart';
 import 'package:organisation_api/organisation_api.dart';
 
 import 'package:trust_app/home//ui/page/page.dart';
-import 'package:trust_app/home/data/repository/server_repository.dart';
-import 'package:trust_app/home/logic/cubit/cubit.dart';
+import 'package:server_api/server_api.dart';
 import 'package:user_api/user_api.dart';
 
 final _route = GoRouter(
