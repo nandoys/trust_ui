@@ -19,10 +19,10 @@ class ServerForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (defaultHost != null) {
-      _hostController.text = defaultHost as String;
+      _hostController.text = defaultHost.toString();
     }
     if (defaultPort != null) {
-      _portController.text = defaultPort as String;
+      _portController.text = defaultPort.toString();
     }
 
     final ServerContextMenuCubit serverMenuCubit = context.read<ServerContextMenuCubit>();

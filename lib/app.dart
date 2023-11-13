@@ -31,7 +31,12 @@ final _route = GoRouter(
                 name: 'server',
                 pageBuilder: (context, route) {
                   String? host = route.uri.queryParameters['host'];
-                  int? port = route.uri.queryParameters['port'] as int?;
+                  int? port;
+
+                  if (route.uri.queryParameters['port'] != null) {
+                    port = int.tryParse(route.uri.queryParameters['port'] as String);
+                  }
+
                   String? protocol = route.uri.queryParameters['protocol'];
 
                   return NoTransitionPage(child: ServerPage(host: host, port: port, protocol: protocol,));
