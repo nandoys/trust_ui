@@ -9,6 +9,13 @@ import 'package:trust_app/home//ui/page/page.dart';
 import 'package:server_api/server_api.dart';
 import 'package:user_api/user_api.dart';
 
+import 'package:trust_app/asset_management/ui/page/page.dart';
+import 'package:trust_app/accounting/ui/page/page.dart';
+import 'package:trust_app/employee/ui/page/page.dart';
+import 'package:trust_app/logistic/ui/page/page.dart';
+import 'package:trust_app/planning/ui/page/page.dart';
+import 'package:trust_app/tax/ui/page/page.dart';
+
 final _route = GoRouter(
     initialLocation: '/',
     routes: [
@@ -70,6 +77,48 @@ final _route = GoRouter(
           pageBuilder: (context, route) {
             final User user = route.extra as User;
             return NoTransitionPage(child: HomePage(user: user,));
+          }
+      ),
+      GoRoute(path: '/asset',
+          name: 'asset',
+          pageBuilder: (context, route) {
+            final User user = route.extra as User;
+            return NoTransitionPage(child: AssetDashboard(user: user,));
+          }
+      ),
+      GoRoute(path: '/accounting',
+          name: 'accounting',
+          pageBuilder: (context, route) {
+            final User user = route.extra as User;
+            return NoTransitionPage(child: AccountingDashboard(user: user,));
+          }
+      ),
+      GoRoute(path: '/employee',
+          name: 'employee',
+          pageBuilder: (context, route) {
+            final User user = route.extra as User;
+            return NoTransitionPage(child: EmployeeDashboard(user: user,));
+          }
+      ),
+      GoRoute(path: '/logistic',
+          name: 'logistic',
+          pageBuilder: (context, route) {
+            final User user = route.extra as User;
+            return NoTransitionPage(child: LogisticDashboard(user: user,));
+          }
+      ),
+      GoRoute(path: '/planning',
+          name: 'planning',
+          pageBuilder: (context, route) {
+            final User user = route.extra as User;
+            return NoTransitionPage(child: PlanningDashboard(user: user,));
+          }
+      ),
+      GoRoute(path: '/tax',
+          name: 'tax',
+          pageBuilder: (context, route) {
+            final User user = route.extra as User;
+            return NoTransitionPage(child: TaxDashboard(user: user,));
           }
       )
     ]
