@@ -8,38 +8,35 @@ import 'package:server_api/server_api.dart';
 import 'package:utils/utils.dart';
 
 class OrganisationContextMenuCubit extends Cubit<List<MenuItem>> {
-  OrganisationContextMenuCubit({required this.organisationRepository, required this.connectivityStatus,
-    required this.apiStatus}) : super([MenuItem(title: 'Nouvelle', action: 'create')]);
-
-  final OrganisationRepository organisationRepository;
+  OrganisationContextMenuCubit({required this.connectivityStatus,required this.apiStatus})
+      : super([MenuItem(title: 'Nouvelle', action: 'create')]);
 
   final ConnectivityStatusCubit connectivityStatus;
   final OrganisationApiStatusCubit apiStatus;
 
-  void get() async {
-    if (connectivityStatus.state == ConnectivityStatus.connected) {
-      try {
-        final organisations = await organisationRepository.getOrganisations();
+  void get(OrganisationRepository repository) async {
 
-        if (organisations != null && organisations.isNotEmpty) {
-          List<MenuItem> menus = [MenuItem(title: 'Nouvelle', action: 'create')];
+    try {
+      final organisations = await repository.getOrganisations();
 
-          List<MenuItem> organisationMenu = organisations.map((organisation) {
-            return MenuItem(title: organisation.name, action: organisation);
-          }).toList();
+      if (organisations != null && organisations.isNotEmpty) {
+        List<MenuItem> menus = [MenuItem(title: 'Nouvelle', action: 'create')];
 
-          menus.addAll(organisationMenu);
-          emit(menus);
-          apiStatus.changeStatus(ApiStatus.succeeded);
-        }
+        List<MenuItem> organisationMenu = organisations.map((organisation) {
+          return MenuItem(title: organisation.name, action: organisation);
+        }).toList();
 
+        menus.addAll(organisationMenu);
+        emit(menus);
+        apiStatus.changeStatus(ApiStatus.succeeded);
       }
-      on http.ClientException {
-        connectivityStatus.changeStatus(ConnectivityStatus.disconnected);
-      }
-      catch (e) {
-        apiStatus.changeStatus(ApiStatus.failed);
-      }
+
+    }
+    on http.ClientException {
+      connectivityStatus.changeStatus(ConnectivityStatus.disconnected);
+    }
+    catch (e) {
+      apiStatus.changeStatus(ApiStatus.failed);
     }
   }
 

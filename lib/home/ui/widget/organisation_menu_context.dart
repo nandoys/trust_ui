@@ -18,10 +18,18 @@ class OrganisationContextMenu extends StatelessWidget {
     return BlocConsumer<OrganisationContextMenuCubit, List<MenuItem>>(
         listener: (context, menus) {
           if(menus.length > 1) {
-            context.read<ActiveOrganisationCubit>().getCurrent();
+            context.read<ActiveOrganisationCubit>().getCurrent(OrganisationRepository(
+                protocol: context.read<ActiveServerCubit>().state.protocol,
+                host: context.read<ActiveServerCubit>().state.host,
+                port: context.read<ActiveServerCubit>().state.port
+            ));
           }
           else if (menus.length == 1) {
-            context.read<ActiveOrganisationCubit>().removeCurrent();
+            context.read<ActiveOrganisationCubit>().removeCurrent(OrganisationRepository(
+                protocol: context.read<ActiveServerCubit>().state.protocol,
+                host: context.read<ActiveServerCubit>().state.host,
+                port: context.read<ActiveServerCubit>().state.port
+            ));
           }
         },
         builder: (context, menus) {
@@ -58,7 +66,14 @@ class OrganisationContextMenu extends StatelessWidget {
               ),
               BlocListener<ActiveOrganisationCubit, Organisation?>(
                 listener: (context, organisation) {
-                  context.read<ActiveOrganisationCubit>().setCurrent(organisation);
+                  context.read<ActiveOrganisationCubit>().setCurrent(
+                      organisation,
+                      OrganisationRepository(
+                      protocol: context.read<ActiveServerCubit>().state.protocol,
+                      host: context.read<ActiveServerCubit>().state.host,
+                      port: context.read<ActiveServerCubit>().state.port
+                  )
+                  );
                 },
                 listenWhen: (previous, current) => current != null,
               ),
@@ -83,7 +98,14 @@ class OrganisationContextMenu extends StatelessWidget {
                     'protocol': protocol, 'host':host, 'port': port.toString()
                   }, extra: context.read<ActiveOrganisationCubit>())
                 } else if (item.action is Organisation) {
-                  activeOrganisation.active(item.action as Organisation)
+                  activeOrganisation.active(
+                      item.action as Organisation,
+                      OrganisationRepository(
+                          protocol: context.read<ActiveServerCubit>().state.protocol,
+                          host: context.read<ActiveServerCubit>().state.host,
+                          port: context.read<ActiveServerCubit>().state.port
+                      )
+                  )
                 }
               },
               menuItems: menus,

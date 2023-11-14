@@ -1,7 +1,9 @@
+import 'package:authentication_api/authentication_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:native_context_menu/native_context_menu.dart';
+import 'package:organisation_api/organisation_api.dart';
 
 import 'package:server_api/server_api.dart';
 import 'package:utils/utils.dart';
@@ -27,6 +29,9 @@ class ServerMenuContext extends StatelessWidget {
 
             if(item.title == 'Activer'){
               menuServerCubit.activateServer(item.action as String);
+
+              final activeServer = context.read<ActiveServerCubit>().state;
+              context.read<SubmitLoginFormLoadingCubit>().change(false);
             }
 
             if(item.title == 'Modifier'){
@@ -49,6 +54,16 @@ class ServerMenuContext extends StatelessWidget {
               onPressed: () {
                 activeServer is ActiveServerSelected ?
                 menuServerCubit.activateServer(activeServer.fullAddress as String) : null;
+                context.read<SubmitLoginFormLoadingCubit>().change(false);
+                if (activeServer is ActiveServerSelected) {
+                  context.read<OrganisationContextMenuCubit>().get(
+                      OrganisationRepository(
+                          protocol: activeServer.protocol,
+                          host: activeServer.host,
+                          port: activeServer.port
+                      )
+                  );
+                }
               },
               icon: BlocBuilder<ConnectivityStatusCubit, ConnectivityStatus>(builder: (context, status) {
                 if (status == ConnectivityStatus.connected) {

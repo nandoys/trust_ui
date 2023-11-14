@@ -7,23 +7,28 @@ import 'package:server_api/server_api.dart';
 import 'package:user_api/user_api.dart';
 import 'package:utils/utils.dart';
 
-import 'api_status/api_status_cubit.dart';
-
 class AuthenticationCubit extends Cubit<AuthenticationStatus> {
-  AuthenticationCubit({required this.authenticationRepository, required this.connectivityStatus, required this.userCubit,
-    required this.apiStatus}) : super(AuthenticationStatus.anonymous);
+  AuthenticationCubit({required this.connectivityStatus, required this.userCubit, required this.apiStatus,
+    required this.server}) : super(AuthenticationStatus.anonymous);
 
-  final AuthenticationRepository authenticationRepository;
   final ConnectivityStatusCubit connectivityStatus;
   final LoginApiStatusCubit apiStatus;
   final UserCubit userCubit;
+  final ActiveServerCubit server;
 
-  void login(String username, String password, Organisation? organisation) async {
+
+  void login(String username, String password, Organisation? organisation, AuthenticationRepository repository) async {
     apiStatus.changeStatus(ApiStatus.requesting);
 
+    if (connectivityStatus.state == ConnectivityStatus.disconnected) {
+      apiStatus.changeStatus(ApiStatus.failed);
+      server.get();
+    }
+
     if (connectivityStatus.state == ConnectivityStatus.connected) {
+
       try {
-        User? user = await authenticationRepository.logIn(username: username, password: password);
+        User? user = await repository.logIn(username: username, password: password);
 
         apiStatus.changeStatus(ApiStatus.succeeded);
 
@@ -56,10 +61,6 @@ class AuthenticationCubit extends Cubit<AuthenticationStatus> {
         apiStatus.changeStatus(ApiStatus.failed);
       }
     }
-    else {
-      apiStatus.changeStatus(ApiStatus.failed);
-      connectivityStatus.changeStatus(ConnectivityStatus.loading);
-      connectivityStatus.changeStatus(ConnectivityStatus.disconnected);
-    }
+
   }
 }

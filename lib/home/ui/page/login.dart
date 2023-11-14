@@ -22,10 +22,9 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
 
-    ActiveServerCubit activeServer = context.read<ActiveServerCubit>();
-
     return BlocListener<ActiveServerCubit, ActiveServerState>(
       listener: (context, currentServer) {
+        /// Get all servers once activeServerCubit state is ready
         context.read<ServerContextMenuCubit>().getServers();
       },
       child: MultiBlocProvider(
@@ -35,33 +34,18 @@ class _LoginPageState extends State<LoginPage> {
         ],
         child: MultiRepositoryProvider(
           providers: [
-            RepositoryProvider(
-            create: (context) => AuthenticationRepository(
-                protocol: activeServer.state.protocol,
-                host: activeServer.state.host,
-                port: activeServer.state.port
-            ),
-          ),
-            RepositoryProvider(
-              create: (context) => OrganisationRepository(
-                  protocol: context.read<ActiveServerCubit>().state.protocol,
-                  host: context.read<ActiveServerCubit>().state.host,
-                  port: context.read<ActiveServerCubit>().state.port
-              )
-            ),
             RepositoryProvider(create: (context) => UserRepository(
-                protocol: activeServer.state.protocol,
-                host: activeServer.state.host,
-                port: activeServer.state.port))
+                protocol: context.read<ActiveServerCubit>().state.protocol,
+                host: context.read<ActiveServerCubit>().state.host,
+                port: context.read<ActiveServerCubit>().state.port))
           ],
           child: MultiBlocProvider(
             providers: [
               BlocProvider(
                   create: (context) => OrganisationContextMenuCubit(
-                      organisationRepository: context.read<OrganisationRepository>(),
                       connectivityStatus: context.read<ConnectivityStatusCubit>(),
                       apiStatus: context.read<OrganisationApiStatusCubit>()
-                  )..get()
+                  )
               ),
               BlocProvider(
                   create: (context) => SetupOrganisationCubit()
@@ -69,7 +53,6 @@ class _LoginPageState extends State<LoginPage> {
               BlocProvider(
                   create: (context) => ActiveOrganisationCubit(
                       organisationMenu: context.read<OrganisationContextMenuCubit>(),
-                      organisationRepository: context.read<OrganisationRepository>(),
                       connectivityStatus: context.read<ConnectivityStatusCubit>(),
                       apiStatus: context.read<UserRoleApiStatusCubit>(),
                       setup: context.read<SetupOrganisationCubit>()
@@ -83,12 +66,14 @@ class _LoginPageState extends State<LoginPage> {
                 // activeOrganisationCubit: context.read<ActiveOrganisationCubit>()
               )),
               BlocProvider(create: (context) => SubmitLoginFormLoadingCubit()),
-              BlocProvider(create: (context) => AuthenticationCubit(
-                  authenticationRepository: context.read<AuthenticationRepository>(),
-                  connectivityStatus: context.read<ConnectivityStatusCubit>(),
-                  apiStatus: context.read<LoginApiStatusCubit>(),
-                  userCubit: context.read<UserCubit>()
-              )),
+              BlocProvider(
+                  create: (context) => AuthenticationCubit(
+                      connectivityStatus: context.read<ConnectivityStatusCubit>(),
+                      apiStatus: context.read<LoginApiStatusCubit>(),
+                      userCubit: context.read<UserCubit>(),
+                      server: context.read<ActiveServerCubit>()
+                  )
+              ),
             ],
             child: MultiBlocListener(
               listeners: [
@@ -99,7 +84,9 @@ class _LoginPageState extends State<LoginPage> {
                     final user = context.read<UserCubit>().state;
 
                     if(user != null && authStatus == AuthenticationStatus.authenticated) {
-                      context.goNamed('start', extra: user);
+                      context.goNamed('start', extra: {
+                        'user': user, 'organisationContextMenuCubit': context.read<OrganisationContextMenuCubit>()
+                      });
                     }
 
                     else if(user == null && authStatus == AuthenticationStatus.unauthenticated) {
@@ -113,6 +100,18 @@ class _LoginPageState extends State<LoginPage> {
                   },
                   listenWhen: (previous, current) => current != ApiStatus.requesting,
                 ),
+                BlocListener<ActiveServerCubit, ActiveServerState>(
+                    listener: (context, currentServer) {
+                      context.read<OrganisationContextMenuCubit>().get(
+                        OrganisationRepository(
+                            protocol: currentServer.protocol,
+                            host: currentServer.host,
+                            port: currentServer.port
+                        )
+                      );
+                    },
+                  listenWhen: (previous, current) => current != ActiveServerInitial(),
+                )
               ],
               child: Scaffold(
                 backgroundColor: Colors.white60.withOpacity(0.4),

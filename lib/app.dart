@@ -80,8 +80,19 @@ final _route = GoRouter(
       GoRoute(path: '/start',
           name: 'start',
           pageBuilder: (context, route) {
-            final User user = route.extra as User;
-            return NoTransitionPage(child: HomePage(user: user,));
+            final Map<String, dynamic> extra = route.extra as Map<String, dynamic>;
+            final User user = extra['user'] as User;
+            final OrganisationContextMenuCubit organisationContextMenuCubit =
+            extra['organisationContextMenuCubit'] as OrganisationContextMenuCubit;
+
+            return NoTransitionPage(
+                child: MultiBlocProvider(
+                    providers: [
+                      BlocProvider.value(value: organisationContextMenuCubit)
+                    ],
+                    child: HomePage(user: user,)
+                )
+            );
           }
       ),
       GoRoute(path: '/asset',
@@ -94,8 +105,17 @@ final _route = GoRouter(
       GoRoute(path: '/accounting',
           name: 'accounting',
           pageBuilder: (context, route) {
-            final User user = route.extra as User;
-            return NoTransitionPage(child: AccountingDashboard(user: user,));
+            final Map<String, dynamic> extra = route.extra as Map<String, dynamic>;
+            final User user = extra['user'] as User;
+            final OrganisationContextMenuCubit organisationContextMenuCubit =
+            extra['organisationContextMenuCubit'] as OrganisationContextMenuCubit;
+
+            return NoTransitionPage(child: MultiBlocProvider(
+                providers: [
+                  BlocProvider.value(value: organisationContextMenuCubit)
+                ],
+                child: Accounting(user: user,)
+            ));
           }
       ),
       GoRoute(path: '/employee',

@@ -57,7 +57,14 @@ class CreateUserAdminPage extends StatelessWidget {
                     listener: (context, user){
                       context.read<SubmitCreateUserAdminFormLoadingCubit>().change(false);
                       if(user != null) {
-                        context.read<ActiveOrganisationCubit>().setCurrent(organisation);
+                        context.read<ActiveOrganisationCubit>().setCurrent(
+                            organisation,
+                            OrganisationRepository(
+                                protocol: context.read<ActiveServerCubit>().state.protocol,
+                                host: context.read<ActiveServerCubit>().state.host,
+                                port: context.read<ActiveServerCubit>().state.port
+                            )
+                        );
                         context.goNamed('start', extra: user);
                       }
                     },

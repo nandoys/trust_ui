@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meta/dart2js.dart';
+import 'package:organisation_api/organisation_api.dart';
 import 'package:user_api/user_api.dart';
 
 class HomePage extends StatelessWidget {
@@ -85,7 +87,13 @@ class HomePage extends StatelessWidget {
                                           Expanded(
                                               child: InkWell(
                                                 onTap: () {
-                                                  context.goNamed(apps[index]['route'], extra: user);
+                                                  context.goNamed(
+                                                      apps[index]['route'],
+                                                      extra: {
+                                                        'user': user,
+                                                        'organisationContextMenuCubit': context.read<OrganisationContextMenuCubit>()
+                                                      }
+                                                  );
                                                 },
                                                 child: Card(
                                                   elevation: 5,

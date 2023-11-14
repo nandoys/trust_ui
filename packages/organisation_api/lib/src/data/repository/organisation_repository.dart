@@ -13,6 +13,7 @@ class OrganisationRepository {
   
   Future<List<Organisation>?> getOrganisations() async {
    if (protocol != null && host != null && port != null) {
+
      final uri = Uri(
          scheme: protocol?.toLowerCase(),
          host: host,
