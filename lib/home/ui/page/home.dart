@@ -85,24 +85,27 @@ class HomePage extends StatelessWidget {
                                       return Column(
                                         children: [
                                           Expanded(
-                                              child: InkWell(
-                                                onTap: () {
-                                                  context.goNamed(
-                                                      apps[index]['route'],
-                                                      extra: {
-                                                        'user': user,
-                                                        'organisationContextMenuCubit': context.read<OrganisationContextMenuCubit>()
-                                                      }
-                                                  );
-                                                },
-                                                child: Card(
-                                                  elevation: 5,
-                                                  color: Colors.white,
-                                                  child: Image.asset(
-                                                    apps[index]['image'],
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
+                                              child: Hero(
+                                                  tag: '${apps[index]['name']}-hero',
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      context.goNamed(
+                                                          apps[index]['route'],
+                                                          extra: {
+                                                            'user': user,
+                                                            'organisationContextMenuCubit': context.read<OrganisationContextMenuCubit>()
+                                                          }
+                                                      );
+                                                    },
+                                                    child: Card(
+                                                      elevation: 5,
+                                                      color: Colors.white,
+                                                      child: Image.asset(
+                                                        apps[index]['image'],
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    ),
+                                                  )
                                               )
                                           ),
                                           Text(

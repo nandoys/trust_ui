@@ -7,7 +7,7 @@ import 'package:user_api/user_api.dart';
 import 'package:trust_app/accounting/ui/view/view.dart';
 
 class Accounting extends StatelessWidget {
-  Accounting({super.key, required this.user});
+  const Accounting({super.key, required this.user});
 
   final User user;
 
@@ -68,54 +68,65 @@ class Accounting extends StatelessWidget {
             const SizedBox(width: 20,)
           ],
         ),
-        body: BlocBuilder<SwitchAccountingViewCubit, int>(
-            builder: (context, viewIndex) {
-              return Row(
-                children: [
-                  NavigationRail(
-                    destinations: const [
-                      NavigationRailDestination(
-                          icon: Icon(Icons.dashboard),
-                          label: Text('Tableau de bord')
+        body: Hero(
+            tag: 'accounting-hero',
+            child: BlocBuilder<SwitchAccountingViewCubit, int>(
+                builder: (context, viewIndex) {
+                  return Row(
+                    children: [
+                      NavigationRail(
+                        destinations: const [
+                          NavigationRailDestination(
+                              icon: Icon(Icons.dashboard),
+                              label: Text('Tableau de bord')
+                          ),
+                          NavigationRailDestination(
+                              icon: Icon(FontAwesomeIcons.box),
+                              label: Text('Activité')
+                          ),
+                          NavigationRailDestination(
+                              icon: Icon(FontAwesomeIcons.receipt),
+                              label: Text('Facturation')
+                          ),
+                          NavigationRailDestination(
+                              icon: Icon(FontAwesomeIcons.cashRegister),
+                              label: Text('Paiements')
+                          ),
+                          NavigationRailDestination(
+                              icon: Icon(Icons.book),
+                              label: Text('Journaux')
+                          ),
+                          NavigationRailDestination(
+                              icon: Icon(Icons.groups),
+                              label: Text('Tiers')
+                          ),
+                        ],
+                        labelType: NavigationRailLabelType.all,
+                        useIndicator: true,
+                        selectedIndex: viewIndex,
+                        onDestinationSelected: (index) {
+                          context.read<SwitchAccountingViewCubit>().switchView(index);
+                        },
                       ),
-                      NavigationRailDestination(
-                          icon: Icon(FontAwesomeIcons.box),
-                          label: Text('Activité')
-                      ),
-                      NavigationRailDestination(
-                          icon: Icon(FontAwesomeIcons.receipt),
-                          label: Text('Facturation')
-                      ),
-                      NavigationRailDestination(
-                          icon: Icon(FontAwesomeIcons.cashRegister),
-                          label: Text('Trésorerie')
-                      ),
-                      NavigationRailDestination(
-                          icon: Icon(Icons.book),
-                          label: Text('Op. diverses')
-                      ),
-                      NavigationRailDestination(
-                          icon: Icon(Icons.groups),
-                          label: Text('Tiers')
-                      ),
-                    ],
-                    labelType: NavigationRailLabelType.all,
-                    useIndicator: true,
-                    selectedIndex: viewIndex,
-                    onDestinationSelected: (index) {
-                      context.read<SwitchAccountingViewCubit>().switchView(index);
-                    },
-                  ),
-                  Expanded(
-                      child: Card(
-                        color: Colors.white,
-                        elevation: 5,
-                        child: views[viewIndex],
+                      Expanded(
+                          child: MultiBlocProvider(
+                              providers: [
+                                BlocProvider(create: (context) => FilterProductCategoryCubit()),
+                                BlocProvider(create: (context) => ActivityViewModeCubit()),
+                                BlocProvider(create: (context) => FilterPartnerCategoryCubit()),
+                                BlocProvider(create: (context) => ThirdPartyViewModeCubit()),
+                              ],
+                              child: Card(
+                                color: Colors.white,
+                                elevation: 5,
+                                child: views[viewIndex],
+                              )
+                          )
                       )
-                  )
-                ],
-              );
-            }
+                    ],
+                  );
+                }
+            )
         ),
         bottomNavigationBar: const BottomAppBar(color: Colors.black, height: 25,),
       ),

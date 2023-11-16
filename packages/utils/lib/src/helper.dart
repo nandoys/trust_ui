@@ -1,5 +1,7 @@
 enum ApiStatus {succeeded, failed, requesting}
 
+enum ViewMode {grid, list, table}
+
 /// get protocol from format "[[protocol]] host:port"
 String getProtocol(String toSplit) {
   final serverSplit = toSplit.split(' ');
