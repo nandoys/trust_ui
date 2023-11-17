@@ -38,11 +38,6 @@
   </script>
   <!-- This script adds the flutter initialization JS code -->
   <script src="flutter.js" defer></script>
-  <script>
-    window.flutterConfiguration = {
-      canvasKitBaseUrl: "/canvaskit/"
-    };
-  </script>
 </head>
 <body>
   <script>
@@ -53,7 +48,9 @@
           serviceWorkerVersion: serviceWorkerVersion,
         },
         onEntrypointLoaded: function(engineInitializer) {
-          engineInitializer.initializeEngine().then(function(appRunner) {
+          engineInitializer.initializeEngine({
+            canvasKitBaseUrl: "/canvaskit/"
+          }).then(function(appRunner) {
             appRunner.runApp();
           });
         }

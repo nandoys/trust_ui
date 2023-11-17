@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "trust_app" "\0"
+            VALUE "CompanyName", "com.trustholding" "\0"
+            VALUE "FileDescription", "trust compte" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "trust_app" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2023 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "trust_app.exe" "\0"
-            VALUE "ProductName", "trust_app" "\0"
+            VALUE "InternalName", "trust compte" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2023 Trust Holding. Tous droits réservés." "\0"
+            VALUE "OriginalFilename", "trust_compta.exe" "\0"
+            VALUE "ProductName", "trust compta" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
