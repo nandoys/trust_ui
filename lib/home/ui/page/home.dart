@@ -82,6 +82,7 @@ class HomePage extends StatelessWidget {
                                       mainAxisExtent: 90, //
                                     ),
                                     itemBuilder: (context, index) {
+
                                       return Column(
                                         children: [
                                           Expanded(
