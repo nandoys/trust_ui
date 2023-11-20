@@ -3,7 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class BillWidget extends StatelessWidget {
-  const BillWidget({super.key});
+  BillWidget({super.key});
+
+  final billRowController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -235,162 +237,1272 @@ class BillWidget extends StatelessWidget {
                                   )
                               ),
                               Expanded(
+                                flex: 10,
                                 child: TabBarView(
                                     children: [
                                       Column(
                                         children: [
                                           Padding(
                                             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
-                                            child: Table(
-                                              children: [
-                                                const TableRow(
-                                                    children: [
-                                                      Text('Produit'),
-                                                      Text('Libellé'),
-                                                      Text('Compte'),
-                                                      Text('Quantité'),
-                                                      Text('Taxe'),
-                                                      Text('Prix HT'),
-                                                    ]
-                                                ),
-                                                TableRow(
-                                                    children: [
-                                                      SizedBox(
-                                                        height: 40,
-                                                        child: DropdownSearch<String>(
-                                                          items: const ['Pomme tomate'],
-                                                          //itemAsString: (Country country) => country.name,
-                                                          validator: (value) {
-                                                            if(value == null) {
-                                                              return "Veuillez choisir le produit";
-                                                            }
-                                                            return null;
-                                                          },
-                                                          onSaved: (value) {
-                                                            //context.read<SelectedCountryCubit>().change(value);
-                                                          },
-                                                          dropdownDecoratorProps: const DropDownDecoratorProps(
-                                                              dropdownSearchDecoration: InputDecoration(
-                                                                  isDense: true,
-                                                                  filled: true
-                                                              )
-                                                          ),
-                                                          popupProps: PopupProps.bottomSheet(
-                                                              showSearchBox: true,
-                                                              searchFieldProps: const TextFieldProps(
-                                                                  decoration: InputDecoration(
-                                                                    label: Text('Recherche ...'),
-                                                                    isDense: true,
-                                                                  )
-                                                              ),
-                                                              emptyBuilder: (context, text) {
-                                                                return const Center(
-                                                                  child: SizedBox(
-                                                                    height: 50.0,
-                                                                    child: Text('Aucun produit trouvé'),
+                                            child: SizedBox(
+                                              height: 200,
+                                              child: Scrollbar(
+                                                  controller: billRowController,
+                                                  thumbVisibility: true,
+                                                  trackVisibility: true,
+                                                  thickness: 3.5,
+                                                  child: SingleChildScrollView(
+                                                    controller: billRowController,
+                                                    physics: const BouncingScrollPhysics(),
+                                                    child: Table(
+                                                      children: [
+                                                        const TableRow(
+                                                            children: [
+                                                              Text('Produit'),
+                                                              Text('Libellé'),
+                                                              Text('Compte'),
+                                                              Text('Quantité'),
+                                                              Text('Taxe'),
+                                                              Text('Prix HT'),
+                                                            ]
+                                                        ),
+                                                        TableRow(
+                                                            children: [
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: DropdownSearch<String>(
+                                                                  items: const ['Pomme tomate'],
+                                                                  //itemAsString: (Country country) => country.name,
+                                                                  validator: (value) {
+                                                                    if(value == null) {
+                                                                      return "Veuillez choisir le produit";
+                                                                    }
+                                                                    return null;
+                                                                  },
+                                                                  onSaved: (value) {
+                                                                    //context.read<SelectedCountryCubit>().change(value);
+                                                                  },
+                                                                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                                                                      dropdownSearchDecoration: InputDecoration(
+                                                                          isDense: true,
+                                                                          filled: true
+                                                                      )
                                                                   ),
-                                                                );
-                                                              }
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 40,
-                                                        child: TextFormField(
-                                                          decoration: const InputDecoration(),
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 40,
-                                                        child: DropdownSearch<String>(
-                                                          items: const ['7011 - Mse'],
-                                                          //itemAsString: (Country country) => country.name,
-                                                          validator: (value) {
-                                                            if(value == null) {
-                                                              return "Veuillez choisir le produit";
-                                                            }
-                                                            return null;
-                                                          },
-                                                          onSaved: (value) {
-                                                            //context.read<SelectedCountryCubit>().change(value);
-                                                          },
-                                                          dropdownDecoratorProps: const DropDownDecoratorProps(
-                                                              dropdownSearchDecoration: InputDecoration(
-                                                                isDense: true,
-                                                              )
-                                                          ),
-                                                          popupProps: PopupProps.bottomSheet(
-                                                              showSearchBox: true,
-                                                              searchFieldProps: const TextFieldProps(
-                                                                  decoration: InputDecoration(
-                                                                    label: Text('Recherche ...'),
-                                                                    isDense: true,
-                                                                  )
-                                                              ),
-                                                              emptyBuilder: (context, text) {
-                                                                return const Center(
-                                                                  child: SizedBox(
-                                                                    height: 50.0,
-                                                                    child: Text('Aucun produit trouvé'),
+                                                                  popupProps: PopupProps.bottomSheet(
+                                                                      showSearchBox: true,
+                                                                      searchFieldProps: const TextFieldProps(
+                                                                          decoration: InputDecoration(
+                                                                            label: Text('Recherche ...'),
+                                                                            isDense: true,
+                                                                          )
+                                                                      ),
+                                                                      emptyBuilder: (context, text) {
+                                                                        return const Center(
+                                                                          child: SizedBox(
+                                                                            height: 50.0,
+                                                                            child: Text('Aucun produit trouvé'),
+                                                                          ),
+                                                                        );
+                                                                      }
                                                                   ),
-                                                                );
-                                                              }
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 40,
-                                                        child: TextFormField(
-                                                          decoration: const InputDecoration(),
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 40,
-                                                        child: DropdownSearch<String>.multiSelection(
-                                                          items: const ['7011', '7012'],
-                                                          //itemAsString: (Country country) => country.name,
-                                                          validator: (value) {
-                                                            if(value == null) {
-                                                              return "Veuillez choisir le produit";
-                                                            }
-                                                            return null;
-                                                          },
-                                                          onSaved: (value) {
-                                                            //context.read<SelectedCountryCubit>().change(value);
-                                                          },
-                                                          dropdownDecoratorProps: const DropDownDecoratorProps(
-                                                              dropdownSearchDecoration: InputDecoration(
-                                                                isDense: true,
-                                                              )
-                                                          ),
-                                                          popupProps: PopupPropsMultiSelection.bottomSheet(
-                                                              showSearchBox: true,
-                                                              searchFieldProps: const TextFieldProps(
-                                                                  decoration: InputDecoration(
-                                                                    label: Text('Recherche ...'),
-                                                                    isDense: true,
-                                                                  )
+                                                                ),
                                                               ),
-                                                              emptyBuilder: (context, text) {
-                                                                return const Center(
-                                                                  child: SizedBox(
-                                                                    height: 50.0,
-                                                                    child: Text('Aucune taxe trouvée'),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: TextFormField(
+                                                                  decoration: const InputDecoration(),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: DropdownSearch<String>(
+                                                                  items: const ['7011 - Mse'],
+                                                                  //itemAsString: (Country country) => country.name,
+                                                                  validator: (value) {
+                                                                    if(value == null) {
+                                                                      return "Veuillez choisir le produit";
+                                                                    }
+                                                                    return null;
+                                                                  },
+                                                                  onSaved: (value) {
+                                                                    //context.read<SelectedCountryCubit>().change(value);
+                                                                  },
+                                                                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                                                                      dropdownSearchDecoration: InputDecoration(
+                                                                        isDense: true,
+                                                                      )
                                                                   ),
-                                                                );
-                                                              }
-                                                          ),
+                                                                  popupProps: PopupProps.bottomSheet(
+                                                                      showSearchBox: true,
+                                                                      searchFieldProps: const TextFieldProps(
+                                                                          decoration: InputDecoration(
+                                                                            label: Text('Recherche ...'),
+                                                                            isDense: true,
+                                                                          )
+                                                                      ),
+                                                                      emptyBuilder: (context, text) {
+                                                                        return const Center(
+                                                                          child: SizedBox(
+                                                                            height: 50.0,
+                                                                            child: Text('Aucun produit trouvé'),
+                                                                          ),
+                                                                        );
+                                                                      }
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: TextFormField(
+                                                                  decoration: const InputDecoration(),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: DropdownSearch<String>.multiSelection(
+                                                                  items: const ['7011', '7012'],
+                                                                  //itemAsString: (Country country) => country.name,
+                                                                  validator: (value) {
+                                                                    if(value == null) {
+                                                                      return "Veuillez choisir le produit";
+                                                                    }
+                                                                    return null;
+                                                                  },
+                                                                  onSaved: (value) {
+                                                                    //context.read<SelectedCountryCubit>().change(value);
+                                                                  },
+                                                                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                                                                      dropdownSearchDecoration: InputDecoration(
+                                                                        isDense: true,
+                                                                      )
+                                                                  ),
+                                                                  popupProps: PopupPropsMultiSelection.bottomSheet(
+                                                                      showSearchBox: true,
+                                                                      searchFieldProps: const TextFieldProps(
+                                                                          decoration: InputDecoration(
+                                                                            label: Text('Recherche ...'),
+                                                                            isDense: true,
+                                                                          )
+                                                                      ),
+                                                                      emptyBuilder: (context, text) {
+                                                                        return const Center(
+                                                                          child: SizedBox(
+                                                                            height: 50.0,
+                                                                            child: Text('Aucune taxe trouvée'),
+                                                                          ),
+                                                                        );
+                                                                      }
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: TextFormField(
+                                                                  decoration: const InputDecoration(),
+                                                                ),
+                                                              ),
+                                                            ]
                                                         ),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 40,
-                                                        child: TextFormField(
-                                                          decoration: const InputDecoration(),
+                                                        TableRow(
+                                                            children: [
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: DropdownSearch<String>(
+                                                                  items: const ['Pomme tomate'],
+                                                                  //itemAsString: (Country country) => country.name,
+                                                                  validator: (value) {
+                                                                    if(value == null) {
+                                                                      return "Veuillez choisir le produit";
+                                                                    }
+                                                                    return null;
+                                                                  },
+                                                                  onSaved: (value) {
+                                                                    //context.read<SelectedCountryCubit>().change(value);
+                                                                  },
+                                                                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                                                                      dropdownSearchDecoration: InputDecoration(
+                                                                          isDense: true,
+                                                                          filled: true
+                                                                      )
+                                                                  ),
+                                                                  popupProps: PopupProps.bottomSheet(
+                                                                      showSearchBox: true,
+                                                                      searchFieldProps: const TextFieldProps(
+                                                                          decoration: InputDecoration(
+                                                                            label: Text('Recherche ...'),
+                                                                            isDense: true,
+                                                                          )
+                                                                      ),
+                                                                      emptyBuilder: (context, text) {
+                                                                        return const Center(
+                                                                          child: SizedBox(
+                                                                            height: 50.0,
+                                                                            child: Text('Aucun produit trouvé'),
+                                                                          ),
+                                                                        );
+                                                                      }
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: TextFormField(
+                                                                  decoration: const InputDecoration(),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: DropdownSearch<String>(
+                                                                  items: const ['7011 - Mse'],
+                                                                  //itemAsString: (Country country) => country.name,
+                                                                  validator: (value) {
+                                                                    if(value == null) {
+                                                                      return "Veuillez choisir le produit";
+                                                                    }
+                                                                    return null;
+                                                                  },
+                                                                  onSaved: (value) {
+                                                                    //context.read<SelectedCountryCubit>().change(value);
+                                                                  },
+                                                                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                                                                      dropdownSearchDecoration: InputDecoration(
+                                                                        isDense: true,
+                                                                      )
+                                                                  ),
+                                                                  popupProps: PopupProps.bottomSheet(
+                                                                      showSearchBox: true,
+                                                                      searchFieldProps: const TextFieldProps(
+                                                                          decoration: InputDecoration(
+                                                                            label: Text('Recherche ...'),
+                                                                            isDense: true,
+                                                                          )
+                                                                      ),
+                                                                      emptyBuilder: (context, text) {
+                                                                        return const Center(
+                                                                          child: SizedBox(
+                                                                            height: 50.0,
+                                                                            child: Text('Aucun produit trouvé'),
+                                                                          ),
+                                                                        );
+                                                                      }
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: TextFormField(
+                                                                  decoration: const InputDecoration(),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: DropdownSearch<String>.multiSelection(
+                                                                  items: const ['7011', '7012'],
+                                                                  //itemAsString: (Country country) => country.name,
+                                                                  validator: (value) {
+                                                                    if(value == null) {
+                                                                      return "Veuillez choisir le produit";
+                                                                    }
+                                                                    return null;
+                                                                  },
+                                                                  onSaved: (value) {
+                                                                    //context.read<SelectedCountryCubit>().change(value);
+                                                                  },
+                                                                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                                                                      dropdownSearchDecoration: InputDecoration(
+                                                                        isDense: true,
+                                                                      )
+                                                                  ),
+                                                                  popupProps: PopupPropsMultiSelection.bottomSheet(
+                                                                      showSearchBox: true,
+                                                                      searchFieldProps: const TextFieldProps(
+                                                                          decoration: InputDecoration(
+                                                                            label: Text('Recherche ...'),
+                                                                            isDense: true,
+                                                                          )
+                                                                      ),
+                                                                      emptyBuilder: (context, text) {
+                                                                        return const Center(
+                                                                          child: SizedBox(
+                                                                            height: 50.0,
+                                                                            child: Text('Aucune taxe trouvée'),
+                                                                          ),
+                                                                        );
+                                                                      }
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: TextFormField(
+                                                                  decoration: const InputDecoration(),
+                                                                ),
+                                                              ),
+                                                            ]
                                                         ),
-                                                      ),
-                                                    ]
-                                                ),
-                                              ],
+                                                        TableRow(
+                                                            children: [
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: DropdownSearch<String>(
+                                                                  items: const ['Pomme tomate'],
+                                                                  //itemAsString: (Country country) => country.name,
+                                                                  validator: (value) {
+                                                                    if(value == null) {
+                                                                      return "Veuillez choisir le produit";
+                                                                    }
+                                                                    return null;
+                                                                  },
+                                                                  onSaved: (value) {
+                                                                    //context.read<SelectedCountryCubit>().change(value);
+                                                                  },
+                                                                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                                                                      dropdownSearchDecoration: InputDecoration(
+                                                                          isDense: true,
+                                                                          filled: true
+                                                                      )
+                                                                  ),
+                                                                  popupProps: PopupProps.bottomSheet(
+                                                                      showSearchBox: true,
+                                                                      searchFieldProps: const TextFieldProps(
+                                                                          decoration: InputDecoration(
+                                                                            label: Text('Recherche ...'),
+                                                                            isDense: true,
+                                                                          )
+                                                                      ),
+                                                                      emptyBuilder: (context, text) {
+                                                                        return const Center(
+                                                                          child: SizedBox(
+                                                                            height: 50.0,
+                                                                            child: Text('Aucun produit trouvé'),
+                                                                          ),
+                                                                        );
+                                                                      }
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: TextFormField(
+                                                                  decoration: const InputDecoration(),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: DropdownSearch<String>(
+                                                                  items: const ['7011 - Mse'],
+                                                                  //itemAsString: (Country country) => country.name,
+                                                                  validator: (value) {
+                                                                    if(value == null) {
+                                                                      return "Veuillez choisir le produit";
+                                                                    }
+                                                                    return null;
+                                                                  },
+                                                                  onSaved: (value) {
+                                                                    //context.read<SelectedCountryCubit>().change(value);
+                                                                  },
+                                                                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                                                                      dropdownSearchDecoration: InputDecoration(
+                                                                        isDense: true,
+                                                                      )
+                                                                  ),
+                                                                  popupProps: PopupProps.bottomSheet(
+                                                                      showSearchBox: true,
+                                                                      searchFieldProps: const TextFieldProps(
+                                                                          decoration: InputDecoration(
+                                                                            label: Text('Recherche ...'),
+                                                                            isDense: true,
+                                                                          )
+                                                                      ),
+                                                                      emptyBuilder: (context, text) {
+                                                                        return const Center(
+                                                                          child: SizedBox(
+                                                                            height: 50.0,
+                                                                            child: Text('Aucun produit trouvé'),
+                                                                          ),
+                                                                        );
+                                                                      }
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: TextFormField(
+                                                                  decoration: const InputDecoration(),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: DropdownSearch<String>.multiSelection(
+                                                                  items: const ['7011', '7012'],
+                                                                  //itemAsString: (Country country) => country.name,
+                                                                  validator: (value) {
+                                                                    if(value == null) {
+                                                                      return "Veuillez choisir le produit";
+                                                                    }
+                                                                    return null;
+                                                                  },
+                                                                  onSaved: (value) {
+                                                                    //context.read<SelectedCountryCubit>().change(value);
+                                                                  },
+                                                                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                                                                      dropdownSearchDecoration: InputDecoration(
+                                                                        isDense: true,
+                                                                      )
+                                                                  ),
+                                                                  popupProps: PopupPropsMultiSelection.bottomSheet(
+                                                                      showSearchBox: true,
+                                                                      searchFieldProps: const TextFieldProps(
+                                                                          decoration: InputDecoration(
+                                                                            label: Text('Recherche ...'),
+                                                                            isDense: true,
+                                                                          )
+                                                                      ),
+                                                                      emptyBuilder: (context, text) {
+                                                                        return const Center(
+                                                                          child: SizedBox(
+                                                                            height: 50.0,
+                                                                            child: Text('Aucune taxe trouvée'),
+                                                                          ),
+                                                                        );
+                                                                      }
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: TextFormField(
+                                                                  decoration: const InputDecoration(),
+                                                                ),
+                                                              ),
+                                                            ]
+                                                        ),
+                                                        TableRow(
+                                                            children: [
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: DropdownSearch<String>(
+                                                                  items: const ['Pomme tomate'],
+                                                                  //itemAsString: (Country country) => country.name,
+                                                                  validator: (value) {
+                                                                    if(value == null) {
+                                                                      return "Veuillez choisir le produit";
+                                                                    }
+                                                                    return null;
+                                                                  },
+                                                                  onSaved: (value) {
+                                                                    //context.read<SelectedCountryCubit>().change(value);
+                                                                  },
+                                                                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                                                                      dropdownSearchDecoration: InputDecoration(
+                                                                          isDense: true,
+                                                                          filled: true
+                                                                      )
+                                                                  ),
+                                                                  popupProps: PopupProps.bottomSheet(
+                                                                      showSearchBox: true,
+                                                                      searchFieldProps: const TextFieldProps(
+                                                                          decoration: InputDecoration(
+                                                                            label: Text('Recherche ...'),
+                                                                            isDense: true,
+                                                                          )
+                                                                      ),
+                                                                      emptyBuilder: (context, text) {
+                                                                        return const Center(
+                                                                          child: SizedBox(
+                                                                            height: 50.0,
+                                                                            child: Text('Aucun produit trouvé'),
+                                                                          ),
+                                                                        );
+                                                                      }
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: TextFormField(
+                                                                  decoration: const InputDecoration(),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: DropdownSearch<String>(
+                                                                  items: const ['7011 - Mse'],
+                                                                  //itemAsString: (Country country) => country.name,
+                                                                  validator: (value) {
+                                                                    if(value == null) {
+                                                                      return "Veuillez choisir le produit";
+                                                                    }
+                                                                    return null;
+                                                                  },
+                                                                  onSaved: (value) {
+                                                                    //context.read<SelectedCountryCubit>().change(value);
+                                                                  },
+                                                                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                                                                      dropdownSearchDecoration: InputDecoration(
+                                                                        isDense: true,
+                                                                      )
+                                                                  ),
+                                                                  popupProps: PopupProps.bottomSheet(
+                                                                      showSearchBox: true,
+                                                                      searchFieldProps: const TextFieldProps(
+                                                                          decoration: InputDecoration(
+                                                                            label: Text('Recherche ...'),
+                                                                            isDense: true,
+                                                                          )
+                                                                      ),
+                                                                      emptyBuilder: (context, text) {
+                                                                        return const Center(
+                                                                          child: SizedBox(
+                                                                            height: 50.0,
+                                                                            child: Text('Aucun produit trouvé'),
+                                                                          ),
+                                                                        );
+                                                                      }
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: TextFormField(
+                                                                  decoration: const InputDecoration(),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: DropdownSearch<String>.multiSelection(
+                                                                  items: const ['7011', '7012'],
+                                                                  //itemAsString: (Country country) => country.name,
+                                                                  validator: (value) {
+                                                                    if(value == null) {
+                                                                      return "Veuillez choisir le produit";
+                                                                    }
+                                                                    return null;
+                                                                  },
+                                                                  onSaved: (value) {
+                                                                    //context.read<SelectedCountryCubit>().change(value);
+                                                                  },
+                                                                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                                                                      dropdownSearchDecoration: InputDecoration(
+                                                                        isDense: true,
+                                                                      )
+                                                                  ),
+                                                                  popupProps: PopupPropsMultiSelection.bottomSheet(
+                                                                      showSearchBox: true,
+                                                                      searchFieldProps: const TextFieldProps(
+                                                                          decoration: InputDecoration(
+                                                                            label: Text('Recherche ...'),
+                                                                            isDense: true,
+                                                                          )
+                                                                      ),
+                                                                      emptyBuilder: (context, text) {
+                                                                        return const Center(
+                                                                          child: SizedBox(
+                                                                            height: 50.0,
+                                                                            child: Text('Aucune taxe trouvée'),
+                                                                          ),
+                                                                        );
+                                                                      }
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: TextFormField(
+                                                                  decoration: const InputDecoration(),
+                                                                ),
+                                                              ),
+                                                            ]
+                                                        ),
+                                                        TableRow(
+                                                            children: [
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: DropdownSearch<String>(
+                                                                  items: const ['Pomme tomate'],
+                                                                  //itemAsString: (Country country) => country.name,
+                                                                  validator: (value) {
+                                                                    if(value == null) {
+                                                                      return "Veuillez choisir le produit";
+                                                                    }
+                                                                    return null;
+                                                                  },
+                                                                  onSaved: (value) {
+                                                                    //context.read<SelectedCountryCubit>().change(value);
+                                                                  },
+                                                                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                                                                      dropdownSearchDecoration: InputDecoration(
+                                                                          isDense: true,
+                                                                          filled: true
+                                                                      )
+                                                                  ),
+                                                                  popupProps: PopupProps.bottomSheet(
+                                                                      showSearchBox: true,
+                                                                      searchFieldProps: const TextFieldProps(
+                                                                          decoration: InputDecoration(
+                                                                            label: Text('Recherche ...'),
+                                                                            isDense: true,
+                                                                          )
+                                                                      ),
+                                                                      emptyBuilder: (context, text) {
+                                                                        return const Center(
+                                                                          child: SizedBox(
+                                                                            height: 50.0,
+                                                                            child: Text('Aucun produit trouvé'),
+                                                                          ),
+                                                                        );
+                                                                      }
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: TextFormField(
+                                                                  decoration: const InputDecoration(),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: DropdownSearch<String>(
+                                                                  items: const ['7011 - Mse'],
+                                                                  //itemAsString: (Country country) => country.name,
+                                                                  validator: (value) {
+                                                                    if(value == null) {
+                                                                      return "Veuillez choisir le produit";
+                                                                    }
+                                                                    return null;
+                                                                  },
+                                                                  onSaved: (value) {
+                                                                    //context.read<SelectedCountryCubit>().change(value);
+                                                                  },
+                                                                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                                                                      dropdownSearchDecoration: InputDecoration(
+                                                                        isDense: true,
+                                                                      )
+                                                                  ),
+                                                                  popupProps: PopupProps.bottomSheet(
+                                                                      showSearchBox: true,
+                                                                      searchFieldProps: const TextFieldProps(
+                                                                          decoration: InputDecoration(
+                                                                            label: Text('Recherche ...'),
+                                                                            isDense: true,
+                                                                          )
+                                                                      ),
+                                                                      emptyBuilder: (context, text) {
+                                                                        return const Center(
+                                                                          child: SizedBox(
+                                                                            height: 50.0,
+                                                                            child: Text('Aucun produit trouvé'),
+                                                                          ),
+                                                                        );
+                                                                      }
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: TextFormField(
+                                                                  decoration: const InputDecoration(),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: DropdownSearch<String>.multiSelection(
+                                                                  items: const ['7011', '7012'],
+                                                                  //itemAsString: (Country country) => country.name,
+                                                                  validator: (value) {
+                                                                    if(value == null) {
+                                                                      return "Veuillez choisir le produit";
+                                                                    }
+                                                                    return null;
+                                                                  },
+                                                                  onSaved: (value) {
+                                                                    //context.read<SelectedCountryCubit>().change(value);
+                                                                  },
+                                                                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                                                                      dropdownSearchDecoration: InputDecoration(
+                                                                        isDense: true,
+                                                                      )
+                                                                  ),
+                                                                  popupProps: PopupPropsMultiSelection.bottomSheet(
+                                                                      showSearchBox: true,
+                                                                      searchFieldProps: const TextFieldProps(
+                                                                          decoration: InputDecoration(
+                                                                            label: Text('Recherche ...'),
+                                                                            isDense: true,
+                                                                          )
+                                                                      ),
+                                                                      emptyBuilder: (context, text) {
+                                                                        return const Center(
+                                                                          child: SizedBox(
+                                                                            height: 50.0,
+                                                                            child: Text('Aucune taxe trouvée'),
+                                                                          ),
+                                                                        );
+                                                                      }
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: TextFormField(
+                                                                  decoration: const InputDecoration(),
+                                                                ),
+                                                              ),
+                                                            ]
+                                                        ),
+                                                        TableRow(
+                                                            children: [
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: DropdownSearch<String>(
+                                                                  items: const ['Pomme tomate'],
+                                                                  //itemAsString: (Country country) => country.name,
+                                                                  validator: (value) {
+                                                                    if(value == null) {
+                                                                      return "Veuillez choisir le produit";
+                                                                    }
+                                                                    return null;
+                                                                  },
+                                                                  onSaved: (value) {
+                                                                    //context.read<SelectedCountryCubit>().change(value);
+                                                                  },
+                                                                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                                                                      dropdownSearchDecoration: InputDecoration(
+                                                                          isDense: true,
+                                                                          filled: true
+                                                                      )
+                                                                  ),
+                                                                  popupProps: PopupProps.bottomSheet(
+                                                                      showSearchBox: true,
+                                                                      searchFieldProps: const TextFieldProps(
+                                                                          decoration: InputDecoration(
+                                                                            label: Text('Recherche ...'),
+                                                                            isDense: true,
+                                                                          )
+                                                                      ),
+                                                                      emptyBuilder: (context, text) {
+                                                                        return const Center(
+                                                                          child: SizedBox(
+                                                                            height: 50.0,
+                                                                            child: Text('Aucun produit trouvé'),
+                                                                          ),
+                                                                        );
+                                                                      }
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: TextFormField(
+                                                                  decoration: const InputDecoration(),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: DropdownSearch<String>(
+                                                                  items: const ['7011 - Mse'],
+                                                                  //itemAsString: (Country country) => country.name,
+                                                                  validator: (value) {
+                                                                    if(value == null) {
+                                                                      return "Veuillez choisir le produit";
+                                                                    }
+                                                                    return null;
+                                                                  },
+                                                                  onSaved: (value) {
+                                                                    //context.read<SelectedCountryCubit>().change(value);
+                                                                  },
+                                                                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                                                                      dropdownSearchDecoration: InputDecoration(
+                                                                        isDense: true,
+                                                                      )
+                                                                  ),
+                                                                  popupProps: PopupProps.bottomSheet(
+                                                                      showSearchBox: true,
+                                                                      searchFieldProps: const TextFieldProps(
+                                                                          decoration: InputDecoration(
+                                                                            label: Text('Recherche ...'),
+                                                                            isDense: true,
+                                                                          )
+                                                                      ),
+                                                                      emptyBuilder: (context, text) {
+                                                                        return const Center(
+                                                                          child: SizedBox(
+                                                                            height: 50.0,
+                                                                            child: Text('Aucun produit trouvé'),
+                                                                          ),
+                                                                        );
+                                                                      }
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: TextFormField(
+                                                                  decoration: const InputDecoration(),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: DropdownSearch<String>.multiSelection(
+                                                                  items: const ['7011', '7012'],
+                                                                  //itemAsString: (Country country) => country.name,
+                                                                  validator: (value) {
+                                                                    if(value == null) {
+                                                                      return "Veuillez choisir le produit";
+                                                                    }
+                                                                    return null;
+                                                                  },
+                                                                  onSaved: (value) {
+                                                                    //context.read<SelectedCountryCubit>().change(value);
+                                                                  },
+                                                                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                                                                      dropdownSearchDecoration: InputDecoration(
+                                                                        isDense: true,
+                                                                      )
+                                                                  ),
+                                                                  popupProps: PopupPropsMultiSelection.bottomSheet(
+                                                                      showSearchBox: true,
+                                                                      searchFieldProps: const TextFieldProps(
+                                                                          decoration: InputDecoration(
+                                                                            label: Text('Recherche ...'),
+                                                                            isDense: true,
+                                                                          )
+                                                                      ),
+                                                                      emptyBuilder: (context, text) {
+                                                                        return const Center(
+                                                                          child: SizedBox(
+                                                                            height: 50.0,
+                                                                            child: Text('Aucune taxe trouvée'),
+                                                                          ),
+                                                                        );
+                                                                      }
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: TextFormField(
+                                                                  decoration: const InputDecoration(),
+                                                                ),
+                                                              ),
+                                                            ]
+                                                        ),
+                                                        TableRow(
+                                                            children: [
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: DropdownSearch<String>(
+                                                                  items: const ['Pomme tomate'],
+                                                                  //itemAsString: (Country country) => country.name,
+                                                                  validator: (value) {
+                                                                    if(value == null) {
+                                                                      return "Veuillez choisir le produit";
+                                                                    }
+                                                                    return null;
+                                                                  },
+                                                                  onSaved: (value) {
+                                                                    //context.read<SelectedCountryCubit>().change(value);
+                                                                  },
+                                                                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                                                                      dropdownSearchDecoration: InputDecoration(
+                                                                          isDense: true,
+                                                                          filled: true
+                                                                      )
+                                                                  ),
+                                                                  popupProps: PopupProps.bottomSheet(
+                                                                      showSearchBox: true,
+                                                                      searchFieldProps: const TextFieldProps(
+                                                                          decoration: InputDecoration(
+                                                                            label: Text('Recherche ...'),
+                                                                            isDense: true,
+                                                                          )
+                                                                      ),
+                                                                      emptyBuilder: (context, text) {
+                                                                        return const Center(
+                                                                          child: SizedBox(
+                                                                            height: 50.0,
+                                                                            child: Text('Aucun produit trouvé'),
+                                                                          ),
+                                                                        );
+                                                                      }
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: TextFormField(
+                                                                  decoration: const InputDecoration(),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: DropdownSearch<String>(
+                                                                  items: const ['7011 - Mse'],
+                                                                  //itemAsString: (Country country) => country.name,
+                                                                  validator: (value) {
+                                                                    if(value == null) {
+                                                                      return "Veuillez choisir le produit";
+                                                                    }
+                                                                    return null;
+                                                                  },
+                                                                  onSaved: (value) {
+                                                                    //context.read<SelectedCountryCubit>().change(value);
+                                                                  },
+                                                                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                                                                      dropdownSearchDecoration: InputDecoration(
+                                                                        isDense: true,
+                                                                      )
+                                                                  ),
+                                                                  popupProps: PopupProps.bottomSheet(
+                                                                      showSearchBox: true,
+                                                                      searchFieldProps: const TextFieldProps(
+                                                                          decoration: InputDecoration(
+                                                                            label: Text('Recherche ...'),
+                                                                            isDense: true,
+                                                                          )
+                                                                      ),
+                                                                      emptyBuilder: (context, text) {
+                                                                        return const Center(
+                                                                          child: SizedBox(
+                                                                            height: 50.0,
+                                                                            child: Text('Aucun produit trouvé'),
+                                                                          ),
+                                                                        );
+                                                                      }
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: TextFormField(
+                                                                  decoration: const InputDecoration(),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: DropdownSearch<String>.multiSelection(
+                                                                  items: const ['7011', '7012'],
+                                                                  //itemAsString: (Country country) => country.name,
+                                                                  validator: (value) {
+                                                                    if(value == null) {
+                                                                      return "Veuillez choisir le produit";
+                                                                    }
+                                                                    return null;
+                                                                  },
+                                                                  onSaved: (value) {
+                                                                    //context.read<SelectedCountryCubit>().change(value);
+                                                                  },
+                                                                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                                                                      dropdownSearchDecoration: InputDecoration(
+                                                                        isDense: true,
+                                                                      )
+                                                                  ),
+                                                                  popupProps: PopupPropsMultiSelection.bottomSheet(
+                                                                      showSearchBox: true,
+                                                                      searchFieldProps: const TextFieldProps(
+                                                                          decoration: InputDecoration(
+                                                                            label: Text('Recherche ...'),
+                                                                            isDense: true,
+                                                                          )
+                                                                      ),
+                                                                      emptyBuilder: (context, text) {
+                                                                        return const Center(
+                                                                          child: SizedBox(
+                                                                            height: 50.0,
+                                                                            child: Text('Aucune taxe trouvée'),
+                                                                          ),
+                                                                        );
+                                                                      }
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: TextFormField(
+                                                                  decoration: const InputDecoration(),
+                                                                ),
+                                                              ),
+                                                            ]
+                                                        ),
+                                                        TableRow(
+                                                            children: [
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: DropdownSearch<String>(
+                                                                  items: const ['Pomme tomate'],
+                                                                  //itemAsString: (Country country) => country.name,
+                                                                  validator: (value) {
+                                                                    if(value == null) {
+                                                                      return "Veuillez choisir le produit";
+                                                                    }
+                                                                    return null;
+                                                                  },
+                                                                  onSaved: (value) {
+                                                                    //context.read<SelectedCountryCubit>().change(value);
+                                                                  },
+                                                                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                                                                      dropdownSearchDecoration: InputDecoration(
+                                                                          isDense: true,
+                                                                          filled: true
+                                                                      )
+                                                                  ),
+                                                                  popupProps: PopupProps.bottomSheet(
+                                                                      showSearchBox: true,
+                                                                      searchFieldProps: const TextFieldProps(
+                                                                          decoration: InputDecoration(
+                                                                            label: Text('Recherche ...'),
+                                                                            isDense: true,
+                                                                          )
+                                                                      ),
+                                                                      emptyBuilder: (context, text) {
+                                                                        return const Center(
+                                                                          child: SizedBox(
+                                                                            height: 50.0,
+                                                                            child: Text('Aucun produit trouvé'),
+                                                                          ),
+                                                                        );
+                                                                      }
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: TextFormField(
+                                                                  decoration: const InputDecoration(),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: DropdownSearch<String>(
+                                                                  items: const ['7011 - Mse'],
+                                                                  //itemAsString: (Country country) => country.name,
+                                                                  validator: (value) {
+                                                                    if(value == null) {
+                                                                      return "Veuillez choisir le produit";
+                                                                    }
+                                                                    return null;
+                                                                  },
+                                                                  onSaved: (value) {
+                                                                    //context.read<SelectedCountryCubit>().change(value);
+                                                                  },
+                                                                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                                                                      dropdownSearchDecoration: InputDecoration(
+                                                                        isDense: true,
+                                                                      )
+                                                                  ),
+                                                                  popupProps: PopupProps.bottomSheet(
+                                                                      showSearchBox: true,
+                                                                      searchFieldProps: const TextFieldProps(
+                                                                          decoration: InputDecoration(
+                                                                            label: Text('Recherche ...'),
+                                                                            isDense: true,
+                                                                          )
+                                                                      ),
+                                                                      emptyBuilder: (context, text) {
+                                                                        return const Center(
+                                                                          child: SizedBox(
+                                                                            height: 50.0,
+                                                                            child: Text('Aucun produit trouvé'),
+                                                                          ),
+                                                                        );
+                                                                      }
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: TextFormField(
+                                                                  decoration: const InputDecoration(),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: DropdownSearch<String>.multiSelection(
+                                                                  items: const ['7011', '7012'],
+                                                                  //itemAsString: (Country country) => country.name,
+                                                                  validator: (value) {
+                                                                    if(value == null) {
+                                                                      return "Veuillez choisir le produit";
+                                                                    }
+                                                                    return null;
+                                                                  },
+                                                                  onSaved: (value) {
+                                                                    //context.read<SelectedCountryCubit>().change(value);
+                                                                  },
+                                                                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                                                                      dropdownSearchDecoration: InputDecoration(
+                                                                        isDense: true,
+                                                                      )
+                                                                  ),
+                                                                  popupProps: PopupPropsMultiSelection.bottomSheet(
+                                                                      showSearchBox: true,
+                                                                      searchFieldProps: const TextFieldProps(
+                                                                          decoration: InputDecoration(
+                                                                            label: Text('Recherche ...'),
+                                                                            isDense: true,
+                                                                          )
+                                                                      ),
+                                                                      emptyBuilder: (context, text) {
+                                                                        return const Center(
+                                                                          child: SizedBox(
+                                                                            height: 50.0,
+                                                                            child: Text('Aucune taxe trouvée'),
+                                                                          ),
+                                                                        );
+                                                                      }
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: TextFormField(
+                                                                  decoration: const InputDecoration(),
+                                                                ),
+                                                              ),
+                                                            ]
+                                                        ),
+                                                        TableRow(
+                                                            children: [
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: DropdownSearch<String>(
+                                                                  items: const ['Pomme tomate'],
+                                                                  //itemAsString: (Country country) => country.name,
+                                                                  validator: (value) {
+                                                                    if(value == null) {
+                                                                      return "Veuillez choisir le produit";
+                                                                    }
+                                                                    return null;
+                                                                  },
+                                                                  onSaved: (value) {
+                                                                    //context.read<SelectedCountryCubit>().change(value);
+                                                                  },
+                                                                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                                                                      dropdownSearchDecoration: InputDecoration(
+                                                                          isDense: true,
+                                                                          filled: true
+                                                                      )
+                                                                  ),
+                                                                  popupProps: PopupProps.bottomSheet(
+                                                                      showSearchBox: true,
+                                                                      searchFieldProps: const TextFieldProps(
+                                                                          decoration: InputDecoration(
+                                                                            label: Text('Recherche ...'),
+                                                                            isDense: true,
+                                                                          )
+                                                                      ),
+                                                                      emptyBuilder: (context, text) {
+                                                                        return const Center(
+                                                                          child: SizedBox(
+                                                                            height: 50.0,
+                                                                            child: Text('Aucun produit trouvé'),
+                                                                          ),
+                                                                        );
+                                                                      }
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: TextFormField(
+                                                                  decoration: const InputDecoration(),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: DropdownSearch<String>(
+                                                                  items: const ['7011 - Mse'],
+                                                                  //itemAsString: (Country country) => country.name,
+                                                                  validator: (value) {
+                                                                    if(value == null) {
+                                                                      return "Veuillez choisir le produit";
+                                                                    }
+                                                                    return null;
+                                                                  },
+                                                                  onSaved: (value) {
+                                                                    //context.read<SelectedCountryCubit>().change(value);
+                                                                  },
+                                                                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                                                                      dropdownSearchDecoration: InputDecoration(
+                                                                        isDense: true,
+                                                                      )
+                                                                  ),
+                                                                  popupProps: PopupProps.bottomSheet(
+                                                                      showSearchBox: true,
+                                                                      searchFieldProps: const TextFieldProps(
+                                                                          decoration: InputDecoration(
+                                                                            label: Text('Recherche ...'),
+                                                                            isDense: true,
+                                                                          )
+                                                                      ),
+                                                                      emptyBuilder: (context, text) {
+                                                                        return const Center(
+                                                                          child: SizedBox(
+                                                                            height: 50.0,
+                                                                            child: Text('Aucun produit trouvé'),
+                                                                          ),
+                                                                        );
+                                                                      }
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: TextFormField(
+                                                                  decoration: const InputDecoration(),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: DropdownSearch<String>.multiSelection(
+                                                                  items: const ['7011', '7012'],
+                                                                  //itemAsString: (Country country) => country.name,
+                                                                  validator: (value) {
+                                                                    if(value == null) {
+                                                                      return "Veuillez choisir le produit";
+                                                                    }
+                                                                    return null;
+                                                                  },
+                                                                  onSaved: (value) {
+                                                                    //context.read<SelectedCountryCubit>().change(value);
+                                                                  },
+                                                                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                                                                      dropdownSearchDecoration: InputDecoration(
+                                                                        isDense: true,
+                                                                      )
+                                                                  ),
+                                                                  popupProps: PopupPropsMultiSelection.bottomSheet(
+                                                                      showSearchBox: true,
+                                                                      searchFieldProps: const TextFieldProps(
+                                                                          decoration: InputDecoration(
+                                                                            label: Text('Recherche ...'),
+                                                                            isDense: true,
+                                                                          )
+                                                                      ),
+                                                                      emptyBuilder: (context, text) {
+                                                                        return const Center(
+                                                                          child: SizedBox(
+                                                                            height: 50.0,
+                                                                            child: Text('Aucune taxe trouvée'),
+                                                                          ),
+                                                                        );
+                                                                      }
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 40,
+                                                                child: TextFormField(
+                                                                  decoration: const InputDecoration(),
+                                                                ),
+                                                              ),
+                                                            ]
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  )
+                                              ),
                                             ),
                                           ),
                                           Padding(
@@ -404,108 +1516,132 @@ class BillWidget extends StatelessWidget {
                                               ],
                                             ),
                                           ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                                            child: Table(
-                                              children: [
-                                                TableRow(
-                                                    children: [
-                                                      const Spacer(),
-                                                      const Text('Total HT'),
-                                                      SizedBox(
-                                                        width: 100,
-                                                        height: 20,
-                                                        child: TextFormField(
-                                                          enabled: false,
-                                                          initialValue: "105 555",
-                                                          decoration: const InputDecoration(
-                                                              suffixText: "\$"
-                                                          ),
+                                          Expanded(
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.end,
+                                                children: [
+                                                  Padding(
+                                                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                                                    child: Table(
+                                                      columnWidths: const {
+                                                        0: FixedColumnWidth(80),
+                                                        1: FixedColumnWidth(180),
+                                                      },
+                                                      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                                                      children: [
+                                                        TableRow(
+                                                            children: [
+                                                              const Text('Total HT'),
+                                                              SizedBox(
+                                                                width: 100,
+                                                                height: 20,
+                                                                child: TextFormField(
+                                                                  textAlign: TextAlign.end,
+                                                                  style: const TextStyle(color: Colors.black),
+                                                                  enabled: false,
+                                                                  initialValue: "105 555",
+                                                                  decoration: const InputDecoration(
+                                                                      suffixStyle: TextStyle(color: Colors.black),
+                                                                      suffixText: "\$"
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ]
                                                         ),
-                                                      ),
-                                                    ]
-                                                ),
-                                                TableRow(
-                                                    children: [
-                                                      const Spacer(),
-                                                      const Text('Remise'),
-                                                      SizedBox(
-                                                          width: 100,
-                                                          height: 20.0,
-                                                          child: TextFormField(
-                                                            decoration:  const InputDecoration(
-                                                                suffixText: "%"
-                                                            ),
-                                                          )
-                                                      ),
-                                                    ]
-                                                ),
-                                                TableRow(
-                                                    children: [
-                                                      const Spacer(),
-                                                      const Text('Ristourne'),
-                                                      SizedBox(
-                                                          width: 100,
-                                                          height: 20.0,
-                                                          child: TextFormField(
-                                                            decoration:  const InputDecoration(
-                                                                suffixText: "%"
-                                                            ),
-                                                          )
-                                                      ),
-                                                    ]
-                                                ),
-                                                TableRow(
-                                                    children: [
-                                                      const Spacer(),
-                                                      const Text('Escompte'),
-                                                      SizedBox(
-                                                          width: 100,
-                                                          height: 20.0,
-                                                          child: TextFormField(
-                                                            decoration:  const InputDecoration(
-                                                                suffixText: "%"
-                                                            ),
-                                                          )
-                                                      ),
-                                                    ]
-                                                ),
-                                                TableRow(
-                                                    children: [
-                                                      const Spacer(),
-                                                      const Text('Total Taxe'),
-                                                      SizedBox(
-                                                        width: 100,
-                                                        height: 20,
-                                                        child: TextFormField(
-                                                          enabled: false,
-                                                          initialValue: "25 000",
-                                                          decoration: const InputDecoration(
-                                                              suffixText: "\$"
-                                                          ),
+                                                        TableRow(
+                                                            children: [
+                                                              const Text('Remise'),
+                                                              SizedBox(
+                                                                  width: 100,
+                                                                  height: 20.0,
+                                                                  child: TextFormField(
+                                                                    textAlign: TextAlign.end,
+                                                                    style: const TextStyle(color: Colors.black),
+                                                                    decoration:  const InputDecoration(
+                                                                        suffixStyle: TextStyle(color: Colors.black),
+                                                                        suffixText: "%"
+                                                                    ),
+                                                                  )
+                                                              ),
+                                                            ]
                                                         ),
-                                                      ),
-                                                    ]
-                                                ),
-                                                TableRow(
-                                                    children: [
-                                                      const Spacer(),
-                                                      const Text('Total Taxe'),
-                                                      SizedBox(
-                                                        width: 100,
-                                                        height: 20,
-                                                        child: TextFormField(
-                                                          enabled: false,
-                                                          initialValue: "125 555",
-                                                          decoration: const InputDecoration(
-                                                              suffixText: "\$"
-                                                          ),
+                                                        TableRow(
+                                                            children: [
+                                                              const Text('Ristourne'),
+                                                              SizedBox(
+                                                                  width: 100,
+                                                                  height: 20.0,
+                                                                  child: TextFormField(
+                                                                    textAlign: TextAlign.end,
+                                                                    style: const TextStyle(color: Colors.black),
+                                                                    decoration:  const InputDecoration(
+                                                                        suffixStyle: TextStyle(color: Colors.black),
+                                                                        suffixText: "%"
+                                                                    ),
+                                                                  )
+                                                              ),
+                                                            ]
                                                         ),
-                                                      ),
-                                                    ]
-                                                ),
-                                              ],
-                                            ),
+                                                        TableRow(
+                                                            children: [
+                                                              const Text('Escompte'),
+                                                              SizedBox(
+                                                                  width: 100,
+                                                                  height: 20.0,
+                                                                  child: TextFormField(
+                                                                    textAlign: TextAlign.end,
+                                                                    style: const TextStyle(color: Colors.black),
+                                                                    decoration:  const InputDecoration(
+                                                                        suffixStyle: TextStyle(color: Colors.black),
+                                                                        suffixText: "%"
+                                                                    ),
+                                                                  )
+                                                              ),
+                                                            ]
+                                                        ),
+                                                        TableRow(
+                                                            children: [
+                                                              const Text('Total Taxe'),
+                                                              SizedBox(
+                                                                width: 100,
+                                                                height: 20,
+                                                                child: TextFormField(
+                                                                  textAlign: TextAlign.end,
+                                                                  style: const TextStyle(color: Colors.black),
+                                                                  enabled: false,
+                                                                  initialValue: "25 000",
+                                                                  decoration: const InputDecoration(
+                                                                      suffixStyle: TextStyle(color: Colors.black),
+                                                                      suffixText: "\$"
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ]
+                                                        ),
+                                                        TableRow(
+                                                            children: [
+                                                              const Text('Total TTC'),
+                                                              SizedBox(
+                                                                width: 100,
+                                                                height: 20,
+                                                                child: TextFormField(
+                                                                  textAlign: TextAlign.end,
+                                                                  style: const TextStyle(color: Colors.black),
+                                                                  enabled: false,
+                                                                  initialValue: "125 555",
+                                                                  decoration: const InputDecoration(
+                                                                      suffixStyle: TextStyle(color: Colors.black),
+                                                                      suffixText: "\$"
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ]
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  )
+                                                ],
+                                              )
                                           ),
                                         ],
                                       ),

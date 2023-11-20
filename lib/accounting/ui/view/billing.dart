@@ -286,7 +286,7 @@ class AccountingBilling extends StatelessWidget {
         ),
         Expanded(
             flex: width < 1400 ? 2 : 3,
-            child: const BillWidget()
+            child: BillWidget()
         ),
       ],
     );
