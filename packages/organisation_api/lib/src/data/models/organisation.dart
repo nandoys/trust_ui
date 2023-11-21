@@ -23,6 +23,15 @@ class Organisation extends Equatable {
     );
   }
 
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic>  data = {
+      'nom': name, 'adresse': address, 'country_id': country.id, 'activites': activities, 'email': email,
+      'telephone': telephone, 'type_organisation_id': typeOrganisation.id, 'register': register, 'id_nat': idNat,
+      'numero_impot': numeroImpot, 'numero_social': numeroSocial, 'numero_employeur': numeroEmployeur};
+
+    return data;
+
+  }
 
   final String? id;
   late final String name;
@@ -38,16 +47,6 @@ class Organisation extends Equatable {
   late final String? numeroImpot;
   late final String? numeroSocial;
   late final String? numeroEmployeur;
-
-  Map<String, dynamic> toJson() {
-    Map<String, dynamic>  data = {
-      'nom': name, 'adresse': address, 'country_id': country.id, 'activites': activities, 'email': email,
-      'telephone': telephone, 'type_organisation_id': typeOrganisation.id, 'register': register, 'id_nat': idNat,
-      'numero_impot': numeroImpot, 'numero_social': numeroSocial, 'numero_employeur': numeroEmployeur};
-
-    return data;
-
-  }
 
   @override
   List<Object?> get props => [id];

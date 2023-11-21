@@ -45,11 +45,21 @@ final route = GoRouter(
                   int? port = int.tryParse(route.uri.queryParameters['port']!);
                   String? protocol = route.uri.queryParameters['protocol'];
 
-                  ActiveOrganisationCubit activeOrganisationCubit = route.extra as ActiveOrganisationCubit;
+                  Map<String, dynamic> extra = route.extra as Map<String, dynamic>;
+                  final OrganisationContextMenuCubit organisationContextMenuCubit =
+                  extra['organisationContextMenuCubit'] as OrganisationContextMenuCubit;
+                  ActiveOrganisationCubit activeOrganisation = extra['activeOrganisationCubit'] as ActiveOrganisationCubit;
 
                   return NoTransitionPage(
-                      child: BlocProvider.value(
-                        value: activeOrganisationCubit,
+                      child: MultiBlocProvider(
+                        providers: [
+                          BlocProvider.value(
+                            value: organisationContextMenuCubit,
+                          ),
+                          BlocProvider.value(
+                            value: activeOrganisation,
+                          )
+                        ],
                         child: SignUpPage(protocol: protocol, host: host, port: port,),
                       )
                   );
@@ -62,12 +72,21 @@ final route = GoRouter(
           pageBuilder: (context, route) {
             Map<String, dynamic> extra = route.extra as Map<String, dynamic>;
             final Organisation organisation = extra['organisation'] as Organisation;
+            final OrganisationContextMenuCubit organisationContextMenuCubit =
+            extra['organisationContextMenuCubit'] as OrganisationContextMenuCubit;
             final ActiveOrganisationCubit activeOrganisation = extra['activeOrganisationCubit'] as ActiveOrganisationCubit;
 
             return NoTransitionPage(
-                child: BlocProvider.value(
-                    value: activeOrganisation,
-                    child: CreateUserAdminPage(organisation: organisation,)
+                child: MultiBlocProvider(
+                  providers: [
+                    BlocProvider.value(
+                      value: organisationContextMenuCubit,
+                    ),
+                    BlocProvider.value(
+                      value: activeOrganisation,
+                    )
+                  ],
+                  child: CreateUserAdminPage(organisation: organisation,),
                 )
             );
           }

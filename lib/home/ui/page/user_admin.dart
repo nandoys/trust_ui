@@ -65,7 +65,9 @@ class CreateUserAdminPage extends StatelessWidget {
                                 port: context.read<ActiveServerCubit>().state.port
                             )
                         );
-                        context.goNamed('start', extra: user);
+                        context.goNamed('start', extra: {
+                          'user': user, 'organisationContextMenuCubit': context.read<OrganisationContextMenuCubit>()
+                        });
                       }
                     },
                   ),

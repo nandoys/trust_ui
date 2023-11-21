@@ -81,7 +81,8 @@ class OrganisationContextMenu extends StatelessWidget {
                 listener: (context, organisation) {
                   context.goNamed('createAdmin', extra: {
                     'organisation': organisation,
-                    'activeOrganisationCubit': context.read<ActiveOrganisationCubit>()
+                    'activeOrganisationCubit': context.read<ActiveOrganisationCubit>(),
+                    'organisationContextMenuCubit': context.read<OrganisationContextMenuCubit>()
                   });
                 },
                 listenWhen: (previous, current) => current != null,
@@ -96,7 +97,10 @@ class OrganisationContextMenu extends StatelessWidget {
                   port = context.read<ActiveServerCubit>().state.port,
                   context.goNamed('signUp', queryParameters: {
                     'protocol': protocol, 'host':host, 'port': port.toString()
-                  }, extra: context.read<ActiveOrganisationCubit>())
+                  }, extra: {
+                    'activeOrganisationCubit': context.read<ActiveOrganisationCubit>(),
+                    'organisationContextMenuCubit': context.read<OrganisationContextMenuCubit>()
+                  })
                 } else if (item.action is Organisation) {
                   activeOrganisation.active(
                       item.action as Organisation,

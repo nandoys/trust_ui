@@ -43,7 +43,8 @@ class _SignUpFormState extends State<SignUpForm> {
               context.read<SignupLoadingCubit>().change(false);
               context.goNamed('createAdmin', extra: {
                 'organisation': organisation,
-                'activeOrganisationCubit': context.read<ActiveOrganisationCubit>()
+                'activeOrganisationCubit': context.read<ActiveOrganisationCubit>(),
+                'organisationContextMenuCubit': context.read<OrganisationContextMenuCubit>()
               });
             },
             listenWhen: (previous, current) => current != null,
