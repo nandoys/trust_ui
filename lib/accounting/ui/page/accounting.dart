@@ -18,7 +18,7 @@ class Accounting extends StatelessWidget {
       AccountingDashboard(user: user),
       AccountingActivity(user: user),
       AccountingBilling(user: user),
-      AccountingTreasury(user: user),
+      AccountingPayment(user: user),
       AccountingMisc(user: user),
       AccountingThirdParty(user: user)
     ];
@@ -111,7 +111,7 @@ class Accounting extends StatelessWidget {
                       Expanded(
                           child: MultiBlocProvider(
                               providers: [
-                                BlocProvider(create: (context) => FilterProductCategoryCubit()),
+                                BlocProvider(create: (context) => FilterProductTypeCubit()),
                                 BlocProvider(create: (context) => ActivityViewModeCubit()),
                                 BlocProvider(create: (context) => FilterPartnerCategoryCubit()),
                                 BlocProvider(create: (context) => ThirdPartyViewModeCubit()),

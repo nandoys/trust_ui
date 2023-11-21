@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:user_api/user_api.dart';
+import 'package:activity_api/activity_api.dart';
 
 import 'package:trust_app/accounting/logic/cubit/activity/activity_cubit.dart';
+import 'package:trust_app/accounting/ui/widget/accounting_widget.dart';
 import 'package:utils/utils.dart';
 
 class AccountingActivity extends StatelessWidget {
@@ -17,39 +19,13 @@ class AccountingActivity extends StatelessWidget {
 
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(20.0),
+        const Padding(
+          padding: EdgeInsets.all(20.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Vos produits',
-                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-              ),
-              ElevatedButton.icon(
-                icon: const Icon(Icons.add, color: Colors.white,),
-                onPressed: (){
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return const Dialog(
-                          child: SizedBox(
-                            width: 850,
-                            height: 600,
-                            child: Column(
-                              children: [Text('data')],
-                            ),
-                          ),
-                        );
-                      }
-                  );
-                },
-                style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.resolveWith((states) => Colors.blue.shade700),
-                    fixedSize: MaterialStateProperty.resolveWith((states) => const Size.fromHeight(5))
-                ),
-                label: const Text('Nouveau', style: TextStyle(color: Colors.white),),
-              )
+              ActivityTitleWidget(),
+              ActivityNewButton()
             ],
           ),
         ),
@@ -57,62 +33,112 @@ class AccountingActivity extends StatelessWidget {
           padding: const EdgeInsets.only(left: 20.0),
           child: BlocBuilder<ActivityViewModeCubit, ViewMode>(
               builder: (context, viewMode) {
-                return Row(
-                  children: [
-                    FilterChip(
-                        label: const Text('Bien'),
-                        selected: true,
-                        onSelected: (selected) {}
-                    ),
-                    FilterChip(
-                        label: const Text('Service'),
-                        selected: true,
-                        onSelected: (selected) {}
-                    ),
-                    FilterChip(
-                        label: const Text('Mixte'),
-                        selected: true,
-                        onSelected: (selected) {}
-                    ),
-                    const Spacer(),
-                    const SizedBox(
-                      width: 250,
-                      child: TextField(
-                        decoration: InputDecoration(
-                            label: Text("Recherche"),
-                            isDense: true,
-                            contentPadding: EdgeInsets.all(2)
-                        ),
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: (){
-                        context.read<ActivityViewModeCubit>().changeView(ViewMode.table);
-                      },
-                      icon: const Icon(Icons.table_view),
-                      selectedIcon: const Icon(Icons.table_view, color: Colors.red,),
-                      isSelected: viewMode == ViewMode.table,
-                    ),
-                    IconButton(
-                      onPressed: (){
-                        context.read<ActivityViewModeCubit>().changeView(ViewMode.grid);
-                      },
-                      icon: const Icon(Icons.grid_view),
-                      selectedIcon: const Icon(Icons.grid_view, color: Colors.red,),
-                      isSelected: viewMode == ViewMode.grid,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 20.0),
-                      child: IconButton(
-                        onPressed: (){
-                          context.read<ActivityViewModeCubit>().changeView(ViewMode.list);
-                        },
-                        icon: const Icon(Icons.list),
-                        selectedIcon: const Icon(Icons.list, color: Colors.red,),
-                        isSelected: viewMode == ViewMode.list,
-                      ),
-                    ),
-                  ],
+                return BlocBuilder<FilterProductTypeCubit, Set<ProductType>>(
+                    builder: (context, filter) {
+                      final productTypeCubit = context.read<FilterProductTypeCubit>();
+                      return Row(
+                        children: [
+                          FilterChip(
+                              label: Text(
+                                  ProductType.bien.name.replaceFirst(
+                                      ProductType.bien.name[0],
+                                      ProductType.bien.name[0].toUpperCase()
+                                  )
+                              ),
+                              selected: filter.contains(ProductType.bien),
+                              onSelected: (selected) {
+                                if(selected) {
+                                  final Set<ProductType> filters = filter;
+                                  filters.add(ProductType.bien);
+                                  productTypeCubit.onSelectionChanged(filters.toSet());
+                                } else if (filter.length > 1) {
+                                  final filters = filter;
+                                  filters.remove(ProductType.bien);
+                                  productTypeCubit.onSelectionChanged(filters.toSet());
+                                }
+                              },
+                          ),
+                          FilterChip(
+                              label: Text(
+                                  ProductType.service.name.replaceFirst(
+                                      ProductType.service.name[0],
+                                      ProductType.service.name[0].toUpperCase()
+                                  )
+                              ),
+                              selected: filter.contains(ProductType.service),
+                              onSelected: (selected) {
+                                if(selected) {
+                                  final Set<ProductType> filters = filter;
+                                  filters.add(ProductType.service);
+                                  productTypeCubit.onSelectionChanged(filters.toSet());
+                                } else if (filter.length > 1) {
+                                  final filters = filter;
+                                  filters.remove(ProductType.service);
+                                  productTypeCubit.onSelectionChanged(filters.toSet());
+                                }
+                              }
+                          ),
+                          FilterChip(
+                              label: Text(
+                                  ProductType.mixte.name.replaceFirst(
+                                      ProductType.mixte.name[0],
+                                      ProductType.mixte.name[0].toUpperCase()
+                                  )
+                              ),
+                              selected: filter.contains(ProductType.mixte),
+                              onSelected: (selected) {
+                                if(selected) {
+                                  final Set<ProductType> filters = filter;
+                                  filters.add(ProductType.mixte);
+                                  productTypeCubit.onSelectionChanged(filters.toSet());
+                                } else if (filter.length > 1) {
+                                  final filters = filter;
+                                  filters.remove(ProductType.mixte);
+                                  productTypeCubit.onSelectionChanged(filters.toSet());
+                                }
+                              }
+                          ),
+                          const Spacer(),
+                          const SizedBox(
+                            width: 250,
+                            child: TextField(
+                              decoration: InputDecoration(
+                                  label: Text("Recherche"),
+                                  isDense: true,
+                                  contentPadding: EdgeInsets.all(2)
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: (){
+                              context.read<ActivityViewModeCubit>().changeView(ViewMode.table);
+                            },
+                            icon: const Icon(Icons.table_view),
+                            selectedIcon: const Icon(Icons.table_view, color: Colors.red,),
+                            isSelected: viewMode == ViewMode.table,
+                          ),
+                          IconButton(
+                            onPressed: (){
+                              context.read<ActivityViewModeCubit>().changeView(ViewMode.grid);
+                            },
+                            icon: const Icon(Icons.grid_view),
+                            selectedIcon: const Icon(Icons.grid_view, color: Colors.red,),
+                            isSelected: viewMode == ViewMode.grid,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 20.0),
+                            child: IconButton(
+                              onPressed: (){
+                                context.read<ActivityViewModeCubit>().changeView(ViewMode.list);
+                              },
+                              icon: const Icon(Icons.list),
+                              selectedIcon: const Icon(Icons.list, color: Colors.red,),
+                              isSelected: viewMode == ViewMode.list,
+                            ),
+                          ),
+                        ],
+                      );
+                    }
                 );
               }
           ),

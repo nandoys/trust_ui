@@ -53,17 +53,23 @@ dependencies:
   dropdown_search: ^5.0.6
   font_awesome_flutter: ^10.6.0
   flag: ^7.0.0
-  server_api:
-    path: packages/server_api
+  window_manager: ^0.3.7
+  accounting_api:
+    path: packages/accounting_api
+  activity_api:
+    path: packages/activity_api
   authentication_api:
     path: packages/authentication_api
-  user_api:
-    path: packages/user_api
   organisation_api:
     path: packages/organisation_api
+  server_api:
+    path: packages/server_api
+  tax_api:
+    path: packages/tax_api
+  user_api:
+    path: packages/user_api
   utils:
     path: packages/utils
-  window_manager: ^0.3.7
 
 dev_dependencies:
   flutter_test:

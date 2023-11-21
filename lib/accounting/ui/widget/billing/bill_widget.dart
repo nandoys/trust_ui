@@ -109,25 +109,29 @@ class BillWidget extends StatelessWidget {
                           )
                       ),
                       Flexible(
-                          child: Row(
-                            children: [
-                              Flexible(
-                                  child: TextFormField(
-                                decoration: const InputDecoration(
-                                    label: Text('Date facturation*'),
-                                    isDense: true
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 20.0),
+                            child: Row(
+                              children: [
+                                Flexible(
+                                    child: TextFormField(
+                                  decoration: const InputDecoration(
+                                      label: Text('Date facturation*'),
+                                      isDense: true
+                                  ),
+                                )
                                 ),
-                              )
-                              ),
-                              Flexible(
-                                  child: TextFormField(
-                                    decoration: const InputDecoration(
-                                        label: Text("Date de l'échéance"),
-                                        isDense: true
-                                    ),
-                                  )
-                              ),
-                            ],
+                                const SizedBox(width: 10),
+                                Flexible(
+                                    child: TextFormField(
+                                      decoration: const InputDecoration(
+                                          label: Text("Date de l'échéance"),
+                                          isDense: true
+                                      ),
+                                    )
+                                ),
+                              ],
+                            ),
                           )
                       ),
                     ],
@@ -136,85 +140,89 @@ class BillWidget extends StatelessWidget {
                     children: [
                       const Spacer(),
                       Flexible(
-                          child: Row(
-                            children: [
-                              Flexible(
-                                  child: DropdownSearch<String>(
-                                items: const ['Journal Achat'],
-                                //itemAsString: (Country country) => country.name,
-                                validator: (value) {
-                                  if(value == null) {
-                                    return "Veuillez choisir le journal";
-                                  }
-                                  return null;
-                                },
-                                onSaved: (value) {
-                                  //context.read<SelectedCountryCubit>().change(value);
-                                },
-                                dropdownDecoratorProps: const DropDownDecoratorProps(
-                                    dropdownSearchDecoration: InputDecoration(
-                                        isDense: true,
-                                        labelText: 'Journal*'
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 20.0),
+                            child: Row(
+                              children: [
+                                Flexible(
+                                    child: DropdownSearch<String>(
+                                  items: const ['Journal Achat'],
+                                  //itemAsString: (Country country) => country.name,
+                                  validator: (value) {
+                                    if(value == null) {
+                                      return "Veuillez choisir le journal";
+                                    }
+                                    return null;
+                                  },
+                                  onSaved: (value) {
+                                    //context.read<SelectedCountryCubit>().change(value);
+                                  },
+                                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                                      dropdownSearchDecoration: InputDecoration(
+                                          isDense: true,
+                                          labelText: 'Journal*'
+                                      )
+                                  ),
+                                  popupProps: PopupProps.menu(
+                                      showSearchBox: true,
+                                      searchFieldProps: const TextFieldProps(
+                                          decoration: InputDecoration(
+                                            label: Text('Recherche ...'),
+                                            isDense: true,
+                                          )
+                                      ),
+                                      emptyBuilder: (context, text) {
+                                        return const Center(
+                                          child: SizedBox(
+                                            height: 50.0,
+                                            child: Text('Aucun journal trouvé'),
+                                          ),
+                                        );
+                                      }
+                                  ),
+                                )
+                                ),
+                                const SizedBox(width: 10),
+                                Flexible(
+                                    child: DropdownSearch<String>(
+                                      items: const ['Franc congolais'],
+                                      //itemAsString: (Country country) => country.name,
+                                      validator: (value) {
+                                        if(value == null) {
+                                          return "Veuillez choisir la devise";
+                                        }
+                                        return null;
+                                      },
+                                      onSaved: (value) {
+                                        //context.read<SelectedCountryCubit>().change(value);
+                                      },
+                                      dropdownDecoratorProps: const DropDownDecoratorProps(
+                                          dropdownSearchDecoration: InputDecoration(
+                                              isDense: true,
+                                              labelText: 'Devise*'
+                                          )
+                                      ),
+                                      popupProps: PopupProps.menu(
+                                          showSearchBox: true,
+                                          searchFieldProps: const TextFieldProps(
+                                              decoration: InputDecoration(
+                                                label: Text('Recherche ...'),
+                                                isDense: true,
+                                              )
+                                          ),
+                                          emptyBuilder: (context, text) {
+                                            return const Center(
+                                              child: SizedBox(
+                                                height: 50.0,
+                                                child: Text('Aucun devise trouvée'),
+                                              ),
+                                            );
+                                          }
+                                      ),
                                     )
                                 ),
-                                popupProps: PopupProps.menu(
-                                    showSearchBox: true,
-                                    searchFieldProps: const TextFieldProps(
-                                        decoration: InputDecoration(
-                                          label: Text('Recherche ...'),
-                                          isDense: true,
-                                        )
-                                    ),
-                                    emptyBuilder: (context, text) {
-                                      return const Center(
-                                        child: SizedBox(
-                                          height: 50.0,
-                                          child: Text('Aucun journal trouvé'),
-                                        ),
-                                      );
-                                    }
-                                ),
-                              )
-                              ),
-                              Flexible(
-                                  child: DropdownSearch<String>(
-                                    items: const ['Franc congolais'],
-                                    //itemAsString: (Country country) => country.name,
-                                    validator: (value) {
-                                      if(value == null) {
-                                        return "Veuillez choisir la devise";
-                                      }
-                                      return null;
-                                    },
-                                    onSaved: (value) {
-                                      //context.read<SelectedCountryCubit>().change(value);
-                                    },
-                                    dropdownDecoratorProps: const DropDownDecoratorProps(
-                                        dropdownSearchDecoration: InputDecoration(
-                                            isDense: true,
-                                            labelText: 'Devise*'
-                                        )
-                                    ),
-                                    popupProps: PopupProps.menu(
-                                        showSearchBox: true,
-                                        searchFieldProps: const TextFieldProps(
-                                            decoration: InputDecoration(
-                                              label: Text('Recherche ...'),
-                                              isDense: true,
-                                            )
-                                        ),
-                                        emptyBuilder: (context, text) {
-                                          return const Center(
-                                            child: SizedBox(
-                                              height: 50.0,
-                                              child: Text('Aucun devise trouvée'),
-                                            ),
-                                          );
-                                        }
-                                    ),
-                                  )
-                              ),
-                            ],
+                              ],
+                            ),
                           )
                       ),
                     ],

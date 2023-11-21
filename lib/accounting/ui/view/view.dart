@@ -1,6 +1,6 @@
 export 'activity.dart';
 export 'billing.dart';
 export 'dashboard.dart';
-export 'misc.dart';
+export 'journal.dart';
 export 'third_party.dart';
-export 'treasury.dart';
+export 'payment.dart';
