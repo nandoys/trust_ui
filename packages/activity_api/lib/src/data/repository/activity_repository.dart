@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:activity_api/src/data/models/category.dart';
+import 'package:activity_api/src/data/models/activity_models.dart';
 import 'package:http/http.dart' as http;
 
 class ProductCategoryRepository {

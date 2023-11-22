@@ -1,2 +1,2 @@
-export 'models/models.dart';
-export 'repository/repository.dart';
+export 'models/accounting_models.dart';
+export 'repository/accounting_repository.dart';

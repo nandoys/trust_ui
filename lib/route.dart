@@ -5,7 +5,7 @@ import 'package:trust_app/planning/ui/page/dashboard.dart';
 import 'package:trust_app/tax/ui/page/dashboard.dart';
 import 'package:user_api/user_api.dart';
 
-import 'accounting/ui/page/accounting.dart';
+import 'accounting/ui/page/accounting_page.dart';
 import 'asset_management/ui/page/dashboard.dart';
 import 'employee/ui/page/dashboard.dart';
 import 'home/ui/page/page.dart';

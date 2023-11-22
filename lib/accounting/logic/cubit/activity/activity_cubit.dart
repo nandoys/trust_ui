@@ -11,11 +11,20 @@ class FilterProductTypeCubit extends Cubit<Set<ProductType>> {
 }
 
 
-
 class ActivityViewModeCubit extends Cubit<ViewMode> {
   ActivityViewModeCubit() : super(ViewMode.list);
 
   void changeView(ViewMode mode) {
     emit(mode);
   }
+}
+
+class ProductBottomNavigationCubit extends Cubit<int> {
+
+  ProductBottomNavigationCubit() : super(0);
+
+  void navigate(int index) {
+    emit(index);
+  }
+
 }

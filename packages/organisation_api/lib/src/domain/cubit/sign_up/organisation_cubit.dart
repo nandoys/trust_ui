@@ -6,7 +6,8 @@ import 'package:organisation_api/organisation_api.dart';
 import 'package:utils/utils.dart';
 
 class OrganisationCubit extends Cubit<Organisation?> {
-  OrganisationCubit({required this.organisationRepository, required this.connectivityStatus, required this.apiStatus}) : super(null);
+  OrganisationCubit({required this.organisationRepository, required this.connectivityStatus, required this.apiStatus})
+      : super(null);
 
   final OrganisationRepository organisationRepository;
   final ConnectivityStatusCubit connectivityStatus;

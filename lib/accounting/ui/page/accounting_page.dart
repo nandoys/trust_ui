@@ -1,10 +1,17 @@
+import 'package:activity_api/activity_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:trust_app/accounting/logic/cubit/cubit.dart';
+import 'package:server_api/server_api.dart';
 import 'package:user_api/user_api.dart';
+import 'package:trust_app/accounting/logic/cubit/cubit.dart';
 
-import 'package:trust_app/accounting/ui/view/view.dart';
+import 'package:trust_app/accounting/ui/page/activity_page.dart';
+import 'package:trust_app/accounting/ui/page/billing_page.dart';
+import 'package:trust_app/accounting/ui/page/dashboard_page.dart';
+import 'package:trust_app/accounting/ui/page/journal_page.dart';
+import 'package:trust_app/accounting/ui/page/payment_page.dart';
+import 'package:trust_app/accounting/ui/page/third_party_page.dart';
 
 class Accounting extends StatelessWidget {
   const Accounting({super.key, required this.user});
@@ -14,12 +21,14 @@ class Accounting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final List<Widget> views = [
+    final server = context.read<ActiveServerCubit>().state;
+
+    final List<Widget> pages = [
       AccountingDashboard(user: user),
       AccountingActivity(user: user),
       AccountingBilling(user: user),
       AccountingPayment(user: user),
-      AccountingMisc(user: user),
+      AccountingJournal(user: user),
       AccountingThirdParty(user: user)
     ];
 
@@ -71,7 +80,7 @@ class Accounting extends StatelessWidget {
         body: Hero(
             tag: 'accounting-hero',
             child: BlocBuilder<SwitchAccountingViewCubit, int>(
-                builder: (context, viewIndex) {
+                builder: (context, pageIndex) {
                   return Row(
                     children: [
                       NavigationRail(
@@ -103,7 +112,7 @@ class Accounting extends StatelessWidget {
                         ],
                         labelType: NavigationRailLabelType.all,
                         useIndicator: true,
-                        selectedIndex: viewIndex,
+                        selectedIndex: pageIndex,
                         onDestinationSelected: (index) {
                           context.read<SwitchAccountingViewCubit>().switchView(index);
                         },
@@ -119,7 +128,7 @@ class Accounting extends StatelessWidget {
                               child: Card(
                                 color: Colors.white,
                                 elevation: 5,
-                                child: views[viewIndex],
+                                child: pages[pageIndex],
                               )
                           )
                       )

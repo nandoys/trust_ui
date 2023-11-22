@@ -1,5 +1,7 @@
+import 'package:activity_api/activity_api.dart';
 import 'package:flutter/material.dart';
-import 'package:trust_app/accounting/ui/widget/activity/activity_dialog_widget.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:trust_app/accounting/ui/view/view.dart';
 
 class ActivityNewButton extends StatelessWidget {
   const ActivityNewButton({super.key});
@@ -9,10 +11,17 @@ class ActivityNewButton extends StatelessWidget {
     return ElevatedButton.icon(
       icon: const Icon(Icons.add, color: Colors.white,),
       onPressed: (){
+        context.read<ProductCategoryCubit>().getCategories();
         showDialog(
             context: context,
-            builder: (context) {
-              return const ActivityDialog();
+            builder: (_) {
+              return MultiBlocProvider(
+                  providers: [
+                    BlocProvider.value(value: context.read<ProductCategoryApiStatusCubit>()),
+                    BlocProvider.value(value: context.read<ProductCategoryCubit>())
+                  ],
+                  child: const ActivityDialog()
+              );
             }
         );
       },
