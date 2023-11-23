@@ -20,7 +20,8 @@ class Module extends Equatable {
 
   factory Module.fromJson(Map<String, dynamic> json) {
     final Account account = Account.fromJson(json['compte']);
-    return Module(id: json['id'], name: json['intitule'], account: account);
+
+    return Module(id: json['module']['id'], name: json['module']['intitule'], account: account);
   }
 
   final String id;
@@ -30,6 +31,11 @@ class Module extends Equatable {
   @override
   List<Object?> get props => [id];
 
+  /// check whether a module exist
+  bool hasModule(String moduleName) {
+    return name.contains(moduleName);
+  }
+
 }
 
 class Account extends Equatable {
@@ -37,8 +43,12 @@ class Account extends Equatable {
   Account({this.id, required this.number, required this.name, required this.organisation, required this.accountType});
 
   factory Account.fromJson(Map<String, dynamic> json) {
-    final Organisation organisation = Organisation.fromJson(json['organisation']);
-    final AccountType accountType = AccountType.fromJson(json['type_compte']);
+    final Organisation? organisation = json['organisation'] != null ?
+    Organisation.fromJson(json['organisation']) : json['organisation'];
+
+    final AccountType? accountType = json['type_compte'] != null ?
+    AccountType.fromJson(json['type_compte']) : json['type_compte'];
+
     return Account(
         id: json['id'], number: json['numero'], name: json['intitule'], organisation: organisation,
         accountType: accountType
@@ -48,8 +58,8 @@ class Account extends Equatable {
   final String? id;
   final String number;
   final String name;
-  final Organisation organisation;
-  final AccountType accountType;
+  final Organisation? organisation;
+  final AccountType? accountType;
 
   @override
   List<Object?> get props => [id, number, name, organisation];

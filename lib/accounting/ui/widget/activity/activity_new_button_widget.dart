@@ -18,7 +18,9 @@ class ActivityNewButton extends StatelessWidget {
               return MultiBlocProvider(
                   providers: [
                     BlocProvider.value(value: context.read<ProductCategoryApiStatusCubit>()),
-                    BlocProvider.value(value: context.read<ProductCategoryCubit>())
+                    BlocProvider.value(value: context.read<ProductCategoryConfigApiStatusCubit>()),
+                    BlocProvider.value(value: context.read<ProductCategoryCubit>()),
+                    BlocProvider.value(value: context.read<ProductCategoryConfigCubit>()),
                   ],
                   child: const ActivityDialog()
               );

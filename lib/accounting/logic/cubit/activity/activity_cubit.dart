@@ -28,3 +28,19 @@ class ProductBottomNavigationCubit extends Cubit<int> {
   }
 
 }
+
+class SwitchPerishableCubit extends Cubit<bool> {
+  SwitchPerishableCubit(): super(false);
+
+  void change(bool state) {
+    emit(state);
+  }
+}
+
+class SwitchInPromoCubit extends Cubit<bool> {
+  SwitchInPromoCubit(): super(false);
+
+  void change(bool state) {
+    emit(state);
+  }
+}

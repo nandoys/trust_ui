@@ -1,3 +1,4 @@
+import 'package:accounting_api/accounting_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:server_api/server_api.dart';
@@ -26,6 +27,11 @@ class AccountingActivity extends StatelessWidget {
               create: (context) => ProductCategoryRepository(
                   protocol: server.protocol, host: server.host, port: server.port
               )
+          ),
+          RepositoryProvider(
+              create: (context) => ModuleRepository(
+                  protocol: server.protocol, host: server.host, port: server.port
+              )
           )
         ],
         child: MultiBlocProvider(
@@ -34,11 +40,21 @@ class AccountingActivity extends StatelessWidget {
                   create: (context) => ProductCategoryApiStatusCubit()
               ),
               BlocProvider(
+                  create: (context) => ProductCategoryConfigApiStatusCubit()
+              ),
+              BlocProvider(
                   create: (context) => ProductCategoryCubit(
                       productCategoryRepository: context.read<ProductCategoryRepository>(),
                       connectivityStatus: context.read<ConnectivityStatusCubit>(),
                       apiStatus: context.read<ProductCategoryApiStatusCubit>()
                   ),
+              ),
+              BlocProvider(
+                create: (context) => ProductCategoryConfigCubit(
+                    moduleRepository: context.read<ModuleRepository>(),
+                    connectivityStatus: context.read<ConnectivityStatusCubit>(),
+                    apiStatus: context.read<ProductCategoryConfigApiStatusCubit>()
+                ),
               )
             ],
             child: Column(

@@ -14,7 +14,7 @@ class ActivityDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final activityView = [
-      const ProductInfoView(),
+      ProductInfoView(),
       const ProductAccountingView(),
       const ProductTaxesView()
     ];
@@ -27,6 +27,8 @@ class ActivityDialog extends StatelessWidget {
         child: MultiBlocProvider(
           providers: [
             BlocProvider(create: (context) => ProductBottomNavigationCubit()),
+            BlocProvider(create: (context) => SwitchPerishableCubit()),
+            BlocProvider(create: (context) => SwitchInPromoCubit()),
           ],
           child: BlocBuilder<ProductBottomNavigationCubit, int>(
               builder: (context, viewIndex) {
