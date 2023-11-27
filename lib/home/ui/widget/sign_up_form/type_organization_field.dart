@@ -28,6 +28,7 @@ class TypeOrganisationField extends StatelessWidget {
           builder: (context, typeMenus) {
             return LayoutBuilder(builder: (context, constraints) {
               return DropdownSearch<OrganizationType>(
+                autoValidateMode: AutovalidateMode.onUserInteraction,
                 items: typeMenus,
                 itemAsString: (OrganizationType organizationType) => organizationType.name,
                 validator: (value) {

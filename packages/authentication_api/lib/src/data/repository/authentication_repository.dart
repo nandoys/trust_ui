@@ -23,7 +23,7 @@ class AuthenticationRepository {
           scheme: protocol?.toLowerCase(),
           host: host,
           port: port,
-          path: '/api/organisation/utilisateur/login'
+          path: '/api/organization/user/login'
       );
 
       http.Response response = await http.post(

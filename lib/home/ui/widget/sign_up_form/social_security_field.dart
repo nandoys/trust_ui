@@ -8,6 +8,7 @@ class SocialSecurityField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         controller: controller,
         validator: ValidationBuilder(localeName: 'fr', optional: true).regExp(
             RegExp(r'^[a-zA-Z0-9/.\s-]+$'),

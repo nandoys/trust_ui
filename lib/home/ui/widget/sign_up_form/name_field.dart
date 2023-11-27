@@ -8,6 +8,7 @@ class NameField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
         autofocus: true,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         controller: controller,
         validator: (value) {
           if (value!.isEmpty) {

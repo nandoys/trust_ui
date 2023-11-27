@@ -21,7 +21,7 @@ class UserRepository {
           scheme: protocol?.toLowerCase(),
           host: host,
           port: port,
-          path: 'api/get-started/organization/utilisateur'
+          path: 'api/get-started/organization/user'
       );
 
       http.Response response = await http.post(uri,

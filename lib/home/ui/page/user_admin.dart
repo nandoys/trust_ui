@@ -48,7 +48,6 @@ class CreateUserAdminPage extends StatelessWidget {
                 userRepository: context.read<UserRepository>(),
                 connectivityStatus: context.read<ConnectivityStatusCubit>(),
                 apiStatus: context.read<CreateAdminUserApiStatusCubit>()
-                // activeOrganisationCubit: context.read<ActiveOrganisationCubit>()
               )),
             ],
             child: MultiBlocListener(
@@ -66,7 +65,7 @@ class CreateUserAdminPage extends StatelessWidget {
                             )
                         );
                         context.goNamed('start', extra: {
-                          'user': user, 'organisationContextMenuCubit': context.read<OrganizationContextMenuCubit>()
+                          'user': user, 'organizationContextMenuCubit': context.read<OrganizationContextMenuCubit>()
                         });
                       }
                     },

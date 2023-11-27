@@ -8,6 +8,7 @@ class PhoneField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         controller: controller,
         keyboardType: TextInputType.phone,
         validator: ValidationBuilder(localeName: 'fr', optional: true).regExp(

@@ -28,6 +28,7 @@ class CountryField extends StatelessWidget {
           builder: (context, countriesMenu) {
             return LayoutBuilder(builder: (context, constraint) {
               return DropdownSearch<Country>(
+                autoValidateMode: AutovalidateMode.onUserInteraction,
                 items: countriesMenu,
                 itemAsString: (Country country) => country.name,
                 validator: (value) {

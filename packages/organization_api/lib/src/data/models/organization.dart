@@ -11,8 +11,9 @@ class Organization extends Equatable {
     this.socialNUmber, this.employerNumber });
 
   factory Organization.fromJson(Map<String, dynamic> json) {
-    final country = Country.fromJson(json['pays']);
-    final organizationType = OrganizationType.fromJson(json['type_organisation']);
+    final country = Country.fromJson(json['country']);
+    final organizationType = OrganizationType.fromJson(json['organization_type']);
+
     final sectors = List.from(json['sectors']).map((e) => Sector.fromJson(e)).toList();
 
     return Organization(
@@ -26,7 +27,7 @@ class Organization extends Equatable {
   Map<String, dynamic> toJson() {
     Map<String, dynamic>  data = {
       'name': name, 'address': address, 'country_id': country.id, 'sectors': sectors, 'email': email,
-      'telephone': telephone, 'type_organisation_id': organizationType.id, 'register': register, 'id_nat': idNat,
+      'telephone': telephone, 'organization_type_id': organizationType.id, 'register': register, 'id_nat': idNat,
       'tax_registration': taxRegistration, 'social_number': socialNUmber, 'employer_number': employerNumber};
 
     return data;

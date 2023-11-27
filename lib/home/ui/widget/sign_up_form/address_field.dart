@@ -8,6 +8,7 @@ class AddressField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       controller: controller,
       keyboardType: TextInputType.streetAddress,
       validator: ValidationBuilder(localeName: 'fr', optional: true).regExp(
