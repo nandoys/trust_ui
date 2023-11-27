@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_validator/form_validator.dart';
-import 'package:organisation_api/organisation_api.dart';
+import 'package:organization_api/organization_api.dart';
 import 'package:user_api/user_api.dart';
 
 class AdminEmailField extends StatelessWidget {
-  AdminEmailField({super.key, required this.controller, required this.organisation});
+  AdminEmailField({super.key, required this.controller, required this.organization});
 
   final TextEditingController controller;
-  final Organisation organisation;
+  final Organization organization;
   final emailKey = GlobalKey<FormFieldState>();
 
   @override
@@ -18,7 +18,7 @@ class AdminEmailField extends StatelessWidget {
           onFocusChange: (focus){
             if(!focus) {
               if(controller.text.isNotEmpty) {
-                context.read<CheckEmailCubit>().checkField(organisation, controller.text);
+                context.read<CheckEmailCubit>().checkField(organization, controller.text);
               }
             }
           },

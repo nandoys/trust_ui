@@ -126,9 +126,10 @@ class Accounting extends StatelessWidget {
                                 BlocProvider(create: (context) => ThirdPartyViewModeCubit()),
                               ],
                               child: Card(
-                                color: Colors.white,
-                                elevation: 5,
-                                child: pages[pageIndex],
+                                elevation: 30,
+                                child: Scaffold(
+                                  body: pages[pageIndex],
+                                ),
                               )
                           )
                       )

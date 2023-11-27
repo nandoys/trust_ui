@@ -1,7 +1,7 @@
 import 'package:authentication_api/authentication_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:organisation_api/organisation_api.dart';
+import 'package:organization_api/organization_api.dart';
 import 'package:server_api/server_api.dart';
 
 class LoginButton extends StatelessWidget {
@@ -36,7 +36,7 @@ class LoginButton extends StatelessWidget {
           );
         }
         else {
-          return BlocBuilder<ActiveOrganisationCubit, Organisation?>(
+          return BlocBuilder<ActiveOrganizationCubit, Organization?>(
               builder: (context, activeOrganisation) {
 
                 if (activeOrganisation == null) {
@@ -61,7 +61,7 @@ class LoginButton extends StatelessWidget {
                   }
                   return FilledButton(
                     onPressed: !loading ? () {
-                      Organisation? organisation = context.read<ActiveOrganisationCubit>().state;
+                      Organization? organisation = context.read<ActiveOrganizationCubit>().state;
                       if(formKey.currentState!.validate()) {
                         formKey.currentState?.save();
                         final authRepo = AuthenticationRepository(

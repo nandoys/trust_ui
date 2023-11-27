@@ -115,10 +115,10 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.2+5"
-  organisation_api:
+  organization_api:
     dependency: "direct main"
     description:
-      path: "../organisation_api"
+      path: "../organization_api"
       relative: true
     source: path
     version: "0.0.0"

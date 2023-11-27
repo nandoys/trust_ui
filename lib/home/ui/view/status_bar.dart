@@ -76,7 +76,7 @@ class _StatusBarState extends State<StatusBar> {
               List<Widget> children;
 
               if (connectivityStatus == ConnectivityStatus.connected) {
-                children = [const OrganisationContextMenu(), const ServerMenuContext()];
+                children = [const OrganizationContextMenu(), const ServerMenuContext()];
               } else {
                 children = [const ServerMenuContext()];
               }

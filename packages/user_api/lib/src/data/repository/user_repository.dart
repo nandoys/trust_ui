@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-import 'package:organisation_api/organisation_api.dart';
+import 'package:organization_api/organization_api.dart';
 import '../models/models.dart';
 
 class UserRepository {
@@ -21,7 +21,7 @@ class UserRepository {
           scheme: protocol?.toLowerCase(),
           host: host,
           port: port,
-          path: 'api/get-started/organisation/utilisateur'
+          path: 'api/get-started/organization/utilisateur'
       );
 
       http.Response response = await http.post(uri,
@@ -40,15 +40,15 @@ class UserRepository {
     return null;
   }
 
-  Future<bool> checkField(Organisation organisation, String field, String value) async {
+  Future<bool> checkField(Organization organization, String field, String value) async {
     if (protocol != null && host != null && port != null) {
 
       final uri = Uri(
           scheme: protocol?.toLowerCase(),
           host: host,
           port: port,
-          path: '/api/organisation/utilisateur/existe',
-          queryParameters: {'org_id': organisation.id, 'field': field, 'value': value}
+          path: '/api/organization/user/exist',
+          queryParameters: {'org_id': organization.id, 'field': field, 'value': value}
       );
 
       http.Response response = await http.get(uri);

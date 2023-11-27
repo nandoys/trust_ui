@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:organisation_api/organisation_api.dart';
+import 'package:organization_api/organization_api.dart';
 import 'package:trust_app/planning/ui/page/dashboard.dart';
 import 'package:trust_app/tax/ui/page/dashboard.dart';
 import 'package:user_api/user_api.dart';
@@ -38,7 +38,7 @@ final route = GoRouter(
                 }
             ),
             GoRoute(
-                path: 'organisation/sign-up',
+                path: 'organization/sign-up',
                 name: 'signUp',
                 pageBuilder: (context, route) {
                   String? host = route.uri.queryParameters['host'];
@@ -46,18 +46,18 @@ final route = GoRouter(
                   String? protocol = route.uri.queryParameters['protocol'];
 
                   Map<String, dynamic> extra = route.extra as Map<String, dynamic>;
-                  final OrganisationContextMenuCubit organisationContextMenuCubit =
-                  extra['organisationContextMenuCubit'] as OrganisationContextMenuCubit;
-                  ActiveOrganisationCubit activeOrganisation = extra['activeOrganisationCubit'] as ActiveOrganisationCubit;
+                  final OrganizationContextMenuCubit organizationContextMenuCubit =
+                  extra['organizationContextMenuCubit'] as OrganizationContextMenuCubit;
+                  ActiveOrganizationCubit activeOrganization = extra['activeOrganizationCubit'] as ActiveOrganizationCubit;
 
                   return NoTransitionPage(
                       child: MultiBlocProvider(
                         providers: [
                           BlocProvider.value(
-                            value: organisationContextMenuCubit,
+                            value: organizationContextMenuCubit,
                           ),
                           BlocProvider.value(
-                            value: activeOrganisation,
+                            value: activeOrganization,
                           )
                         ],
                         child: SignUpPage(protocol: protocol, host: host, port: port,),
@@ -67,26 +67,26 @@ final route = GoRouter(
             ),
           ]
       ),
-      GoRoute(path: '/organisation/create-admin-user',
+      GoRoute(path: '/organization/create-admin-user',
           name: 'createAdmin',
           pageBuilder: (context, route) {
             Map<String, dynamic> extra = route.extra as Map<String, dynamic>;
-            final Organisation organisation = extra['organisation'] as Organisation;
-            final OrganisationContextMenuCubit organisationContextMenuCubit =
-            extra['organisationContextMenuCubit'] as OrganisationContextMenuCubit;
-            final ActiveOrganisationCubit activeOrganisation = extra['activeOrganisationCubit'] as ActiveOrganisationCubit;
+            final Organization organization = extra['organization'] as Organization;
+            final OrganizationContextMenuCubit organizationContextMenuCubit =
+            extra['organizationContextMenuCubit'] as OrganizationContextMenuCubit;
+            final ActiveOrganizationCubit activeOrganization = extra['activeOrganizationCubit'] as ActiveOrganizationCubit;
 
             return NoTransitionPage(
                 child: MultiBlocProvider(
                   providers: [
                     BlocProvider.value(
-                      value: organisationContextMenuCubit,
+                      value: organizationContextMenuCubit,
                     ),
                     BlocProvider.value(
-                      value: activeOrganisation,
+                      value: activeOrganization,
                     )
                   ],
-                  child: CreateUserAdminPage(organisation: organisation,),
+                  child: CreateUserAdminPage(organization: organization,),
                 )
             );
           }
@@ -96,13 +96,13 @@ final route = GoRouter(
           pageBuilder: (context, route) {
             final Map<String, dynamic> extra = route.extra as Map<String, dynamic>;
             final User user = extra['user'] as User;
-            final OrganisationContextMenuCubit organisationContextMenuCubit =
-            extra['organisationContextMenuCubit'] as OrganisationContextMenuCubit;
+            final OrganizationContextMenuCubit organizationContextMenuCubit =
+            extra['organizationContextMenuCubit'] as OrganizationContextMenuCubit;
 
             return NoTransitionPage(
                 child: MultiBlocProvider(
                     providers: [
-                      BlocProvider.value(value: organisationContextMenuCubit)
+                      BlocProvider.value(value: organizationContextMenuCubit)
                     ],
                     child: HomePage(user: user,)
                 )
@@ -121,12 +121,12 @@ final route = GoRouter(
           pageBuilder: (context, route) {
             final Map<String, dynamic> extra = route.extra as Map<String, dynamic>;
             final User user = extra['user'] as User;
-            final OrganisationContextMenuCubit organisationContextMenuCubit =
-            extra['organisationContextMenuCubit'] as OrganisationContextMenuCubit;
+            final OrganizationContextMenuCubit organizationContextMenuCubit =
+            extra['organizationContextMenuCubit'] as OrganizationContextMenuCubit;
 
             return NoTransitionPage(child: MultiBlocProvider(
                 providers: [
-                  BlocProvider.value(value: organisationContextMenuCubit)
+                  BlocProvider.value(value: organizationContextMenuCubit)
                 ],
                 child: Accounting(user: user,)
             ));

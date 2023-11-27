@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
                     MenuItem(title: 'Nouveau (Http)', action: 'create http'),
                     MenuItem(title: 'Nouveau (Https)', action: 'create https')
                   ],
-                  serverRepository: context.read<ServerRepository>(),
+                  repository: context.read<ServerRepository>(),
                   activeServer: context.read<ActiveServerCubit>()
               ),
             )

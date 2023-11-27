@@ -60,8 +60,8 @@ dependencies:
     path: packages/activity_api
   authentication_api:
     path: packages/authentication_api
-  organisation_api:
-    path: packages/organisation_api
+  organization_api:
+    path: packages/organization_api
   server_api:
     path: packages/server_api
   tax_api:

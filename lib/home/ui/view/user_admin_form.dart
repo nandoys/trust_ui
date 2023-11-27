@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:organisation_api/organisation_api.dart';
+import 'package:organization_api/organization_api.dart';
 
 import 'package:trust_app/home/ui/widget/widget.dart';
 
 class CreateUserAdminForm extends StatelessWidget {
-  CreateUserAdminForm({super.key, required this.organisation});
+  CreateUserAdminForm({super.key, required this.organization});
 
-  final Organisation organisation;
+  final Organization organization;
   final userController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -27,11 +27,11 @@ class CreateUserAdminForm extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.all(12.0),
-            child: UsernameField(controller: userController, organisation: organisation,),
+            child: UsernameField(controller: userController, organization: organization,),
           ),
           Padding(
             padding: const EdgeInsets.all(12.0),
-            child: AdminEmailField(controller: emailController, organisation: organisation,),
+            child: AdminEmailField(controller: emailController, organization: organization,),
           ),
           Padding(
             padding: const EdgeInsets.all(12.0),
@@ -52,7 +52,7 @@ class CreateUserAdminForm extends StatelessWidget {
               userController: userController,
               emailController: emailController,
               passwordController: passwordController,
-              organisation: organisation,
+              organization: organization,
             ),
           ),
         ],

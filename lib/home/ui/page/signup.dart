@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:server_api/server_api.dart';
-import 'package:organisation_api/organisation_api.dart';
+import 'package:organization_api/organization_api.dart';
 import 'package:trust_app/home/ui/view/view.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -30,7 +30,7 @@ class _SignUpPageState extends State<SignUpPage> {
         providers: [
           RepositoryProvider(
               create: (
-                  context) => TypeOrganisationRepository(
+                  context) => OrganizationTypeRepository(
                   protocol: activeServer.state.protocol, host: activeServer.state.host, port: activeServer.state.port
               )
           ),
@@ -42,7 +42,7 @@ class _SignUpPageState extends State<SignUpPage> {
           ),
           RepositoryProvider(
               create: (
-                  context) => OrganisationRepository(
+                  context) => OrganizationRepository(
                   protocol: activeServer.state.protocol, host: activeServer.state.host, port: activeServer.state.port
               )
           )
@@ -58,25 +58,25 @@ class _SignUpPageState extends State<SignUpPage> {
                       apiStatus: context.read<CountryApiStatusCubit>()
                   )..getAll()
               ),
-              BlocProvider(create: (context) => TypeOrganisationApiStatusCubit()),
-              BlocProvider(create: (context) => SelectedTypeOrganisationCubit()),
+              BlocProvider(create: (context) => OrganizationTypeApiStatusCubit()),
+              BlocProvider(create: (context) => SelectedOrganizationTypeCubit()),
               BlocProvider(
-                  create: (context) => TypeOrganisationMenuCubit(
-                      typeOrganisationRepository: context.read<TypeOrganisationRepository>(),
+                  create: (context) => OrganizationTypeMenuCubit(
+                      repository: context.read<OrganizationTypeRepository>(),
                       connectivityStatus: context.read<ConnectivityStatusCubit>(),
-                      apiStatus: context.read<TypeOrganisationApiStatusCubit>()
+                      apiStatus: context.read<OrganizationTypeApiStatusCubit>()
                   )..getAll()
               ),
-              BlocProvider(create: (context) => OrganisationApiStatusCubit()),
+              BlocProvider(create: (context) => OrganizationApiStatusCubit()),
               BlocProvider(create: (context) => SignupLoadingCubit()),
               BlocProvider(
-                  create: (context) => OrganisationCubit(
-                      organisationRepository: context.read<OrganisationRepository>(),
+                  create: (context) => OrganizationCubit(
+                      repository: context.read<OrganizationRepository>(),
                       connectivityStatus: context.read<ConnectivityStatusCubit>(),
-                      apiStatus: context.read<OrganisationApiStatusCubit>(),
+                      apiStatus: context.read<OrganizationApiStatusCubit>(),
                   )
               ),
-              BlocProvider(create: (context) => SetupOrganisationCubit()),
+              BlocProvider(create: (context) => SetupOrganizationCubit()),
             ],
             child: Scaffold(
                 backgroundColor: Colors.white60.withOpacity(0.4),

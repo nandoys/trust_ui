@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:organisation_api/organisation_api.dart';
+import 'package:organization_api/organization_api.dart';
 
 import 'package:trust_app/home/ui/widget/widget.dart';
 import 'package:utils/utils.dart';
@@ -38,18 +38,18 @@ class _SignUpFormState extends State<SignUpForm> {
   Widget build(BuildContext context) {
     return MultiBlocListener(
         listeners: [
-          BlocListener<OrganisationCubit, Organisation?>(
-            listener: (context, organisation) {
+          BlocListener<OrganizationCubit, Organization?>(
+            listener: (context, organization) {
               context.read<SignupLoadingCubit>().change(false);
               context.goNamed('createAdmin', extra: {
-                'organisation': organisation,
-                'activeOrganisationCubit': context.read<ActiveOrganisationCubit>(),
-                'organisationContextMenuCubit': context.read<OrganisationContextMenuCubit>()
+                'organization': organization,
+                'activeOrganizationCubit': context.read<ActiveOrganizationCubit>(),
+                'organizationContextMenuCubit': context.read<OrganizationContextMenuCubit>()
               });
             },
             listenWhen: (previous, current) => current != null,
           ),
-          BlocListener<OrganisationApiStatusCubit, ApiStatus>(
+          BlocListener<OrganizationApiStatusCubit, ApiStatus>(
             listener: (context, organisation) {
               SnackBar notif = FloatingSnackBar(
                   color: Colors.red,

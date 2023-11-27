@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:organisation_api/organisation_api.dart';
+import 'package:organization_api/organization_api.dart';
 
 class SubmitButton extends StatelessWidget {
   const SubmitButton({super.key, required this.formKey, required this.name, required this.address, required this.email,
@@ -25,20 +25,20 @@ class SubmitButton extends StatelessWidget {
           onPressed: !loading ? (){
             if (formKey.currentState!.validate()) {
               formKey.currentState?.save();
-              Organisation organisation = Organisation(
+              Organization organization = Organization(
                   name: name.text,
                   address: address.text != '' ? address.text : null,
                   country: context.read<SelectedCountryCubit>().state as Country,
                   email: email.text != '' ? email.text : null,
                   telephone: phone.text != '' ? phone.text : null,
-                  typeOrganisation: context.read<SelectedTypeOrganisationCubit>().state as TypeOrganisation,
+                  organizationType: context.read<SelectedOrganizationTypeCubit>().state as OrganizationType,
                   register: register.text != '' ? register.text : null,
                   idNat: idNat.text != '' ? idNat.text : null,
-                  numeroImpot: tax.text != '' ? tax.text : null,
-                  numeroSocial: socialSecurity.text != '' ? socialSecurity.text : null,
-                  numeroEmployeur: employer.text != '' ? employer.text : null
+                  taxRegistration: tax.text != '' ? tax.text : null,
+                  socialNUmber: socialSecurity.text != '' ? socialSecurity.text : null,
+                  employerNumber: employer.text != '' ? employer.text : null
               );
-              context.read<OrganisationCubit>().create(organisation);
+              context.read<OrganizationCubit>().create(organization);
               context.read<SignupLoadingCubit>().change(true);
             }
           } : null,

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:meta/dart2js.dart';
-import 'package:organisation_api/organisation_api.dart';
+import 'package:organization_api/organization_api.dart';
 import 'package:user_api/user_api.dart';
 
 class HomePage extends StatelessWidget {
@@ -94,7 +93,7 @@ class HomePage extends StatelessWidget {
                                                           apps[index]['route'],
                                                           extra: {
                                                             'user': user,
-                                                            'organisationContextMenuCubit': context.read<OrganisationContextMenuCubit>()
+                                                            'organizationContextMenuCubit': context.read<OrganizationContextMenuCubit>()
                                                           }
                                                       );
                                                     },

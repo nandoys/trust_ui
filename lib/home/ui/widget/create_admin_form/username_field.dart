@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:organisation_api/organisation_api.dart';
+import 'package:organization_api/organization_api.dart';
 import 'package:user_api/user_api.dart';
 
 
 class UsernameField extends StatelessWidget {
-  UsernameField({super.key, required this.controller, required this.organisation});
+  UsernameField({super.key, required this.controller, required this.organization});
 
   final TextEditingController controller;
-  final Organisation organisation;
+  final Organization organization;
   final usernameKey = GlobalKey<FormFieldState>();
 
   @override
@@ -19,7 +19,7 @@ class UsernameField extends StatelessWidget {
           onFocusChange: (focus){
             if(!focus) {
               if(controller.text.isNotEmpty) {
-                context.read<CheckUsernameCubit>().checkField(organisation, controller.text);
+                context.read<CheckUsernameCubit>().checkField(organization, controller.text);
               }
             }
           },

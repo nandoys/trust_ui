@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:organisation_api/organisation_api.dart';
+import 'package:organization_api/organization_api.dart';
 
 class Classification extends Equatable {
 
@@ -40,17 +40,17 @@ class Module extends Equatable {
 
 class Account extends Equatable {
 
-  Account({this.id, required this.number, required this.name, required this.organisation, required this.accountType});
+  Account({this.id, required this.number, required this.name, required this.organization, required this.accountType});
 
   factory Account.fromJson(Map<String, dynamic> json) {
-    final Organisation? organisation = json['organisation'] != null ?
-    Organisation.fromJson(json['organisation']) : json['organisation'];
+    final Organization? organization = json['organization'] != null ?
+    Organization.fromJson(json['organization']) : json['organization'];
 
-    final AccountType? accountType = json['type_compte'] != null ?
-    AccountType.fromJson(json['type_compte']) : json['type_compte'];
+    final AccountType? accountType = json['account_type'] != null ?
+    AccountType.fromJson(json['account_type']) : json['account_type'];
 
     return Account(
-        id: json['id'], number: json['numero'], name: json['intitule'], organisation: organisation,
+        id: json['id'], number: json['number'], name: json['name'], organization: organization,
         accountType: accountType
     );
   }
@@ -58,11 +58,11 @@ class Account extends Equatable {
   final String? id;
   final String number;
   final String name;
-  final Organisation? organisation;
+  final Organization? organization;
   final AccountType? accountType;
 
   @override
-  List<Object?> get props => [id, number, name, organisation];
+  List<Object?> get props => [id, number, name, organization];
 
 }
 
@@ -71,7 +71,7 @@ class AccountType extends Equatable {
   AccountType({this.id, required this.name});
 
   factory AccountType.fromJson(Map<String, dynamic> json) {
-    return AccountType(id: json['id'], name: json['intitule']);
+    return AccountType(id: json['id'], name: json['name']);
   }
 
   final String? id;

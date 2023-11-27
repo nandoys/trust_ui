@@ -1,6 +1,6 @@
 import 'package:accounting_api/accounting_api.dart';
 import 'package:equatable/equatable.dart';
-import 'package:organisation_api/organisation_api.dart';
+import 'package:organization_api/organization_api.dart';
 import 'package:tax_api/tax_api.dart';
 
 enum ProductType { bien, service, mixte }
@@ -38,12 +38,12 @@ class ProductCategory extends Equatable {
 }
 
 class Product extends Equatable {
-  Product({this.id, required this.organisation, required this.name, this.reference, this.barCode, this.image,
+  Product({this.id, required this.organization, required this.name, this.reference, this.barCode, this.image,
     this.buyPrice, this.sellPrice, this.sellPromoPrice, required this.currency, this.inPromo = false,
     required this.productCategory, this.canPerish = false, this.accounts, this.taxes});
 
   final String? id;
-  final Organisation organisation;
+  final Organization organization;
   final String name;
   final String? reference;
   final String? barCode;

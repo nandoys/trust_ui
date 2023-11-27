@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:native_context_menu/native_context_menu.dart';
-import 'package:organisation_api/organisation_api.dart';
 
 import 'package:server_api/src/data/data.dart';
 import 'package:server_api/src/domain/domain.dart';
@@ -8,15 +7,15 @@ import 'package:server_api/src/domain/domain.dart';
 import 'package:utils/utils.dart';
 
 class ServerContextMenuCubit extends Cubit<List<MenuItem>> {
-  ServerContextMenuCubit({required this.serverRepository, required this.activeServer, required this.initial})
+  ServerContextMenuCubit({required this.repository, required this.activeServer, required this.initial})
       : super(initial);
 
-  final ServerRepository serverRepository;
+  final ServerRepository repository;
   final ActiveServerCubit activeServer;
   final List<MenuItem> initial;
 
   void getServers() async {
-    List<String>? servers = await serverRepository.getServers();
+    List<String>? servers = await repository.getServers();
 
     if (servers != null) {
       List<MenuItem> menus = [
@@ -44,18 +43,18 @@ class ServerContextMenuCubit extends Cubit<List<MenuItem>> {
   }
 
   void addServer(String server) {
-    serverRepository.addServer(server);
+    repository.addServer(server);
     getServers();
   }
 
   void activateServer(String server) {
-    serverRepository.activateServer(server);
+    repository.activateServer(server);
     activeServer.get();
     getServers();
   }
 
   void updateServer(String oldServer, String newServer) {
-    serverRepository.updateServer(oldServer, newServer);
+    repository.updateServer(oldServer, newServer);
     getServers();
     if (formatActiveServer(oldServer) == activeServer.state.fullAddress) {
       activeServer.get();
@@ -63,7 +62,7 @@ class ServerContextMenuCubit extends Cubit<List<MenuItem>> {
   }
 
   void removeServer(String server) {
-    serverRepository.removeServer(formatServers(server));
+    repository.removeServer(formatServers(server));
     getServers();
     if (server == activeServer.state.fullAddress) {
       activeServer.get();

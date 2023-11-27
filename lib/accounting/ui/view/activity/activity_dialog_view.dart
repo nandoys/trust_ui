@@ -9,12 +9,14 @@ import 'package:trust_app/accounting/ui/view/activity/product_info_view.dart';
 import 'package:trust_app/accounting/ui/view/activity/product_taxes_view.dart';
 
 class ActivityDialog extends StatelessWidget {
-  const ActivityDialog({super.key});
+  const ActivityDialog({super.key, this.product});
+
+  final Product? product;
 
   @override
   Widget build(BuildContext context) {
     final activityView = [
-      ProductInfoView(),
+      ProductInfoView(product: product,),
       const ProductAccountingView(),
       const ProductTaxesView()
     ];
@@ -45,6 +47,7 @@ class ActivityDialog extends StatelessWidget {
                   body: activityView[viewIndex],
                   bottomNavigationBar: BottomNavigationBar(
                       onTap: (index) {
+
                         context.read<ProductBottomNavigationCubit>().navigate(index);
                       },
                       currentIndex: viewIndex,

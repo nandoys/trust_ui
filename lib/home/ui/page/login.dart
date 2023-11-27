@@ -2,7 +2,7 @@ import 'package:authentication_api/authentication_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:organisation_api/organisation_api.dart';
+import 'package:organization_api/organization_api.dart';
 
 import 'package:server_api/server_api.dart';
 import 'package:trust_app/home/ui/view/view.dart';
@@ -29,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
       },
       child: MultiBlocProvider(
         providers: [
-          BlocProvider(create: (context) => OrganisationApiStatusCubit()),
+          BlocProvider(create: (context) => OrganizationApiStatusCubit()),
           BlocProvider(create: (context) => UserRoleApiStatusCubit()),
         ],
         child: MultiRepositoryProvider(
@@ -42,20 +42,20 @@ class _LoginPageState extends State<LoginPage> {
           child: MultiBlocProvider(
             providers: [
               BlocProvider(
-                  create: (context) => OrganisationContextMenuCubit(
+                  create: (context) => OrganizationContextMenuCubit(
                       connectivityStatus: context.read<ConnectivityStatusCubit>(),
-                      apiStatus: context.read<OrganisationApiStatusCubit>()
+                      apiStatus: context.read<OrganizationApiStatusCubit>()
                   )
               ),
               BlocProvider(
-                  create: (context) => SetupOrganisationCubit()
+                  create: (context) => SetupOrganizationCubit()
               ),
               BlocProvider(
-                  create: (context) => ActiveOrganisationCubit(
-                      organisationMenu: context.read<OrganisationContextMenuCubit>(),
+                  create: (context) => ActiveOrganizationCubit(
+                      organizationMenu: context.read<OrganizationContextMenuCubit>(),
                       connectivityStatus: context.read<ConnectivityStatusCubit>(),
                       apiStatus: context.read<UserRoleApiStatusCubit>(),
-                      setup: context.read<SetupOrganisationCubit>()
+                      setup: context.read<SetupOrganizationCubit>()
                   )
               ),
               BlocProvider(create: (context) => LoginApiStatusCubit()),
@@ -85,7 +85,7 @@ class _LoginPageState extends State<LoginPage> {
 
                     if(user != null && authStatus == AuthenticationStatus.authenticated) {
                       context.goNamed('start', extra: {
-                        'user': user, 'organisationContextMenuCubit': context.read<OrganisationContextMenuCubit>()
+                        'user': user, 'organizationContextMenuCubit': context.read<OrganizationContextMenuCubit>()
                       });
                     }
 
@@ -102,8 +102,8 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 BlocListener<ActiveServerCubit, ActiveServerState>(
                     listener: (context, currentServer) {
-                      context.read<OrganisationContextMenuCubit>().get(
-                        OrganisationRepository(
+                      context.read<OrganizationContextMenuCubit>().get(
+                        OrganizationRepository(
                             protocol: currentServer.protocol,
                             host: currentServer.host,
                             port: currentServer.port

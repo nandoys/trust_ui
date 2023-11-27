@@ -1,6 +1,6 @@
 import 'package:accounting_api/accounting_api.dart';
 import 'package:equatable/equatable.dart';
-import 'package:organisation_api/organisation_api.dart';
+import 'package:organization_api/organization_api.dart';
 import 'package:utils/utils.dart';
 
 class Tax extends Equatable {

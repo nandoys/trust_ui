@@ -11,8 +11,8 @@ dependencies:
   rxdart: ^0.27.7
   http: ^1.1.0
   shared_preferences: ^2.2.2
-  organisation_api:
-    path: ../organisation_api
+  organization_api:
+    path: ../organization_api
   server_api:
     path: ../server_api
   utils:

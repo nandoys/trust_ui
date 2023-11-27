@@ -1,7 +1,7 @@
 import 'package:authentication_api/authentication_api.dart';
 import 'package:bloc/bloc.dart';
 import 'package:http/http.dart' as http;
-import 'package:organisation_api/organisation_api.dart';
+import 'package:organization_api/organization_api.dart';
 import 'package:server_api/server_api.dart';
 
 import 'package:user_api/user_api.dart';
@@ -17,7 +17,7 @@ class AuthenticationCubit extends Cubit<AuthenticationStatus> {
   final ActiveServerCubit server;
 
 
-  void login(String username, String password, Organisation? organisation, AuthenticationRepository repository) async {
+  void login(String username, String password, Organization? organization, AuthenticationRepository repository) async {
     apiStatus.changeStatus(ApiStatus.requesting);
 
     if (connectivityStatus.state == ConnectivityStatus.disconnected) {
@@ -34,7 +34,7 @@ class AuthenticationCubit extends Cubit<AuthenticationStatus> {
 
         if (user != null) {
 
-          if (user.organisation == organisation) {
+          if (user.organization == organization) {
             emit(AuthenticationStatus.authenticated);
 
             userCubit.loggedUser(user);
