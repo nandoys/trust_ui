@@ -22,7 +22,7 @@ class ActivityNewButton extends StatelessWidget {
                     BlocProvider.value(value: context.read<ProductCategoryCubit>()),
                     BlocProvider.value(value: context.read<ProductCategoryConfigCubit>()),
                   ],
-                  child: const ActivityDialog()
+                  child: ActivityDialog()
               );
             }
         );

@@ -16,7 +16,30 @@ class CurrencyRepository {
           scheme: protocol?.toLowerCase(),
           host: host,
           port: port,
-          path: '/api/organization/pays/'
+          path: '/api/settings/currency/'
+      );
+
+      http.Response response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final dynamic json = jsonDecode(utf8.decode(response.bodyBytes));
+        return List.from(json).map((e) => Currency.fromJson(e)).toList();
+      } else {
+        throw Exception("Quelque chose s'est mal passé");
+      }
+    }
+
+    return [];
+  }
+
+  Future<List<Currency>> getCurrenciesFor(Organization organization) async {
+    if (protocol != null && host != null && port != null) {
+
+      final url = Uri(
+          scheme: protocol?.toLowerCase(),
+          host: host,
+          port: port,
+          path: '/api/currency/organization'
       );
 
       http.Response response = await http.get(url);

@@ -41,19 +41,19 @@ class ProductCategoryCubit extends Cubit<List<ProductCategory>> {
 
 class ProductCategoryConfigCubit extends Cubit<List<Module>> {
   ProductCategoryConfigCubit({
-    required this.moduleRepository,
+    required this.repository,
     required this.connectivityStatus,
     required this.apiStatus
 }) : super([]);
 
-  final ModuleRepository moduleRepository;
+  final ModuleRepository repository;
   final ConnectivityStatusCubit connectivityStatus;
   final ProductCategoryConfigApiStatusCubit apiStatus;
 
   void getConfig(String id) async {
     try {
       apiStatus.changeStatus(ApiStatus.requesting);
-      List<Module> response = await moduleRepository.getModulesBy(id);
+      List<Module> response = await repository.getModulesBy(id);
 
       emit(response);
 

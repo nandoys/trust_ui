@@ -28,8 +28,8 @@ class ProductInfoView extends StatelessWidget {
                     width: constraints.maxWidth * 0.965,
                     height: 150,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      border: Border.all(color: Colors.black26)
+                        borderRadius: BorderRadius.circular(10.0),
+                        border: Border.all(color: Colors.black26)
                     ),
                     margin: const EdgeInsets.only(bottom: 25.0),
                     child: const CircleAvatar(),
@@ -81,6 +81,7 @@ class ProductInfoView extends StatelessWidget {
                                           message: "Impossible de récupérer la configuration de la catégorie, "
                                               "un problème inattendu est survenu."
                                       );
+
                                       ScaffoldMessenger.of(context).showSnackBar(notif);
                                     },
                                     listenWhen: (previous, current) => current == ApiStatus.failed,

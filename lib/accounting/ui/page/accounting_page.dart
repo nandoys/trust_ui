@@ -1,4 +1,3 @@
-import 'package:activity_api/activity_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -127,8 +126,9 @@ class Accounting extends StatelessWidget {
                               ],
                               child: Card(
                                 elevation: 30,
-                                child: Scaffold(
-                                  body: pages[pageIndex],
+                                child: Container(
+                                  color: Colors.white,
+                                  child: pages[pageIndex],
                                 ),
                               )
                           )

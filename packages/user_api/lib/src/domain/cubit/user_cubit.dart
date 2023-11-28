@@ -7,16 +7,16 @@ import 'package:user_api/src/domain/domain.dart';
 import 'package:utils/utils.dart';
 
 class UserCubit extends Cubit<User?> {
-  UserCubit({required this.userRepository, required this.connectivityStatus, required this.apiStatus}) : super(null);
+  UserCubit({required this.repository, required this.connectivityStatus, required this.apiStatus}) : super(null);
 
-  final UserRepository userRepository;
+  final UserRepository repository;
   final ConnectivityStatusCubit connectivityStatus;
   final UserApiStatusCubit apiStatus;
 
   void createAdminUser(User user) async {
     try {
       apiStatus.changeStatus(ApiStatus.requesting);
-      User? response = await userRepository.addAdmin(user);
+      User? response = await repository.addAdmin(user);
 
       if (response != null) {
         emit(response);

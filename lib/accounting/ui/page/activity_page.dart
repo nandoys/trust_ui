@@ -51,7 +51,7 @@ class AccountingActivity extends StatelessWidget {
               ),
               BlocProvider(
                 create: (context) => ProductCategoryConfigCubit(
-                    moduleRepository: context.read<ModuleRepository>(),
+                    repository: context.read<ModuleRepository>(),
                     connectivityStatus: context.read<ConnectivityStatusCubit>(),
                     apiStatus: context.read<ProductCategoryConfigApiStatusCubit>()
                 ),

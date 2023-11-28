@@ -45,7 +45,7 @@ class CreateUserAdminPage extends StatelessWidget {
               BlocProvider(create: (context) => CreateAdminUserApiStatusCubit()),
               BlocProvider(create: (context) => SubmitCreateUserAdminFormLoadingCubit()),
               BlocProvider(create: (context) => UserCubit(
-                userRepository: context.read<UserRepository>(),
+                  repository: context.read<UserRepository>(),
                 connectivityStatus: context.read<ConnectivityStatusCubit>(),
                 apiStatus: context.read<CreateAdminUserApiStatusCubit>()
               )),

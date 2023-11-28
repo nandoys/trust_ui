@@ -60,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               BlocProvider(create: (context) => LoginApiStatusCubit()),
               BlocProvider(create: (context) => UserCubit(
-                  userRepository: context.read<UserRepository>(),
+                  repository: context.read<UserRepository>(),
                   connectivityStatus: context.read<ConnectivityStatusCubit>(),
                   apiStatus: context.read<LoginApiStatusCubit>()
                 // activeOrganisationCubit: context.read<ActiveOrganisationCubit>()
@@ -85,7 +85,8 @@ class _LoginPageState extends State<LoginPage> {
 
                     if(user != null && authStatus == AuthenticationStatus.authenticated) {
                       context.goNamed('start', extra: {
-                        'user': user, 'organizationContextMenuCubit': context.read<OrganizationContextMenuCubit>()
+                        'user': user,
+                        'organizationContextMenuCubit': context.read<OrganizationContextMenuCubit>()
                       });
                     }
 
