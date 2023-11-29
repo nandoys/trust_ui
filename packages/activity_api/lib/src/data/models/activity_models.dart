@@ -11,18 +11,18 @@ class ProductCategory extends Equatable {
 
   factory ProductCategory.fromJson(Map<String, dynamic> json) {
     ProductType productType = ProductType.mixte;
-    if(json['type_produit'].toString().contains('bien')) {
+    if(json['product_type'].toString().contains('bien')) {
       productType = ProductType.bien;
     }
-    else if(json['type_produit'].toString().contains('service')) {
+    else if(json['product_type'].toString().contains('service')) {
       productType = ProductType.service;
     }
 
-    return ProductCategory(id: json['id'], name: json['intitule'], productType: productType);
+    return ProductCategory(id: json['id'], name: json['name'], productType: productType);
   }
 
   Map<String, dynamic> toJson() {
-    Map<String, dynamic>  data = {'intitule': name, 'type_produit': productType.name,};
+    Map<String, dynamic>  data = {'name': name, 'product_type': productType.name,};
 
     return data;
 
@@ -59,7 +59,6 @@ class Product extends Equatable {
   final List<Tax>? taxes;
 
   @override
-  // TODO: implement props
   List<Object?> get props => [id];
 
 

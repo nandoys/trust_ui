@@ -19,9 +19,9 @@ class Module extends Equatable {
   Module({required this.id, required this.name, required this.account});
 
   factory Module.fromJson(Map<String, dynamic> json) {
-    final Account account = Account.fromJson(json['compte']);
+    final Account account = Account.fromJson(json['account']);
 
-    return Module(id: json['module']['id'], name: json['module']['intitule'], account: account);
+    return Module(id: json['module']['id'], name: json['module']['name'], account: account);
   }
 
   final String id;

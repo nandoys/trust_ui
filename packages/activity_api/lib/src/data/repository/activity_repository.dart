@@ -9,20 +9,23 @@ class ProductCategoryRepository {
   final String? host;
   final int? port;
 
-  Future<List<ProductCategory>> getProductCategories() async {
+  Future<List<ProductCategory>> getProductCategories(String token) async {
     if (protocol != null && host != null && port != null) {
-      final Uri url;
-      if (protocol == 'Http') {
-        url = Uri.http('$host:$port', '/api/categorie/produit/');
-      }
-      else {
-        url = Uri.https('$host:$port', '/api/categorie/produit/');
-      }
 
-      http.Response response = await http.get(url);
+      final url = Uri(
+          scheme: protocol?.toLowerCase(),
+          host: host,
+          port: port,
+          path: '/api/product/category/',
+      );
+
+      http.Response response = await http.get(url,  headers: {
+        'Authorization':  'Trust $token'
+      });
 
       if (response.statusCode == 200) {
         final dynamic json = jsonDecode(utf8.decode(response.bodyBytes));
+
         return List.from(json).map((e) => ProductCategory.fromJson(e)).toList();
       } else {
         throw Exception("Quelque chose s'est mal passé");

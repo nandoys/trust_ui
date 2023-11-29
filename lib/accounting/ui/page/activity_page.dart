@@ -59,13 +59,13 @@ class AccountingActivity extends StatelessWidget {
             ],
             child: Column(
               children: [
-                const Padding(
-                  padding: EdgeInsets.all(20.0),
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      ActivityTitleWidget(),
-                      ActivityNewButton()
+                      const ActivityTitleWidget(),
+                      ActivityNewButton(user: user,)
                     ],
                   ),
                 ),

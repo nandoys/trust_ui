@@ -12,13 +12,13 @@ class ModuleRepository {
 
   Future<List<Module>> getModules() async {
     if (protocol != null && host != null && port != null) {
-      final Uri url;
-      if (protocol == 'Http') {
-        url = Uri.http('$host:$port', '/api/config/categorie/produit/');
-      }
-      else {
-        url = Uri.https('$host:$port', '/api/config/categorie/produit/');
-      }
+
+      final url = Uri(
+          scheme: protocol?.toLowerCase(),
+          host: host,
+          port: port,
+          path: '/api/product/category/config',
+      );
 
       http.Response response = await http.get(url);
 
@@ -34,25 +34,19 @@ class ModuleRepository {
   }
 
   /// Retrieve modules by id filter
-  Future<List<Module>> getModulesBy(String id) async {
+  Future<List<Module>> getModulesBy(String id, String token) async {
     if (protocol != null && host != null && port != null) {
-      final Uri url;
-      if (protocol == 'Http') {
-        url = Uri.http(
-            '$host:$port',
-            '/api/config/categorie/produit/',
-            {'categorie_produit': id}
-        );
-      }
-      else {
-        url = Uri.https(
-            '$host:$port',
-            '/api/config/categorie/produit/',
-            {'categorie_produit': id}
-        );
-      }
+      final url = Uri(
+        scheme: protocol?.toLowerCase(),
+        host: host,
+        port: port,
+        path: '/api/product/category/config',
+        queryParameters: {'product_category': id}
+      );
 
-      http.Response response = await http.get(url);
+      http.Response response = await http.get(url, headers: {
+        'Authorization':  'Trust $token'
+      });
 
       if (response.statusCode == 200) {
         final dynamic json = jsonDecode(utf8.decode(response.bodyBytes));

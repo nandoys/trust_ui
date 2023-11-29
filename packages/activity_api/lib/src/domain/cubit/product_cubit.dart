@@ -18,10 +18,10 @@ class ProductCategoryCubit extends Cubit<List<ProductCategory>> {
   final ConnectivityStatusCubit connectivityStatus;
   final ProductCategoryApiStatusCubit apiStatus;
 
-  void getCategories() async {
+  void getCategories(String token) async {
     try {
         apiStatus.changeStatus(ApiStatus.requesting);
-        List<ProductCategory> response = await productCategoryRepository.getProductCategories();
+        List<ProductCategory> response = await productCategoryRepository.getProductCategories(token);
 
         emit(response);
 
@@ -50,10 +50,10 @@ class ProductCategoryConfigCubit extends Cubit<List<Module>> {
   final ConnectivityStatusCubit connectivityStatus;
   final ProductCategoryConfigApiStatusCubit apiStatus;
 
-  void getConfig(String id) async {
+  void getConfig(String id, String token) async {
     try {
       apiStatus.changeStatus(ApiStatus.requesting);
-      List<Module> response = await repository.getModulesBy(id);
+      List<Module> response = await repository.getModulesBy(id, token);
 
       emit(response);
 

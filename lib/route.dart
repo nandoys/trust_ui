@@ -123,10 +123,13 @@ final route = GoRouter(
             final User user = extra['user'] as User;
             final OrganizationContextMenuCubit organizationContextMenuCubit =
             extra['organizationContextMenuCubit'] as OrganizationContextMenuCubit;
+            final OrganizationCurrencyCubit organizationCurrencyCubit =
+            extra['organizationCurrencyCubit'] as OrganizationCurrencyCubit;
 
             return NoTransitionPage(child: MultiBlocProvider(
                 providers: [
-                  BlocProvider.value(value: organizationContextMenuCubit)
+                  BlocProvider.value(value: organizationContextMenuCubit),
+                  BlocProvider.value(value: organizationCurrencyCubit),
                 ],
                 child: Accounting(user: user,)
             ));

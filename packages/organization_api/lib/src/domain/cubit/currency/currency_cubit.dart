@@ -4,17 +4,17 @@ import 'package:organization_api/organization_api.dart';
 import 'package:server_api/server_api.dart';
 import 'package:utils/utils.dart';
 
-class CurrencyCubit extends Cubit<List<Currency>?> {
-  CurrencyCubit({required this.repository, required this.connectivityStatus, required this.apiStatus}) : super(null);
+class CurrencyCubit extends Cubit<List<Currency>> {
+  CurrencyCubit({required this.repository, required this.connectivityStatus, required this.apiStatus}) : super([]);
   final CurrencyRepository repository;
   final ConnectivityStatusCubit connectivityStatus;
   final CurrencyApiStatusCubit apiStatus;
 
-  void getCurrencies() async {
+  void getCurrencies(String token) async {
 
     try {
       apiStatus.changeStatus(ApiStatus.requesting);
-      List<Currency> response = await repository.getCurrencies();
+      List<Currency> response = await repository.getCurrencies(token);
 
       emit(response);
 
@@ -31,19 +31,19 @@ class CurrencyCubit extends Cubit<List<Currency>?> {
   }
 }
 
-class OrganizationCurrencyCubit extends Cubit<List<Currency>?> {
+class OrganizationCurrencyCubit extends Cubit<List<Currency>> {
   OrganizationCurrencyCubit({required this.repository, required this.connectivityStatus, required this.apiStatus})
-      : super(null);
+      : super([]);
 
   final CurrencyRepository repository;
   final ConnectivityStatusCubit connectivityStatus;
   final CurrencyApiStatusCubit apiStatus;
 
-  void getCurrencies(Organization organization) async {
+  void getCurrencies(Organization organization, String token) async {
     try {
 
       apiStatus.changeStatus(ApiStatus.requesting);
-      List<Currency> response = await repository.getCurrenciesFor(organization);
+      List<Currency> response = await repository.getOrganizationCurrencies(organization, token);
 
       emit(response);
 

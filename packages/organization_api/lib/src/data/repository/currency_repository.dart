@@ -9,7 +9,7 @@ class CurrencyRepository {
   final String? host;
   final int? port;
 
-  Future<List<Currency>> getCurrencies() async {
+  Future<List<Currency>> getCurrencies(String token) async {
     if (protocol != null && host != null && port != null) {
 
       final url = Uri(
@@ -19,7 +19,9 @@ class CurrencyRepository {
           path: '/api/settings/currency/'
       );
 
-      http.Response response = await http.get(url);
+      http.Response response = await http.get(url, headers: {
+        'Authorization':  'Trust $token'
+      });
 
       if (response.statusCode == 200) {
         final dynamic json = jsonDecode(utf8.decode(response.bodyBytes));
@@ -32,17 +34,20 @@ class CurrencyRepository {
     return [];
   }
 
-  Future<List<Currency>> getCurrenciesFor(Organization organization) async {
+  Future<List<Currency>> getOrganizationCurrencies(Organization organization, String token) async {
     if (protocol != null && host != null && port != null) {
 
       final url = Uri(
           scheme: protocol?.toLowerCase(),
           host: host,
           port: port,
-          path: '/api/currency/organization'
+          path: '/api/organization/currency',
+          queryParameters: {'org_id': organization.id}
       );
 
-      http.Response response = await http.get(url);
+      http.Response response = await http.get(url, headers: {
+        'Authorization':  'Trust $token'
+      });
 
       if (response.statusCode == 200) {
         final dynamic json = jsonDecode(utf8.decode(response.bodyBytes));

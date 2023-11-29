@@ -3,6 +3,8 @@ import 'package:activity_api/activity_api.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:organization_api/organization_api.dart';
+import 'package:user_api/user_api.dart';
 import 'package:utils/utils.dart';
 
 import 'package:trust_app/home/ui/widget/widget.dart';
@@ -10,10 +12,11 @@ import 'package:trust_app/home/ui/widget/widget.dart';
 import 'package:trust_app/accounting/logic/cubit/cubit.dart';
 
 class ProductInfoView extends StatelessWidget {
-  ProductInfoView({super.key, this.product});
+  ProductInfoView({super.key, this.product, required this.user});
 
   final GlobalKey formKey = GlobalKey<FormState>();
   final Product? product;
+  final User user;
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +107,9 @@ class ProductInfoView extends StatelessWidget {
                                           //context.read<SelectedCountryCubit>().change(value);
                                         },
                                         onChanged: (productCategory) {
-                                          context.read<ProductCategoryConfigCubit>().getConfig(productCategory!.id);
+                                          context.read<ProductCategoryConfigCubit>().getConfig(
+                                              productCategory!.id, user.accessToken as String
+                                          );
                                         },
                                         dropdownDecoratorProps: const DropDownDecoratorProps(
                                             dropdownSearchDecoration: InputDecoration(
@@ -159,48 +164,52 @@ class ProductInfoView extends StatelessWidget {
                           ),
                           Padding(
                             padding: const EdgeInsets.only(left: 15.0),
-                            child: DropdownSearch<String>(
-                              items: const ['FC', 'USD'],
-                              //itemAsString: (ProductCategory productCategory) => productCategory.name,
-                              validator: (value) {
-                                if(value == null) {
-                                  return "Veuillez choisir la dévise";
-                                }
-                                return null;
-                              },
-                              autoValidateMode: AutovalidateMode.onUserInteraction,
-                              onSaved: (value) {
-                                //context.read<SelectedCountryCubit>().change(value);
-                              },
-                              onChanged: (currency) {
-                                //context.read<ProductCategoryConfigCubit>().getConfig(productCategory!.id);
-                              },
-                              dropdownDecoratorProps: const DropDownDecoratorProps(
-                                  dropdownSearchDecoration: InputDecoration(
-                                    isDense: true,
-                                    filled: true,
-                                    labelText: "Dévise (lors de l'achat / de la vente) *",
-                                  )
-                              ),
-                              popupProps: PopupProps.menu(
-                                  showSearchBox: true,
-                                  searchFieldProps: const TextFieldProps(
-                                      autofocus: true,
-                                      decoration: InputDecoration(
-                                          label: Text('Recherche ...'),
+                            child: BlocBuilder<OrganizationCurrencyCubit, List<Currency>>(
+                                builder: (context, organizationCurrencies) {
+                                  return DropdownSearch<Currency>(
+                                    items: organizationCurrencies,
+                                    itemAsString: (Currency currency) => currency.name,
+                                    validator: (value) {
+                                      if(value == null) {
+                                        return "Veuillez choisir la dévise";
+                                      }
+                                      return null;
+                                    },
+                                    autoValidateMode: AutovalidateMode.onUserInteraction,
+                                    onSaved: (value) {
+                                      //context.read<SelectedCountryCubit>().change(value);
+                                    },
+                                    onChanged: (currency) {
+                                      //context.read<ProductCategoryConfigCubit>().getConfig(productCategory!.id);
+                                    },
+                                    dropdownDecoratorProps: const DropDownDecoratorProps(
+                                        dropdownSearchDecoration: InputDecoration(
                                           isDense: true,
-                                          filled: true
-                                      )
-                                  ),
-                                  emptyBuilder: (context, text) {
-                                    return const Center(
-                                      child: SizedBox(
-                                        height: 50.0,
-                                        child: Text('Aucune catégorie trouvée'),
-                                      ),
-                                    );
-                                  }
-                              ),
+                                          filled: true,
+                                          labelText: "Dévise (lors de l'achat / de la vente) *",
+                                        )
+                                    ),
+                                    popupProps: PopupProps.menu(
+                                        showSearchBox: true,
+                                        searchFieldProps: const TextFieldProps(
+                                            autofocus: true,
+                                            decoration: InputDecoration(
+                                                label: Text('Recherche ...'),
+                                                isDense: true,
+                                                filled: true
+                                            )
+                                        ),
+                                        emptyBuilder: (context, text) {
+                                          return const Center(
+                                            child: SizedBox(
+                                              height: 50.0,
+                                              child: Text('Aucune catégorie trouvée'),
+                                            ),
+                                          );
+                                        }
+                                    ),
+                                  );
+                                }
                             ),
                           ),
                           ...List.generate(modules.length, (index) {

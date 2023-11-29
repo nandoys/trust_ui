@@ -1,17 +1,21 @@
 import 'package:activity_api/activity_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:organization_api/organization_api.dart';
 import 'package:trust_app/accounting/ui/view/view.dart';
+import 'package:user_api/user_api.dart';
 
 class ActivityNewButton extends StatelessWidget {
-  const ActivityNewButton({super.key});
+  const ActivityNewButton({super.key, required this.user});
+
+  final User user;
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton.icon(
       icon: const Icon(Icons.add, color: Colors.white,),
       onPressed: (){
-        context.read<ProductCategoryCubit>().getCategories();
+        context.read<ProductCategoryCubit>().getCategories(user.accessToken as String);
         showDialog(
             context: context,
             builder: (_) {
@@ -21,8 +25,9 @@ class ActivityNewButton extends StatelessWidget {
                     BlocProvider.value(value: context.read<ProductCategoryConfigApiStatusCubit>()),
                     BlocProvider.value(value: context.read<ProductCategoryCubit>()),
                     BlocProvider.value(value: context.read<ProductCategoryConfigCubit>()),
+                    BlocProvider.value(value: context.read<OrganizationCurrencyCubit>()),
                   ],
-                  child: ActivityDialog()
+                  child: ActivityDialog(user: user,)
               );
             }
         );

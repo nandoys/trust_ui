@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:server_api/server_api.dart';
 import 'package:user_api/user_api.dart';
 import 'package:trust_app/accounting/logic/cubit/cubit.dart';
 
@@ -19,8 +18,6 @@ class Accounting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    final server = context.read<ActiveServerCubit>().state;
 
     final List<Widget> pages = [
       AccountingDashboard(user: user),

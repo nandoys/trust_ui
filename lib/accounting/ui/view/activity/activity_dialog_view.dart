@@ -7,16 +7,18 @@ import 'package:trust_app/accounting/logic/cubit/cubit.dart';
 import 'package:trust_app/accounting/ui/view/activity/product_accounting_view.dart';
 import 'package:trust_app/accounting/ui/view/activity/product_info_view.dart';
 import 'package:trust_app/accounting/ui/view/activity/product_taxes_view.dart';
+import 'package:user_api/user_api.dart';
 
 class ActivityDialog extends StatelessWidget {
-  const ActivityDialog({super.key, this.product});
+  const ActivityDialog({super.key, this.product, required this.user});
 
   final Product? product;
+  final User user;
 
   @override
   Widget build(BuildContext context) {
     final activityView = [
-      ProductInfoView(product: product,),
+      ProductInfoView(product: product, user: user,),
       const ProductAccountingView(),
       const ProductTaxesView()
     ];
