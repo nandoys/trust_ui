@@ -3,14 +3,24 @@ import 'package:organization_api/organization_api.dart';
 
 import 'package:trust_app/home/ui/widget/widget.dart';
 
-class CreateUserAdminForm extends StatelessWidget {
+class CreateUserAdminForm extends StatefulWidget {
   CreateUserAdminForm({super.key, required this.organization});
 
   final Organization organization;
+
+  @override
+  State<CreateUserAdminForm> createState() => _CreateUserAdminFormState();
+}
+
+class _CreateUserAdminFormState extends State<CreateUserAdminForm> {
   final userController = TextEditingController();
+
   final emailController = TextEditingController();
+
   final passwordController = TextEditingController();
+
   final verifyPasswordController = TextEditingController();
+
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -27,11 +37,11 @@ class CreateUserAdminForm extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.all(12.0),
-            child: UsernameField(controller: userController, organization: organization,),
+            child: UsernameField(controller: userController, organization: widget.organization,),
           ),
           Padding(
             padding: const EdgeInsets.all(12.0),
-            child: AdminEmailField(controller: emailController, organization: organization,),
+            child: AdminEmailField(controller: emailController, organization: widget.organization,),
           ),
           Padding(
             padding: const EdgeInsets.all(12.0),
@@ -52,11 +62,21 @@ class CreateUserAdminForm extends StatelessWidget {
               userController: userController,
               emailController: emailController,
               passwordController: passwordController,
-              organization: organization,
+              organization: widget.organization,
             ),
           ),
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    userController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    verifyPasswordController.dispose();
+    _formKey.currentState?.dispose();
+    super.dispose();
   }
 }

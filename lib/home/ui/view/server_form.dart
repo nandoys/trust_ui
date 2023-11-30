@@ -7,22 +7,30 @@ import 'package:server_api/server_api.dart';
 import 'package:trust_app/home//ui/widget/widget.dart';
 
 
-class ServerForm extends StatelessWidget {
+class ServerForm extends StatefulWidget {
   ServerForm({super.key, this.defaultHost, this.defaultPort, required this.protocol});
-  final _formKey = GlobalKey<FormState>();
-  final _hostController = TextEditingController();
-  final _portController = TextEditingController();
   final String? defaultHost;
   final int? defaultPort;
   final String? protocol;
 
   @override
+  State<ServerForm> createState() => _ServerFormState();
+}
+
+class _ServerFormState extends State<ServerForm> {
+  final _formKey = GlobalKey<FormState>();
+
+  final _hostController = TextEditingController();
+
+  final _portController = TextEditingController();
+
+  @override
   Widget build(BuildContext context) {
-    if (defaultHost != null) {
-      _hostController.text = defaultHost.toString();
+    if (widget.defaultHost != null) {
+      _hostController.text = widget.defaultHost.toString();
     }
-    if (defaultPort != null) {
-      _portController.text = defaultPort.toString();
+    if (widget.defaultPort != null) {
+      _portController.text = widget.defaultPort.toString();
     }
 
     final ServerContextMenuCubit serverMenuCubit = context.read<ServerContextMenuCubit>();
@@ -44,7 +52,7 @@ class ServerForm extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                 Text(
-                  defaultHost == defaultPort ? 'Nouveau Serveur $protocol' : 'Modifier Serveur $protocol',
+                  widget.defaultHost == widget.defaultPort ? 'Nouveau Serveur ${widget.protocol}' : 'Modifier Serveur ${widget.protocol}',
                   style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 15.0
@@ -71,12 +79,12 @@ class ServerForm extends StatelessWidget {
                                   return "Veuillez entrer l'adresse du serveur";
                                 }
 
-                                String oldAddress = '$defaultHost:$defaultPort';
+                                String oldAddress = '${widget.defaultHost}:${widget.defaultPort}';
                                 String newAddress = '${_hostController.text}:${_portController.text}';
 
                                 bool serverExist = false;
                                 menus?.forEach((menu) {
-                                  if (menu.title == '[$protocol] $value:${_portController.text}'
+                                  if (menu.title == '[${widget.protocol}] $value:${_portController.text}'
                                       && oldAddress != newAddress ) {
                                     serverExist = true;
                                   }
@@ -138,8 +146,8 @@ class ServerForm extends StatelessWidget {
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             _formKey.currentState?.save();
-                            String editedAddress = '$protocol:${_hostController.text}:${_portController.text}';
-                            String defaultAddress = '$protocol:$defaultHost:$defaultPort';
+                            String editedAddress = '${widget.protocol}:${_hostController.text}:${_portController.text}';
+                            String defaultAddress = '${widget.protocol}:${widget.defaultHost}:${widget.defaultPort}';
 
                             SnackBar notif = FloatingSnackBar(
                               color: Colors.black.withOpacity(0.75),
@@ -147,7 +155,7 @@ class ServerForm extends StatelessWidget {
                               messageDuration: const Duration(seconds: 2),
                             );
 
-                            if (defaultHost == defaultPort) {
+                            if (widget.defaultHost == widget.defaultPort) {
                               serverMenuCubit.addServer(editedAddress);
                               context.pop();
                             } else {
@@ -160,7 +168,7 @@ class ServerForm extends StatelessWidget {
                             }
                           }
                         },
-                        child: Text(defaultHost == defaultPort ? 'Ajouter' : 'Modifier'),
+                        child: Text(widget.defaultHost == widget.defaultPort ? 'Ajouter' : 'Modifier'),
                       )
                     ],
                   ),
@@ -172,5 +180,13 @@ class ServerForm extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _formKey.currentState?.dispose();
+    _hostController.dispose();
+    _portController.dispose();
+    super.dispose();
   }
 }

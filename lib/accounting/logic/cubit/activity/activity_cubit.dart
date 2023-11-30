@@ -1,4 +1,6 @@
+import 'package:accounting_api/accounting_api.dart';
 import 'package:bloc/bloc.dart';
+import 'package:user_api/user_api.dart';
 import 'package:utils/utils.dart';
 import 'package:activity_api/activity_api.dart';
 
@@ -41,6 +43,44 @@ class SwitchInPromoCubit extends Cubit<bool> {
   SwitchInPromoCubit(): super(false);
 
   void change(bool state) {
+    emit(state);
+  }
+}
+
+class SaveProductFormCubit extends Cubit<Map<String, dynamic>> {
+  SaveProductFormCubit({required this.user}) : super({
+    'id': null,
+    'organization': user.organization,
+    'name': null,
+    'product_category': null,
+    'reference': null,
+    'codebar': null,
+    'currency': null,
+    'buy_price': null,
+    'sell_price': null,
+    'sell_in_promo': null,
+    'can_perish': false,
+    'in_promo': false,
+    'accounts': null,
+    'taxes': null
+  });
+
+  final User user;
+
+  void setValue(String fieldName, value, [List<Module>? modules]) {
+
+    state[fieldName] = value;
+
+    if (modules != null) {
+      if (!modules.any((module) => module.name == 'achat') && modules.any((module) => module.name == 'vente')) {
+        state['buy_price'] = null;
+      }
+
+      if (!modules.any((module) => module.name == 'vente') && modules.any((module) => module.name == 'achat')) {
+        state['sell_price'] = null;
+        state['sell_in_promo'] = null;
+      }
+    }
     emit(state);
   }
 }

@@ -18,3 +18,12 @@ class ProductCategoryConfigApiStatusCubit extends Cubit<ApiStatus> {
   }
 
 }
+
+class ProductApiStatusCubit extends Cubit<ApiStatus> {
+  ProductApiStatusCubit() : super(ApiStatus.requesting);
+
+  void changeStatus(ApiStatus status) {
+    emit(status);
+  }
+
+}

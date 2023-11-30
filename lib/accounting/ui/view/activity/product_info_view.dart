@@ -1,41 +1,68 @@
 import 'package:accounting_api/accounting_api.dart';
 import 'package:activity_api/activity_api.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:organization_api/organization_api.dart';
 import 'package:user_api/user_api.dart';
-import 'package:utils/utils.dart';
+import 'package:trust_app/accounting/ui/widget/accounting_widget.dart';
 
-import 'package:trust_app/home/ui/widget/widget.dart';
+class ProductInfoView extends StatefulWidget {
+  const ProductInfoView({super.key, this.product, required this.user, required this.formKey});
 
-import 'package:trust_app/accounting/logic/cubit/cubit.dart';
-
-class ProductInfoView extends StatelessWidget {
-  ProductInfoView({super.key, this.product, required this.user});
-
-  final GlobalKey formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> formKey;
   final Product? product;
   final User user;
 
   @override
+  State<ProductInfoView> createState() => _ProductInfoViewState();
+}
+
+class _ProductInfoViewState extends State<ProductInfoView> {
+  final scrollController = ScrollController();
+
+  @override
   Widget build(BuildContext context) {
+    context.read<ProductCategoryConfigCubit>().initState();
 
     return Form(
-        key: formKey,
+        key: widget.formKey,
         child: Column(
           children: [
             LayoutBuilder(
                 builder: (context, constraints) {
-                  return Container(
-                    width: constraints.maxWidth * 0.965,
-                    height: 150,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        border: Border.all(color: Colors.black26)
-                    ),
-                    margin: const EdgeInsets.only(bottom: 25.0),
-                    child: const CircleAvatar(),
+                  return Stack(
+                    children: [
+                      Container(
+                        width: constraints.maxWidth * 0.965,
+                        height: 150,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
+                            border: Border.all(color: Colors.black26)
+                        ),
+                        margin: const EdgeInsets.only(bottom: 25.0, left: 15.0),
+                      ),
+                      Center(
+                          child: SizedBox(
+                              width: 150,
+                              height: 150,
+                              child: CircleAvatar(
+                                backgroundColor: Colors.blue.shade700,
+                                child: const Text(
+                                  'P',
+                                  style: TextStyle(fontSize: 80.0, fontWeight: FontWeight.w600, color: Colors.white),
+                                  textAlign: TextAlign.center,
+                                ),
+                              )
+                          )
+                      ),
+                      const Positioned(
+                        bottom: 1,
+                        top: 85,
+                        left: 450,
+                        child: Center(
+                            child: CircleAvatar(backgroundColor: Colors.black26,)
+                        ),
+                      ),
+                    ],
                   );
                 }
             ),
@@ -44,263 +71,58 @@ class ProductInfoView extends StatelessWidget {
                 flex: 1,
                 child: BlocBuilder<ProductCategoryConfigCubit, List<Module>>(
                     builder: (_, modules) {
-                      return GridView.count(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 10.0,
-                        shrinkWrap: true,
-                        childAspectRatio: 9.0,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 15.0),
-                            child: SizedBox(
-                              height: 40,
-                              child: TextFormField(
-                                decoration: const InputDecoration(
-                                  label: Text('Nom du produit*'),
-                                  isDense: true,
-                                  filled: true,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                            child: MultiBlocListener(
-                                listeners: [
-                                  BlocListener<ProductCategoryApiStatusCubit, ApiStatus>(
-                                    listener: (context, apiStatus) {
-                                      SnackBar notif = FloatingSnackBar(
-                                          color: Colors.red,
-                                          message: "Impossible de récupérer les catégorie, un problème inattendu est survenu."
-                                      );
-                                      ScaffoldMessenger.of(context).showSnackBar(notif);
-                                    },
-                                    listenWhen: (previous, current) => current == ApiStatus.failed,
-                                  ),
-                                  BlocListener<ProductCategoryConfigApiStatusCubit, ApiStatus>(
-                                    listener: (context, apiStatus) {
-                                      SnackBar notif = FloatingSnackBar(
-                                          color: Colors.red,
-                                          message: "Impossible de récupérer la configuration de la catégorie, "
-                                              "un problème inattendu est survenu."
-                                      );
-
-                                      ScaffoldMessenger.of(context).showSnackBar(notif);
-                                    },
-                                    listenWhen: (previous, current) => current == ApiStatus.failed,
-                                  )
-                                ],
-                                child: BlocBuilder<ProductCategoryCubit, List<ProductCategory>>(
-                                    builder: (context, productCategories) {
-                                      return DropdownSearch<ProductCategory>(
-
-                                        items: productCategories,
-                                        itemAsString: (ProductCategory productCategory) => productCategory.name,
-                                        validator: (value) {
-                                          if(value == null) {
-                                            return "Veuillez choisir la catégorie";
-                                          }
-                                          return null;
-                                        },
-                                        autoValidateMode: AutovalidateMode.onUserInteraction,
-                                        onSaved: (value) {
-                                          //context.read<SelectedCountryCubit>().change(value);
-                                        },
-                                        onChanged: (productCategory) {
-                                          context.read<ProductCategoryConfigCubit>().getConfig(
-                                              productCategory!.id, user.accessToken as String
-                                          );
-                                        },
-                                        dropdownDecoratorProps: const DropDownDecoratorProps(
-                                            dropdownSearchDecoration: InputDecoration(
-                                              isDense: true,
-                                              filled: true,
-                                              labelText: 'Catégorie*',
-                                            )
-                                        ),
-                                        popupProps: PopupProps.menu(
-                                            showSearchBox: true,
-                                            searchFieldProps: const TextFieldProps(
-                                                autofocus: true,
-                                                decoration: InputDecoration(
-                                                    label: Text('Recherche ...'),
-                                                    isDense: true,
-                                                    filled: true
-                                                )
-                                            ),
-                                            emptyBuilder: (context, text) {
-                                              return const Center(
-                                                child: SizedBox(
-                                                  height: 50.0,
-                                                  child: Text('Aucune catégorie trouvée'),
-                                                ),
-                                              );
-                                            }
-                                        ),
-                                      );
-                                    }
-                                )
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 15.0),
-                            child: TextFormField(
-                              decoration: const InputDecoration(
-                                label: Text('Référence'),
-                                isDense: true,
-                                filled: true,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                            child: TextFormField(
-                              decoration: const InputDecoration(
-                                label: Text('Code barre'),
-                                isDense: true,
-                                filled: true,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 15.0),
-                            child: BlocBuilder<OrganizationCurrencyCubit, List<Currency>>(
-                                builder: (context, organizationCurrencies) {
-                                  return DropdownSearch<Currency>(
-                                    items: organizationCurrencies,
-                                    itemAsString: (Currency currency) => currency.name,
-                                    validator: (value) {
-                                      if(value == null) {
-                                        return "Veuillez choisir la dévise";
-                                      }
-                                      return null;
-                                    },
-                                    autoValidateMode: AutovalidateMode.onUserInteraction,
-                                    onSaved: (value) {
-                                      //context.read<SelectedCountryCubit>().change(value);
-                                    },
-                                    onChanged: (currency) {
-                                      //context.read<ProductCategoryConfigCubit>().getConfig(productCategory!.id);
-                                    },
-                                    dropdownDecoratorProps: const DropDownDecoratorProps(
-                                        dropdownSearchDecoration: InputDecoration(
-                                          isDense: true,
-                                          filled: true,
-                                          labelText: "Dévise (lors de l'achat / de la vente) *",
-                                        )
-                                    ),
-                                    popupProps: PopupProps.menu(
-                                        showSearchBox: true,
-                                        searchFieldProps: const TextFieldProps(
-                                            autofocus: true,
-                                            decoration: InputDecoration(
-                                                label: Text('Recherche ...'),
-                                                isDense: true,
-                                                filled: true
-                                            )
-                                        ),
-                                        emptyBuilder: (context, text) {
-                                          return const Center(
-                                            child: SizedBox(
-                                              height: 50.0,
-                                              child: Text('Aucune catégorie trouvée'),
-                                            ),
-                                          );
-                                        }
-                                    ),
+                      widget.formKey.currentWidget;
+                      return Scrollbar(
+                          controller: scrollController,
+                          trackVisibility: true,
+                          thumbVisibility: true,
+                          thickness: 4.0,
+                          child: GridView.count(
+                            controller: scrollController,
+                            physics: const BouncingScrollPhysics(),
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 10.0,
+                            shrinkWrap: true,
+                            childAspectRatio: 6.5,
+                            children: [
+                              const ProductNameField(),
+                              ProductCategoryField(user: widget.user,),
+                              const ProductReferenceField(),
+                              const ProductCodebarField(),
+                              const ProductCurrencyField(),
+                              ...List.generate(modules.length, (index) {
+                                if (modules[index].name == 'achat') {
+                                  return ProductBuyPriceField(modules: modules,);
+                                }
+                                else if (modules[index].name == 'vente') {
+                                  return Padding(
+                                    padding: modules.any((module) => module.name == 'achat') ?
+                                    const EdgeInsets.only(left: 15.0) : const EdgeInsets.symmetric(horizontal: 15.0),
+                                    child: ProductSellPriceField(modules: modules,),
                                   );
                                 }
-                            ),
-                          ),
-                          ...List.generate(modules.length, (index) {
-                            if (modules[index].name == 'achat') {
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                                child: TextFormField(
-                                  decoration: const InputDecoration(
-                                    label: Text("Prix d'achat"),
-                                    isDense: true,
-                                    filled: true,
-                                  ),
-                                ),
-                              );
-                            }
-                            else if (modules[index].name == 'vente') {
-                              return Padding(
-                                padding: modules.any((module) => module.name == 'achat') ?
-                                const EdgeInsets.only(left: 15.0) : const EdgeInsets.symmetric(horizontal: 15.0),
-                                child: TextFormField(
-                                  decoration: const InputDecoration(
-                                    label: Text("Prix de vente"),
-                                    isDense: true,
-                                    filled: true,
-                                  ),
-                                ),
-                              );
-                            }
-                            return const Text("Aucune configuration trouvée");
-                          }),
-                          if (modules.any((module) => module.name == 'vente'))
-                            Padding(
-                              padding: modules.any((module) => module.name == 'achat') ?
-                              const EdgeInsets.symmetric(horizontal: 15.0) : const EdgeInsets.only(left: 15.0),
-                              child: TextFormField(
-                                decoration: const InputDecoration(
-                                  label: Text("Prix de vente promotionnel"),
-                                  isDense: true,
-                                  filled: true,
-                                ),
-                              ),
-                            ),
-                          Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 15.0),
-                                child: BlocBuilder<SwitchPerishableCubit, bool>(
-                                    builder: (_, isPerishable) {
-                                      return SizedBox(
-                                        width: 50,
-                                        height: 30,
-                                        child: FittedBox(
-                                          fit: BoxFit.fill,
-                                          child: Switch(
-                                              activeColor: Colors.blue.shade700,
-                                              value: isPerishable,
-                                              onChanged: (onChanged) {
-                                                context.read<SwitchPerishableCubit>().change(onChanged);
-                                              }
-                                          ),
-                                        ),
-                                      );
-                                    }
-                                ),
-                              ),
-                              const Text('Périssable'),
-                              const SizedBox(width: 20.0,),
+                                return const Text("Aucune configuration trouvée");
+                              }),
                               if (modules.any((module) => module.name == 'vente'))
-                                BlocBuilder<SwitchInPromoCubit, bool>(
-                                    builder: (_, isPerishable) {
-                                      return SizedBox(
-                                        width: 50,
-                                        height: 30,
-                                        child: FittedBox(
-                                          fit: BoxFit.fill,
-                                          child: Switch(
-                                              activeColor: Colors.blue.shade700,
-                                              value: isPerishable,
-                                              onChanged: (onChanged) {
-                                                context.read<SwitchInPromoCubit>().change(onChanged);
-                                              }
-                                          ),
-                                        ),
-                                      );
-                                    }
+                                Padding(
+                                  padding: modules.any((module) => module.name == 'achat') ?
+                                  const EdgeInsets.symmetric(horizontal: 15.0) : const EdgeInsets.only(left: 15.0),
+                                  child: ProductSellPromoField(modules: modules,),
                                 ),
-                              if (modules.any((module) => module.name == 'vente'))
-                                const Text('En promotion'),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const ProductPerishSwitch(),
+                                  const Text('Périssable'),
+                                  const SizedBox(width: 20.0,),
+                                  if (modules.any((module) => module.name == 'vente'))
+                                    const ProductPromoSwitch(),
+                                  if (modules.any((module) => module.name == 'vente'))
+                                    const Text('En promotion'),
+                                ],
+                              )
                             ],
                           )
-                        ],
                       );
                     }
                 )
@@ -308,6 +130,12 @@ class ProductInfoView extends StatelessWidget {
           ],
         )
     );
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 }
 

@@ -1,2 +1,13 @@
 export 'activity_new_button_widget.dart';
 export 'activity_title_widget.dart';
+export 'activity_product_image_widget.dart';
+export 'product_name_field.dart';
+export 'product_category_field.dart';
+export 'product_reference_field.dart';
+export 'product_code_bar_field.dart';
+export 'product_currency_field.dart';
+export 'product_buy_price_field.dart';
+export 'product_sell_price_field.dart';
+export 'product_sell_promo_field.dart';
+export 'product_perish_switch_button.dart';
+export 'product_promo_switch_button.dart';

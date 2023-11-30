@@ -69,4 +69,44 @@ class ProductCategoryConfigCubit extends Cubit<List<Module>> {
     }
   }
 
+  void initState() {
+    /// reset the state
+    emit([]);
+  }
+
+}
+
+class EditingProduct extends Cubit<Product?> {
+  EditingProduct({required this.repository, required this.connectivityStatus, required this.apiStatus}) : super(null);
+
+  final ProductRepository repository;
+  final ConnectivityStatusCubit connectivityStatus;
+  final ProductApiStatusCubit apiStatus;
+
+  void createProduct(Product product, String token) async {
+    try {
+      apiStatus.changeStatus(ApiStatus.requesting);
+      Product? response = await repository.add(product, token);
+      emit(response);
+
+      if (connectivityStatus.state == ConnectivityStatus.disconnected){
+        connectivityStatus.changeStatus(ConnectivityStatus.connected);
+      }
+    }
+    on http.ClientException {
+      connectivityStatus.changeStatus(ConnectivityStatus.disconnected);
+    }
+    catch (e) {
+      apiStatus.changeStatus(ApiStatus.failed);
+    }
+  }
+}
+
+
+class ProductsCubit extends Cubit<List<Product>?> {
+  ProductsCubit({required this.repository, required this.connectivityStatus, required this.apiStatus}) : super(null);
+
+  final ProductRepository repository;
+  final ConnectivityStatusCubit connectivityStatus;
+  final ProductApiStatusCubit apiStatus;
 }

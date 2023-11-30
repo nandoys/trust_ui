@@ -176,4 +176,19 @@ class _SignUpFormState extends State<SignUpForm> {
         )
     );
   }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    addressController.dispose();
+    emailController.dispose();
+    phoneController.dispose();
+    registerController.dispose();
+    idNatController.dispose();
+    taxController.dispose();
+    socialSecurityController.dispose();
+    employerController.dispose();
+    _formKey.currentState?.dispose();
+    super.dispose();
+  }
 }

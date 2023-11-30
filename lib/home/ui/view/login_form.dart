@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:organization_api/organization_api.dart';
 
 import 'package:trust_app/home/ui/widget/widget.dart';
 
-class LoginForm extends StatelessWidget {
+class LoginForm extends StatefulWidget {
   LoginForm({super.key});
 
+  @override
+  State<LoginForm> createState() => _LoginFormState();
+}
+
+class _LoginFormState extends State<LoginForm> {
   final _usernameController = TextEditingController(text: 'grnandoy');
+
   final _passwordController = TextEditingController(text: '@Bc12345');
+
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -41,5 +47,13 @@ class LoginForm extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    _formKey.currentState?.dispose();
+    super.dispose();
   }
 }
