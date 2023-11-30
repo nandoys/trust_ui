@@ -10,6 +10,7 @@ class ProductReferenceField extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 15.0),
       child: TextFormField(
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         decoration: const InputDecoration(
           label: Text('Référence'),
           isDense: true,

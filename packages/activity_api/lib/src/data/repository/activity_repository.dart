@@ -63,6 +63,7 @@ class ProductRepository {
 
       if (response.statusCode == 201) {
         final dynamic json = jsonDecode(utf8.decode(response.bodyBytes));
+
         return Product.fromJson(json);
       } else {
 

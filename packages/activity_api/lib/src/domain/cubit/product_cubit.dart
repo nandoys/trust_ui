@@ -87,6 +87,7 @@ class EditingProduct extends Cubit<Product?> {
     try {
       apiStatus.changeStatus(ApiStatus.requesting);
       Product? response = await repository.add(product, token);
+      print(response);
       emit(response);
 
       if (connectivityStatus.state == ConnectivityStatus.disconnected){

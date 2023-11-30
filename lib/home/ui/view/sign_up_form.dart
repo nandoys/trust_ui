@@ -166,7 +166,7 @@ class _SignUpFormState extends State<SignUpForm> {
                   Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: SubmitButton(formKey: _formKey, name: nameController, address: addressController,
-                      email: employerController, phone: phoneController, register: registerController,
+                      email: emailController, phone: phoneController, register: registerController,
                       idNat: idNatController, socialSecurity: socialSecurityController, tax: taxController,
                       employer: employerController,),
                   )

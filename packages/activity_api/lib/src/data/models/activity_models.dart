@@ -46,8 +46,9 @@ class Product extends Equatable {
     final double? buyPrice = json['buy_price'] == null ? json['buy_price'] : double.tryParse(json['buy_price']);
     final double? sellPrice = json['sell_price'] == null ? json['sell_price'] : double.tryParse(json['sell_price']);
     final double? sellPromoPrice = json['sell_in_promo'] == null ? json['sell_in_promo'] : double.tryParse(json['sell_in_promo']);
+    final reference = json['reference'] == null ? null : json['reference'];
 
-    return Product(id: json['id'], organization: json['organization'], name: json['name'], reference: json['reference'],
+    return Product(id: json['id'], organization: json['organization'], name: json['name'], reference: reference,
         barCode: json['bar_code'], image: json['image'], buyPrice: buyPrice, sellPrice: sellPrice,
         sellPromoPrice: sellPromoPrice, currency: json['currency'], inPromo: json['in_promo'],
         canPerish: json['can_perish'], productCategory: json['product_category'], accounts: json['accounts'],
