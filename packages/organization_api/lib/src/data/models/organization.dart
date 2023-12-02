@@ -13,8 +13,9 @@ class Organization extends Equatable {
   factory Organization.fromJson(Map<String, dynamic> json) {
     final country = Country.fromJson(json['country']);
     final organizationType = OrganizationType.fromJson(json['organization_type']);
+    final sectors = json['sectors'] == null ? null :
+    List.from(json['sectors']).map((sector) => Sector.fromJson(sector)).toList();
 
-    final sectors = List.from(json['sectors']).map((e) => Sector.fromJson(e)).toList();
 
     return Organization(
       id: json['id'], name: json['name'], address: json['address'], email: json['email'], telephone: json['telephone'],

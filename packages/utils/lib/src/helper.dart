@@ -2,7 +2,7 @@ enum ApiStatus {succeeded, failed, requesting }
 
 enum ViewMode {grid, list, table }
 
-enum CalculationType { percent, fix }
+enum CalculationMode { percent, fix }
 
 /// get protocol from format "[[protocol]] host:port"
 String getProtocol(String toSplit) {

@@ -8,6 +8,8 @@ import 'package:trust_app/accounting/ui/view/activity/product_accounting_view.da
 import 'package:trust_app/accounting/ui/view/activity/product_info_view.dart';
 import 'package:trust_app/accounting/ui/view/activity/product_taxes_view.dart';
 import 'package:user_api/user_api.dart';
+import 'package:trust_app/home/ui/widget/widget.dart';
+import 'package:utils/utils.dart';
 
 class ActivityDialog extends StatelessWidget {
   ActivityDialog({super.key, required this.user});
@@ -16,7 +18,6 @@ class ActivityDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return BlocBuilder<EditingProduct, Product?>(
         builder: (context, editingProduct) {
           final activityView = [
@@ -37,55 +38,80 @@ class ActivityDialog extends StatelessWidget {
                   BlocProvider(create: (context) => SwitchInPromoCubit()),
                   BlocProvider(create: (context) => SaveProductFormCubit(user: user)),
                 ],
-                child: BlocBuilder<ProductBottomNavigationCubit, int>(
-                  builder: (context, viewIndex) {
-                    return Scaffold(
-                      appBar: AppBar(
-                        leading: const Row(),
-                        title: const Text('Nouveau produit'),
-                        centerTitle: true,
-                        titleTextStyle: const TextStyle(
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black
-                        ),
-                      ),
-                      body: activityView[viewIndex],
-                      bottomNavigationBar: BottomNavigationBar(
-                          onTap: editingProduct != null ? (index) {
-                            context.read<ProductBottomNavigationCubit>().navigate(index);
-                          } : null,
-                          currentIndex: viewIndex,
-                          selectedItemColor: Colors.blue.shade700,
-                          items: const [
-                            BottomNavigationBarItem(
-                                icon: Icon(FontAwesomeIcons.cartFlatbed), label: 'Produit'
-                            ),
-                            BottomNavigationBarItem(
-                                icon: Icon(Icons.book), label: 'Comptabilité'
-                            ),
-                            BottomNavigationBarItem(
-                              icon: Icon(FontAwesomeIcons.landmark), label: 'Taxe',
-                            ),
-                          ]
-                      ),
-                      floatingActionButton: FloatingActionButton(
-                        onPressed: () {
-                          formProductKey.currentState?.save();
-                          if(formProductKey.currentState!.validate()) {
-                            final form = context.read<SaveProductFormCubit>().state;
-                            final product = Product.fromJson(form);
-                            context.read<EditingProduct>().createProduct(product, user.accessToken as String);
-                          }
-                        },
-                        backgroundColor: Colors.blue.shade700,
-                        tooltip: 'Enregistrer',
-                        child: const Icon(
-                          Icons.add,
-                          color: Colors.white,
-                        ),
-                      ),
-                    );
+                child: BlocListener<ProductApiStatusCubit, ApiStatus>(
+                  listener: (BuildContext context, apiStatus) {
+                    if(apiStatus == ApiStatus.succeeded) {
+                      SnackBar notif = FloatingSnackBar(
+                          color: Colors.green,
+                          message: "Votre produit a été ajouté!"
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(notif);
+                    }
+                    else if(apiStatus == ApiStatus.failed) {
+                      SnackBar notif = FloatingSnackBar(
+                          color: Colors.green,
+                          message: "Votre produit n'a été ajouté! quelque chose s'est mal passé"
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(notif);
+                    }
                   },
+                  //listenWhen: (previous, current) => current.runtimeType == ProductApiStatusCubit,
+                  child: BlocBuilder<ProductBottomNavigationCubit, int>(
+                    builder: (context, viewIndex) {
+                      void saveProduct() {
+                        formProductKey.currentState?.save();
+                        if(formProductKey.currentState!.validate()) {
+                          final form = context.read<SaveProductFormCubit>().state;
+                          final product = Product.fromJson(form);
+                          context.read<EditingProduct>().createProduct(product, user.accessToken as String);
+                        }
+                      }
+
+                      void editProduct() {
+                        print('hey, im editing your product ....');
+                      }
+
+                      return Scaffold(
+                        appBar: AppBar(
+                          leading: const Row(),
+                          title: const Text('Nouveau produit'),
+                          centerTitle: true,
+                          titleTextStyle: const TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black
+                          ),
+                        ),
+                        body: activityView[viewIndex],
+                        bottomNavigationBar: BottomNavigationBar(
+                            onTap: editingProduct != null ? (index) {
+                              context.read<ProductBottomNavigationCubit>().navigate(index);
+                            } : null,
+                            currentIndex: viewIndex,
+                            selectedItemColor: Colors.blue.shade700,
+                            items: const [
+                              BottomNavigationBarItem(
+                                  icon: Icon(FontAwesomeIcons.cartFlatbed), label: 'Produit'
+                              ),
+                              BottomNavigationBarItem(
+                                  icon: Icon(Icons.book), label: 'Comptabilité'
+                              ),
+                              BottomNavigationBarItem(
+                                icon: Icon(FontAwesomeIcons.landmark), label: 'Taxe',
+                              ),
+                            ]
+                        ),
+                        floatingActionButton: FloatingActionButton(
+                          onPressed: editingProduct?.id == null ? saveProduct : editProduct,
+                          backgroundColor: Colors.blue.shade700,
+                          tooltip: editingProduct?.id == null ? 'Enregistrer' : 'Modifier',
+                          child: Icon(
+                            editingProduct?.id == null ? Icons.add : Icons.edit,
+                            color: Colors.white,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
             ),

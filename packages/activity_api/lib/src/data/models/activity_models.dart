@@ -43,17 +43,26 @@ class Product extends Equatable {
     required this.productCategory, this.canPerish = false, this.accounts, this.taxes});
 
   factory Product.fromJson(Map<String, dynamic> json) {
+
     final double? buyPrice = json['buy_price'] == null ? json['buy_price'] : double.tryParse(json['buy_price']);
     final double? sellPrice = json['sell_price'] == null ? json['sell_price'] : double.tryParse(json['sell_price']);
     final double? sellPromoPrice = json['sell_in_promo'] == null ? json['sell_in_promo'] : double.tryParse(json['sell_in_promo']);
     final reference = json['reference'] == null ? null : json['reference'];
 
-    return Product(id: json['id'], organization: json['organization'], name: json['name'], reference: reference,
+    // on createProduct method we use Model object instead of Map
+    // so we need to check the runtimeType
+    final organization = json['organization'].runtimeType == Organization ? json['organization']
+        : Organization.fromJson(json['organization']);
+    final currency = json['currency'].runtimeType == Currency ? json['currency'] : Currency.fromJson(json['currency']);
+    final productCategory = json['product_category'].runtimeType == ProductCategory ? json['product_category'] :
+    ProductCategory.fromJson(json['product_category']);
+    final accounts = json['accounts'] == null ? null : List.from(json['accounts']).map((accountJson) => Account.fromJson(accountJson)).toList();
+    final taxes = json['taxes'] == null ? null : List.from(json['taxes']).map((taxJson) => Tax.fromJson(taxJson)).toList();
+
+    return Product(id: json['id'], organization: organization, name: json['name'], reference: reference,
         barCode: json['bar_code'], image: json['image'], buyPrice: buyPrice, sellPrice: sellPrice,
-        sellPromoPrice: sellPromoPrice, currency: json['currency'], inPromo: json['in_promo'],
-        canPerish: json['can_perish'], productCategory: json['product_category'], accounts: json['accounts'],
-        taxes: json['taxes']
-    );
+        sellPromoPrice: sellPromoPrice, currency: currency, inPromo: json['in_promo'], canPerish: json['can_perish'],
+        productCategory: productCategory, accounts: accounts, taxes: taxes);
   }
 
   final String? id;
