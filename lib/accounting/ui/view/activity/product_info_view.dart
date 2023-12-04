@@ -131,7 +131,7 @@ class _ProductInfoViewState extends State<ProductInfoView> {
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  const ProductPerishSwitch(),
+                                  ProductPerishSwitch(user: widget.user,),
                                   const Text('Périssable'),
                                   const SizedBox(width: 20.0,),
                                   if (modules.any((module) => module.name == 'vente'))

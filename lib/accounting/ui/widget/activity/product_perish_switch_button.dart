@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:trust_app/accounting/logic/cubit/activity/activity_cubit.dart';
+import 'package:user_api/user_api.dart';
 
 class ProductPerishSwitch extends StatelessWidget {
-  const ProductPerishSwitch({super.key});
+  const ProductPerishSwitch({super.key, required this.user});
+
+  final User user;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +32,8 @@ class ProductPerishSwitch extends StatelessWidget {
                               context.read<SaveProductFormCubit>().setValue('can_perish', onChanged);
                             }
                             else {
-
+                              context.read<EditingProduct>().updateByField(editProduct!, 'can_perish',
+                                  onChanged, user.accessToken as String);
                             }
                           }
                       ),

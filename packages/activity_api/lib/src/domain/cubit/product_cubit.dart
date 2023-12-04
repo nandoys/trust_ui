@@ -73,6 +73,25 @@ class EditingProduct extends Cubit<Product?> {
       apiStatus.changeStatus(ApiStatus.failed);
     }
   }
+
+  void updateByField(Product product, String field, dynamic value, String token) async {
+    try {
+      apiStatus.changeStatus(ApiStatus.requesting);
+      Product? response = await repository.updateByField(product, field, value, token);
+      emit(response);
+      if (response.id != null) apiStatus.changeStatus(ApiStatus.succeeded);
+
+      if (connectivityStatus.state == ConnectivityStatus.disconnected){
+        connectivityStatus.changeStatus(ConnectivityStatus.connected);
+      }
+    }
+    on http.ClientException {
+      connectivityStatus.changeStatus(ConnectivityStatus.disconnected);
+    }
+    catch (e) {
+      apiStatus.changeStatus(ApiStatus.failed);
+    }
+  }
 }
 
 

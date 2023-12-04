@@ -100,4 +100,33 @@ class ProductRepository {
 
     return false;
   }
+
+  Future<Product> updateByField(Product product, String field, dynamic value, String token) async {
+    if (protocol != null && host != null && port != null) {
+
+      final uri = Uri(
+          scheme: protocol?.toLowerCase(),
+          host: host,
+          port: port,
+          path: '/api/product/${product.id}/update'
+      );
+
+      http.Response response = await http.put(uri,headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        'Authorization':  'Trust $token'
+      },
+          body: jsonEncode({field: value})
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> json = jsonDecode(utf8.decode(response.bodyBytes));
+        return Product.fromJson(json);
+      }
+      else {
+        throw Exception("Quelque chose s'est mal passé");
+      }
+    }
+
+    return product;
+  }
 }

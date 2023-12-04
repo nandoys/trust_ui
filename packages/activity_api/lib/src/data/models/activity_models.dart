@@ -89,7 +89,8 @@ class Product extends Equatable {
   final List<Tax>? taxes;
 
   @override
-  List<Object?> get props => [id];
+  List<Object?> get props => [id, name, reference, barCode, image, buyPrice, sellPrice,
+    sellPromoPrice, currency, inPromo, productCategory, canPerish, accounts, taxes];
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic>  data = {'name': name, 'organization': organization.id, 'reference': reference,
