@@ -21,7 +21,7 @@ class Module extends Equatable {
   factory Module.fromJson(Map<String, dynamic> json) {
     final Account account = Account.fromJson(json['account']);
 
-    return Module(id: json['module']['id'], name: json['module']['name'], account: account);
+    return Module(id: json['id'], name: json['name'], account: account);
   }
 
   final String id;

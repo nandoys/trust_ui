@@ -40,38 +40,10 @@ class ProductCategoryCubit extends Cubit<List<ProductCategory>> {
 }
 
 class ProductCategoryConfigCubit extends Cubit<List<Module>> {
-  ProductCategoryConfigCubit({
-    required this.repository,
-    required this.connectivityStatus,
-    required this.apiStatus
-}) : super([]);
+  ProductCategoryConfigCubit() : super([]);
 
-  final ModuleRepository repository;
-  final ConnectivityStatusCubit connectivityStatus;
-  final ProductCategoryConfigApiStatusCubit apiStatus;
-
-  void getConfig(String id, String token) async {
-    try {
-      apiStatus.changeStatus(ApiStatus.requesting);
-      List<Module> response = await repository.getModulesBy(id, token);
-
-      emit(response);
-
-      if (connectivityStatus.state == ConnectivityStatus.disconnected){
-        connectivityStatus.changeStatus(ConnectivityStatus.connected);
-      }
-    }
-    on http.ClientException {
-      connectivityStatus.changeStatus(ConnectivityStatus.disconnected);
-    }
-    catch (e) {
-      apiStatus.changeStatus(ApiStatus.failed);
-    }
-  }
-
-  void initState() {
-    /// reset the state
-    emit([]);
+  void selectModule(List<Module> modules) {
+    emit(modules);
   }
 
 }

@@ -5,21 +5,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trust_app/accounting/logic/cubit/activity/activity_cubit.dart';
 
 class ProductNameField extends StatelessWidget {
-  const ProductNameField({super.key});
+  const ProductNameField({super.key, required this.controller});
+
+  final TextEditingController controller;
 
   @override
   Widget build(BuildContext context) {
 
     return BlocBuilder<EditingProduct, Product?>(
-        builder: (context, ediProduct) {
+        builder: (context, editProduct) {
           return Padding(
             padding: const EdgeInsets.only(left: 15.0),
             child: SizedBox(
               height: 40,
               child: TextFormField(
+                controller: controller,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 autofocus: true,
-                initialValue: ediProduct?.name,
                 decoration: const InputDecoration(
                   label: Text('Nom du produit*'),
                   isDense: true,

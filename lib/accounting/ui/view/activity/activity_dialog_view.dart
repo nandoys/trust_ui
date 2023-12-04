@@ -45,11 +45,12 @@ class ActivityDialog extends StatelessWidget {
                           color: Colors.green,
                           message: "Votre produit a été ajouté!"
                       );
+                      context.read<ProductBottomNavigationCubit>().navigate(1);
                       ScaffoldMessenger.of(context).showSnackBar(notif);
                     }
                     else if(apiStatus == ApiStatus.failed) {
                       SnackBar notif = FloatingSnackBar(
-                          color: Colors.green,
+                          color: Colors.red,
                           message: "Votre produit n'a été ajouté! quelque chose s'est mal passé"
                       );
                       ScaffoldMessenger.of(context).showSnackBar(notif);
@@ -74,9 +75,10 @@ class ActivityDialog extends StatelessWidget {
                       return Scaffold(
                         appBar: AppBar(
                           leading: const Row(),
-                          title: const Text('Nouveau produit'),
+                          title: Text(editingProduct?.id == null ? 'Nouveau produit' : 'Modifier produit'),
                           centerTitle: true,
                           titleTextStyle: const TextStyle(
+                              fontSize: 16,
                               fontWeight: FontWeight.w600,
                               color: Colors.black
                           ),

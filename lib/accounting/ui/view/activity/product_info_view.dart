@@ -18,13 +18,29 @@ class ProductInfoView extends StatefulWidget {
 
 class _ProductInfoViewState extends State<ProductInfoView> {
   final scrollController = ScrollController();
+  final nameController = TextEditingController();
+  final referenceController = TextEditingController();
+  final barCodeController = TextEditingController();
+  final buyingPriceController = TextEditingController();
+  final sellingPriceController = TextEditingController();
+  final sellInPromoPriceController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     final product = context.read<EditingProduct>().state;
 
     // reset the UI by removing sell, buy fields at the start
-    if (product?.id == null) context.read<ProductCategoryConfigCubit>().initState();
+    if (product?.id == null) {
+      context.read<ProductCategoryConfigCubit>().selectModule([]);
+    } else {
+      nameController.text = (product?.name ?? product?.name)!;
+      referenceController.text = product?.reference == null ? '' : product?.reference.toString() as String;
+      barCodeController.text = product?.barCode == null ? '' : product?.barCode.toString() as String;
+      buyingPriceController.text = product?.buyPrice == null ? '' : product?.buyPrice.toString() as String;
+      sellingPriceController.text = product?.sellPrice == null ? '' : product?.sellPrice.toString() as String;
+      sellInPromoPriceController.text = product?.sellPromoPrice == null ? '' :
+      product?.sellPromoPrice.toString() as String;
+    }
 
     return Form(
         key: widget.formKey,
@@ -88,20 +104,20 @@ class _ProductInfoViewState extends State<ProductInfoView> {
                             shrinkWrap: true,
                             childAspectRatio: 6.5,
                             children: [
-                              const ProductNameField(),
+                              ProductNameField(controller: nameController,),
                               ProductCategoryField(user: widget.user,),
-                              const ProductReferenceField(),
-                              const ProductCodebarField(),
+                              ProductReferenceField(user: widget.user, controller: referenceController,),
+                              ProductCodebarField(controller: barCodeController,),
                               const ProductCurrencyField(),
                               ...List.generate(modules.length, (index) {
                                 if (modules[index].name == 'achat') {
-                                  return ProductBuyPriceField(modules: modules,);
+                                  return ProductBuyPriceField(modules: modules, controller: buyingPriceController,);
                                 }
                                 else if (modules[index].name == 'vente') {
                                   return Padding(
                                     padding: modules.any((module) => module.name == 'achat') ?
                                     const EdgeInsets.only(left: 15.0) : const EdgeInsets.symmetric(horizontal: 15.0),
-                                    child: ProductSellPriceField(modules: modules,),
+                                    child: ProductSellPriceField(modules: modules, controller: sellingPriceController,),
                                   );
                                 }
                                 return const Text("Aucune configuration trouvée");
@@ -110,7 +126,7 @@ class _ProductInfoViewState extends State<ProductInfoView> {
                                 Padding(
                                   padding: modules.any((module) => module.name == 'achat') ?
                                   const EdgeInsets.symmetric(horizontal: 15.0) : const EdgeInsets.only(left: 15.0),
-                                  child: ProductSellPromoField(modules: modules,),
+                                  child: ProductSellPromoField(modules: modules, controller: sellInPromoPriceController,),
                                 ),
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -138,6 +154,12 @@ class _ProductInfoViewState extends State<ProductInfoView> {
   @override
   void dispose() {
     scrollController.dispose();
+    nameController.dispose();
+    referenceController.dispose();
+    barCodeController.dispose();
+    buyingPriceController.dispose();
+    sellingPriceController.dispose();
+    sellInPromoPriceController.dispose();
     super.dispose();
   }
 }

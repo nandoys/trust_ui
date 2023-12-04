@@ -54,10 +54,10 @@ class SaveProductFormCubit extends Cubit<Map<String, dynamic>> {
     'name': null,
     'product_category': null,
     'reference': null,
-    'codebar': null,
+    'barcode': null,
     'currency': null,
-    'buy_price': null,
-    'sell_price': null,
+    'buying_price': null,
+    'selling_price': null,
     'sell_in_promo': null,
     'can_perish': false,
     'in_promo': false,
@@ -72,15 +72,17 @@ class SaveProductFormCubit extends Cubit<Map<String, dynamic>> {
     state[fieldName] = value;
 
     if (modules != null) {
-      if (!modules.any((module) => module.name == 'achat') && modules.any((module) => module.name == 'vente')) {
+      if (!modules.any((module) => module.name == 'achat')) {
         state['buy_price'] = null;
       }
 
-      if (!modules.any((module) => module.name == 'vente') && modules.any((module) => module.name == 'achat')) {
+      if (!modules.any((module) => module.name == 'vente')) {
         state['sell_price'] = null;
         state['sell_in_promo'] = null;
+        state['in_promo'] = false;
       }
     }
+
     emit(state);
   }
 }

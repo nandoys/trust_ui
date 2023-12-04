@@ -34,6 +34,7 @@ class ModuleRepository {
   }
 
   /// Retrieve modules by id filter
+  /// don't use this method, the api
   Future<List<Module>> getModulesBy(String id, String token) async {
     if (protocol != null && host != null && port != null) {
       final url = Uri(

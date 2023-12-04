@@ -40,9 +40,6 @@ class AccountingActivity extends StatelessWidget {
                   create: (context) => ProductCategoryApiStatusCubit()
               ),
               BlocProvider(
-                  create: (context) => ProductCategoryConfigApiStatusCubit()
-              ),
-              BlocProvider(
                   create: (context) => ProductCategoryCubit(
                       productCategoryRepository: context.read<ProductCategoryRepository>(),
                       connectivityStatus: context.read<ConnectivityStatusCubit>(),
@@ -50,11 +47,7 @@ class AccountingActivity extends StatelessWidget {
                   ),
               ),
               BlocProvider(
-                create: (context) => ProductCategoryConfigCubit(
-                    repository: context.read<ModuleRepository>(),
-                    connectivityStatus: context.read<ConnectivityStatusCubit>(),
-                    apiStatus: context.read<ProductCategoryConfigApiStatusCubit>()
-                ),
+                create: (context) => ProductCategoryConfigCubit(),
               )
             ],
             child: Column(

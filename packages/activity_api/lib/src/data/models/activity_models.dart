@@ -7,7 +7,8 @@ enum ProductType { bien, service, mixte }
 
 class ProductCategory extends Equatable {
 
-  ProductCategory({required this.id, required this.name, required this.productType});
+  ProductCategory({required this.id, required this.name, required this.productType,
+    required this.modules, required this.accounts});
 
   factory ProductCategory.fromJson(Map<String, dynamic> json) {
     ProductType productType = ProductType.mixte;
@@ -18,7 +19,12 @@ class ProductCategory extends Equatable {
       productType = ProductType.service;
     }
 
-    return ProductCategory(id: json['id'], name: json['name'], productType: productType);
+    final modules = List.from(json['config']).map((config) => Module.fromJson(config['module'])).toList();
+
+    final accounts = List.from(json['config']).map((config) => Account.fromJson(config['account'])).toList();
+
+    return ProductCategory(id: json['id'], name: json['name'], productType: productType,
+        modules: modules, accounts: accounts);
   }
 
   Map<String, dynamic> toJson() {
@@ -31,6 +37,8 @@ class ProductCategory extends Equatable {
   final String id;
   final String name;
   final ProductType productType;
+  final List<Module> modules;
+  final List<Account> accounts;
 
   @override
   List<Object?> get props => [name];
@@ -43,10 +51,9 @@ class Product extends Equatable {
     required this.productCategory, this.canPerish = false, this.accounts, this.taxes});
 
   factory Product.fromJson(Map<String, dynamic> json) {
-
-    final double? buyPrice = json['buy_price'] == null ? json['buy_price'] : double.tryParse(json['buy_price']);
-    final double? sellPrice = json['sell_price'] == null ? json['sell_price'] : double.tryParse(json['sell_price']);
-    final double? sellPromoPrice = json['sell_in_promo'] == null ? json['sell_in_promo'] : double.tryParse(json['sell_in_promo']);
+    final double? buyPrice = json['buying_price'] == null ? null : double.tryParse(json['buying_price'].toString());
+    final double? sellPrice = json['selling_price'] == null ? null : double.tryParse(json['selling_price'].toString());
+    final double? sellPromoPrice = json['sell_in_promo'] == null ? null : double.tryParse(json['sell_in_promo'].toString());
     final reference = json['reference'] == null ? null : json['reference'];
 
     // on createProduct method we use Model object instead of Map
@@ -60,7 +67,7 @@ class Product extends Equatable {
     final taxes = json['taxes'] == null ? null : List.from(json['taxes']).map((taxJson) => Tax.fromJson(taxJson)).toList();
 
     return Product(id: json['id'], organization: organization, name: json['name'], reference: reference,
-        barCode: json['bar_code'], image: json['image'], buyPrice: buyPrice, sellPrice: sellPrice,
+        barCode: json['barcode'], image: json['image'], buyPrice: buyPrice, sellPrice: sellPrice,
         sellPromoPrice: sellPromoPrice, currency: currency, inPromo: json['in_promo'], canPerish: json['can_perish'],
         productCategory: productCategory, accounts: accounts, taxes: taxes);
   }
