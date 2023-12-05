@@ -76,6 +76,7 @@ class EditingProduct extends Cubit<Product?> {
 
   void updateByField(Product product, String field, dynamic value, String token) async {
     try {
+      apiStatus.isUpdating = true;
       apiStatus.changeStatus(ApiStatus.requesting);
       Product? response = await repository.updateByField(product, field, value, token);
       emit(response);

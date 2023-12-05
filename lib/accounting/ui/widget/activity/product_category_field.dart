@@ -54,7 +54,6 @@ class ProductCategoryField extends StatelessWidget {
                         },
                         dropdownDecoratorProps: const DropDownDecoratorProps(
                             dropdownSearchDecoration: InputDecoration(
-                              isDense: true,
                               filled: true,
                               labelText: 'Catégorie*',
                             )

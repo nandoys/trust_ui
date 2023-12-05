@@ -52,6 +52,25 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
                 useMaterial3: true,
                 snackBarTheme: const SnackBarThemeData(behavior: SnackBarBehavior.floating),
+                buttonTheme: const ButtonThemeData(
+                  hoverColor: Colors.blue
+                ),
+                textButtonTheme: TextButtonThemeData(
+                  style: ButtonStyle(
+                    foregroundColor: MaterialStateProperty.resolveWith((states) => Colors.blue),
+                    overlayColor: MaterialStateProperty.resolveWith((states) => Colors.blue.withOpacity(0.2))
+                  )
+                ),
+                inputDecorationTheme: InputDecorationTheme(
+                    filled: true,
+                    contentPadding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+                    fillColor: Colors.blue.shade900.withOpacity(0.08),
+                    focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.blue.shade900
+                    )
+                  )
+                ),
                 fontFamily: 'Roboto',
                 primaryColor: Colors.blue
             ),

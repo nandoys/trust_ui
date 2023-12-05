@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:trust_app/accounting/logic/cubit/activity/activity_cubit.dart';
+import 'package:user_api/user_api.dart';
 
 class ProductPromoSwitch extends StatelessWidget {
-  const ProductPromoSwitch({super.key});
+  const ProductPromoSwitch({super.key, required this.user});
+
+  final User user;
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +25,14 @@ class ProductPromoSwitch extends StatelessWidget {
                         activeColor: Colors.blue.shade700,
                         value: editProduct?.id == null ? isPromo : editProduct!.inPromo,
                         onChanged: (onChanged) {
-                          context.read<SwitchInPromoCubit>().change(onChanged);
-                          context.read<SaveProductFormCubit>().setValue('in_promo', onChanged);
+                          if (editProduct?.id == null) {
+                            context.read<SwitchInPromoCubit>().change(onChanged);
+                            context.read<SaveProductFormCubit>().setValue('in_promo', onChanged);
+                          } else {
+                            context.read<EditingProduct>().updateByField(editProduct!, 'in_promo',
+                                onChanged, user.accessToken as String);
+                          }
+
                         }
                     ),
                   ),

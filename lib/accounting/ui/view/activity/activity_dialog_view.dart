@@ -22,7 +22,7 @@ class ActivityDialog extends StatelessWidget {
         builder: (context, editingProduct) {
           final activityView = [
             ProductInfoView(product: editingProduct, user: user, formKey: formProductKey),
-            const ProductAccountingView(),
+            ProductAccountingView(),
             const ProductTaxesView()
           ];
 
@@ -40,7 +40,9 @@ class ActivityDialog extends StatelessWidget {
                 ],
                 child: BlocListener<ProductApiStatusCubit, ApiStatus>(
                   listener: (BuildContext context, apiStatus) {
-                    if(apiStatus == ApiStatus.succeeded) {
+                    final isUpdating = context.read<ProductApiStatusCubit>().isUpdating;
+
+                    if(apiStatus == ApiStatus.succeeded && !isUpdating) {
                       SnackBar notif = FloatingSnackBar(
                           color: Colors.green,
                           message: "Votre produit a été ajouté!"
@@ -48,7 +50,14 @@ class ActivityDialog extends StatelessWidget {
                       context.read<ProductBottomNavigationCubit>().navigate(1);
                       ScaffoldMessenger.of(context).showSnackBar(notif);
                     }
-                    else if(apiStatus == ApiStatus.failed) {
+                    else if(apiStatus == ApiStatus.succeeded && isUpdating) {
+                      SnackBar notif = FloatingSnackBar(
+                          color: Colors.green,
+                          message: "Votre produit a été modifié avec succès!"
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(notif);
+                    }
+                    else if(apiStatus == ApiStatus.failed && !isUpdating) {
                       SnackBar notif = FloatingSnackBar(
                           color: Colors.red,
                           message: "Votre produit n'a été ajouté! quelque chose s'est mal passé"
@@ -72,6 +81,8 @@ class ActivityDialog extends StatelessWidget {
                         print('hey, im editing your product ....');
                       }
 
+                      final bottomNavigation = context.read<ProductBottomNavigationCubit>();
+
                       return Scaffold(
                         appBar: AppBar(
                           leading: const Row(),
@@ -82,11 +93,22 @@ class ActivityDialog extends StatelessWidget {
                               fontWeight: FontWeight.w600,
                               color: Colors.black
                           ),
+                          actions: [
+                            if (editingProduct?.id != null)
+                              Padding(
+                                padding: const EdgeInsets.only(right: 8.0),
+                                child: IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(Icons.delete),
+                                  tooltip: "Supprimer",
+                                ),
+                              )
+                          ],
                         ),
                         body: activityView[viewIndex],
                         bottomNavigationBar: BottomNavigationBar(
                             onTap: editingProduct != null ? (index) {
-                              context.read<ProductBottomNavigationCubit>().navigate(index);
+                              bottomNavigation.navigate(index);
                             } : null,
                             currentIndex: viewIndex,
                             selectedItemColor: Colors.blue.shade700,
@@ -102,7 +124,7 @@ class ActivityDialog extends StatelessWidget {
                               ),
                             ]
                         ),
-                        floatingActionButton: FloatingActionButton(
+                        floatingActionButton: bottomNavigation.state == 0 ? FloatingActionButton(
                           onPressed: editingProduct?.id == null ? saveProduct : editProduct,
                           backgroundColor: Colors.blue.shade700,
                           tooltip: editingProduct?.id == null ? 'Enregistrer' : 'Modifier',
@@ -110,7 +132,7 @@ class ActivityDialog extends StatelessWidget {
                             editingProduct?.id == null ? Icons.add : Icons.edit,
                             color: Colors.white,
                           ),
-                        ),
+                        ) : null,
                       );
                     },
                   ),

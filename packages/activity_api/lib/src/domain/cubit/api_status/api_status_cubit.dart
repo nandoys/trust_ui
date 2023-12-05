@@ -22,6 +22,8 @@ class ProductCategoryConfigApiStatusCubit extends Cubit<ApiStatus> {
 class ProductApiStatusCubit extends Cubit<ApiStatus> {
   ProductApiStatusCubit() : super(ApiStatus.requesting);
 
+  bool isUpdating = false;
+
   void changeStatus(ApiStatus status) {
     emit(status);
   }

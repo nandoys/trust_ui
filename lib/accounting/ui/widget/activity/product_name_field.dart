@@ -25,7 +25,6 @@ class ProductNameField extends StatelessWidget {
                 decoration: const InputDecoration(
                   label: Text('Nom du produit*'),
                   isDense: true,
-                  filled: true,
                 ),
                 validator: (value) {
                   if(value == null ||  value.isEmpty) {

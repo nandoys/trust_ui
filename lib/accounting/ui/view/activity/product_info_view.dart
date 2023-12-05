@@ -52,7 +52,7 @@ class _ProductInfoViewState extends State<ProductInfoView> {
                     children: [
                       Container(
                         width: constraints.maxWidth * 0.965,
-                        height: 150,
+                        height: 100,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10.0),
                             border: Border.all(color: Colors.black26)
@@ -62,12 +62,12 @@ class _ProductInfoViewState extends State<ProductInfoView> {
                       Center(
                           child: SizedBox(
                               width: 150,
-                              height: 150,
+                              height: 100,
                               child: CircleAvatar(
                                 backgroundColor: Colors.blue.shade700,
                                 child: const Text(
                                   'P',
-                                  style: TextStyle(fontSize: 80.0, fontWeight: FontWeight.w600, color: Colors.white),
+                                  style: TextStyle(fontSize: 50.0, fontWeight: FontWeight.w600, color: Colors.white),
                                   textAlign: TextAlign.center,
                                 ),
                               )
@@ -75,8 +75,8 @@ class _ProductInfoViewState extends State<ProductInfoView> {
                       ),
                       const Positioned(
                         bottom: 1,
-                        top: 85,
-                        left: 450,
+                        top: 50,
+                        left: 435,
                         child: Center(
                             child: CircleAvatar(backgroundColor: Colors.black26,)
                         ),
@@ -135,7 +135,7 @@ class _ProductInfoViewState extends State<ProductInfoView> {
                                   const Text('Périssable'),
                                   const SizedBox(width: 20.0,),
                                   if (modules.any((module) => module.name == 'vente'))
-                                    const ProductPromoSwitch(),
+                                    ProductPromoSwitch(user: widget.user,),
                                   if (modules.any((module) => module.name == 'vente'))
                                     const Text('En promotion'),
                                 ],

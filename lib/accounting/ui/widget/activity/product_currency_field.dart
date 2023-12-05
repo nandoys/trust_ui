@@ -32,7 +32,6 @@ class ProductCurrencyField extends StatelessWidget {
                     },
                     dropdownDecoratorProps: const DropDownDecoratorProps(
                         dropdownSearchDecoration: InputDecoration(
-                          isDense: true,
                           filled: true,
                           labelText: "Dévise (lors de l'achat / de la vente) *",
                         )
