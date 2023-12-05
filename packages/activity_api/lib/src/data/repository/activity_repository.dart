@@ -45,6 +45,38 @@ class ProductRepository {
   final String? host;
   final int? port;
 
+  Future<List<Product>> get(String? filters, String token) async {
+    if (protocol != null && host != null && port != null) {
+
+      final uri = Uri(
+          scheme: protocol?.toLowerCase(),
+          host: host,
+          port: port,
+          path: '/api/product/'
+      );
+
+      http.Response response = await http.get(uri,
+        headers: {
+          'Authorization':  'Trust $token'
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final dynamic json = jsonDecode(utf8.decode(response.bodyBytes));
+        return List.from(json).map((jsonProduct) => Product.fromJson(jsonProduct)).toList();
+      }
+      else if (response.statusCode == 401) {
+        // HTTP 401 Unauthorized
+      }
+      else {
+
+        throw Exception("Quelque chose s'est mal passé");
+      }
+    }
+
+    return [];
+  }
+
   Future<Product?> add(Product product, String token) async {
     if (protocol != null && host != null && port != null) {
 

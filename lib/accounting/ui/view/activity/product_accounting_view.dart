@@ -15,7 +15,7 @@ class _ProductAccountingViewState extends State<ProductAccountingView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<EditingProduct, Product?>(
+    return BlocBuilder<EditingProductCubit, Product?>(
       builder: (context, editProduct) {
         return Column(
           children: [

@@ -71,6 +71,15 @@ class MyApp extends StatelessWidget {
                     )
                   )
                 ),
+                chipTheme: ChipThemeData(
+                  selectedColor: Colors.blue.shade700.withOpacity(0.12)
+                ),
+                navigationRailTheme: const NavigationRailThemeData(
+                  indicatorColor: Colors.blue,
+                  selectedIconTheme: IconThemeData(
+                    color: Colors.white
+                  )
+                ),
                 fontFamily: 'Roboto',
                 primaryColor: Colors.blue
             ),

@@ -86,3 +86,12 @@ class SaveProductFormCubit extends Cubit<Map<String, dynamic>> {
     emit(state);
   }
 }
+
+class OnchangeProductCategoryCubit extends Cubit<ProductCategory?> {
+  OnchangeProductCategoryCubit() : super(null);
+
+  void change(ProductCategory? productCategory) {
+    emit(productCategory);
+  }
+
+}

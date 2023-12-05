@@ -48,8 +48,8 @@ class ProductCategoryConfigCubit extends Cubit<List<Module>> {
 
 }
 
-class EditingProduct extends Cubit<Product?> {
-  EditingProduct({required this.repository, required this.connectivityStatus, required this.apiStatus}) : super(null);
+class EditingProductCubit extends Cubit<Product?> {
+  EditingProductCubit({required this.repository, required this.connectivityStatus, required this.apiStatus}) : super(null);
 
   final ProductRepository repository;
   final ConnectivityStatusCubit connectivityStatus;
@@ -93,13 +93,37 @@ class EditingProduct extends Cubit<Product?> {
       apiStatus.changeStatus(ApiStatus.failed);
     }
   }
+
+  void edit(Product? product) {
+    emit(product);
+  }
 }
 
 
-class ProductsCubit extends Cubit<List<Product>?> {
-  ProductsCubit({required this.repository, required this.connectivityStatus, required this.apiStatus}) : super(null);
+class ProductsCubit extends Cubit<List<Product>> {
+  ProductsCubit({required this.repository, required this.connectivityStatus, required this.apiStatus}) : super([]);
 
   final ProductRepository repository;
   final ConnectivityStatusCubit connectivityStatus;
   final ProductApiStatusCubit apiStatus;
+
+  void getProducts({String? filters, required String token}) async {
+    try {
+      apiStatus.changeStatus(ApiStatus.requesting);
+      List<Product> response = await repository.get(filters, token);
+      emit(response);
+
+      apiStatus.changeStatus(ApiStatus.succeeded);
+
+      if (connectivityStatus.state == ConnectivityStatus.disconnected){
+        connectivityStatus.changeStatus(ConnectivityStatus.connected);
+      }
+    }
+    on http.ClientException {
+      connectivityStatus.changeStatus(ConnectivityStatus.disconnected);
+    }
+    catch (e) {
+      apiStatus.changeStatus(ApiStatus.failed);
+    }
+  }
 }

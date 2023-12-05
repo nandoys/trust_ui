@@ -18,7 +18,7 @@ class ProductBuyPriceField extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 15.0),
       child: BlocBuilder<SaveProductFormCubit, Map<String, dynamic>>(
           builder: (context, saveProduct) {
-            return BlocBuilder<EditingProduct, Product?>(
+            return BlocBuilder<EditingProductCubit, Product?>(
                 builder: (context, editProduct) {
                   return TextFormField(
                     controller: controller,

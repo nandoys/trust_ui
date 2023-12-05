@@ -14,7 +14,7 @@ class ProductCurrencyField extends StatelessWidget {
       padding: const EdgeInsets.only(left: 15.0),
       child: BlocBuilder<OrganizationCurrencyCubit, List<Currency>>(
           builder: (context, organizationCurrencies) {
-            return BlocBuilder<EditingProduct, Product?>(
+            return BlocBuilder<EditingProductCubit, Product?>(
                 builder: (context, editProduct) {
                   return DropdownSearch<Currency>(
                     items: organizationCurrencies,

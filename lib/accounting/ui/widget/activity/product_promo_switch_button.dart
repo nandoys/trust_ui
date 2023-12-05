@@ -14,7 +14,7 @@ class ProductPromoSwitch extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SwitchInPromoCubit, bool>(
         builder: (_, isPromo) {
-          return BlocBuilder<EditingProduct, Product?>(
+          return BlocBuilder<EditingProductCubit, Product?>(
               builder: (context, editProduct) {
                 return SizedBox(
                   width: 50,
@@ -29,7 +29,7 @@ class ProductPromoSwitch extends StatelessWidget {
                             context.read<SwitchInPromoCubit>().change(onChanged);
                             context.read<SaveProductFormCubit>().setValue('in_promo', onChanged);
                           } else {
-                            context.read<EditingProduct>().updateByField(editProduct!, 'in_promo',
+                            context.read<EditingProductCubit>().updateByField(editProduct!, 'in_promo',
                                 onChanged, user.accessToken as String);
                           }
 

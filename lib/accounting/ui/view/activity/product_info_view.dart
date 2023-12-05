@@ -27,7 +27,7 @@ class _ProductInfoViewState extends State<ProductInfoView> {
 
   @override
   Widget build(BuildContext context) {
-    final product = context.read<EditingProduct>().state;
+    final product = context.read<EditingProductCubit>().state;
 
     // reset the UI by removing sell, buy fields at the start
     if (product?.id == null) {

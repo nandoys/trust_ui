@@ -16,7 +16,7 @@ class ProductPerishSwitch extends StatelessWidget {
       padding: const EdgeInsets.only(left: 15.0),
       child: BlocBuilder<SwitchPerishableCubit, bool>(
           builder: (_, isPerishable) {
-            return BlocBuilder<EditingProduct, Product?>(
+            return BlocBuilder<EditingProductCubit, Product?>(
                 builder: (context, editProduct) {
                   return SizedBox(
                     width: 50,
@@ -32,7 +32,7 @@ class ProductPerishSwitch extends StatelessWidget {
                               context.read<SaveProductFormCubit>().setValue('can_perish', onChanged);
                             }
                             else {
-                              context.read<EditingProduct>().updateByField(editProduct!, 'can_perish',
+                              context.read<EditingProductCubit>().updateByField(editProduct!, 'can_perish',
                                   onChanged, user.accessToken as String);
                             }
                           }

@@ -16,7 +16,7 @@ class ProductSellPromoField extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SaveProductFormCubit, Map<String, dynamic>>(
         builder: (context, saveProduct) {
-          return BlocBuilder<EditingProduct, Product?>(
+          return BlocBuilder<EditingProductCubit, Product?>(
               builder: (context, editProduct) {
                 return TextFormField(
                   autovalidateMode: AutovalidateMode.onUserInteraction,

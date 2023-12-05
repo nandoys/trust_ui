@@ -2,7 +2,8 @@ import 'package:activity_api/activity_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:organization_api/organization_api.dart';
-import 'package:server_api/server_api.dart';
+
+import 'package:trust_app/accounting/logic/cubit/activity/activity_cubit.dart';
 import 'package:trust_app/accounting/ui/view/view.dart';
 import 'package:user_api/user_api.dart';
 
@@ -13,41 +14,30 @@ class ActivityNewButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final activeServer = context.read<ActiveServerCubit>().state;
+    final productCategoryCubit = context.read<ProductCategoryCubit>();
+
     return ElevatedButton.icon(
       icon: const Icon(Icons.add, color: Colors.white,),
       onPressed: (){
-        context.read<ProductCategoryCubit>().getCategories(user.accessToken as String);
+        if (productCategoryCubit.state.isEmpty) {
+          productCategoryCubit.getCategories(user.accessToken as String);
+        }
+
+        context.read<EditingProductCubit>().edit(null);
+        context.read<ProductBottomNavigationCubit>().navigate(0);
         showDialog(
             context: context,
             builder: (_) {
-              return MultiRepositoryProvider(
-                  providers: [
-                    RepositoryProvider(
-                        create: (context) => ProductRepository(
-                            protocol: activeServer.protocol, host: activeServer.host, port: activeServer.port
-                        )
-                    )
-                  ],
-                  child: MultiBlocProvider(
-                      providers: [
-                        BlocProvider.value(value: context.read<ProductCategoryApiStatusCubit>()),
-                        BlocProvider.value(value: context.read<ProductCategoryCubit>()),
-                        BlocProvider.value(value: context.read<ProductCategoryConfigCubit>()),
-                        BlocProvider.value(value: context.read<OrganizationCurrencyCubit>()),
-                        BlocProvider(
-                            create: (context) => ProductApiStatusCubit()
-                        ),
-                        BlocProvider(
-                            create: (context) => EditingProduct(
-                                repository: context.read<ProductRepository>(),
-                                connectivityStatus: context.read<ConnectivityStatusCubit>(),
-                                apiStatus: context.read<ProductApiStatusCubit>()
-                            )
-                        )
-                      ],
-                      child: ActivityDialog(user: user,)
-                  )
+              return ActivityDialog(
+                user: user,
+                repository: context.read<ProductRepository>(),
+                productCategoryApiStatusCubit: context.read<ProductCategoryApiStatusCubit>(),
+                productCategoryCubit: context.read<ProductCategoryCubit>(),
+                productCategoryConfigCubit: context.read<ProductCategoryConfigCubit>(),
+                organizationCurrencyCubit: context.read<OrganizationCurrencyCubit>(),
+                productApiStatusCubit: context.read<ProductApiStatusCubit>(),
+                editingProductCubit: context.read<EditingProductCubit>(),
+                productBottomNavigationCubit: context.read<ProductBottomNavigationCubit>(),
               );
             }
         );

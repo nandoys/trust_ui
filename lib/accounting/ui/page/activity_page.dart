@@ -1,6 +1,7 @@
 import 'package:accounting_api/accounting_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:organization_api/organization_api.dart';
 import 'package:server_api/server_api.dart';
 import 'package:user_api/user_api.dart';
 import 'package:activity_api/activity_api.dart';
@@ -8,6 +9,8 @@ import 'package:activity_api/activity_api.dart';
 import 'package:trust_app/accounting/logic/cubit/activity/activity_cubit.dart';
 import 'package:trust_app/accounting/ui/widget/accounting_widget.dart';
 import 'package:utils/utils.dart';
+
+import 'package:trust_app/accounting/ui/view/activity/activity_view.dart';
 
 class AccountingActivity extends StatelessWidget {
   AccountingActivity({super.key, required this.user});
@@ -32,12 +35,20 @@ class AccountingActivity extends StatelessWidget {
               create: (context) => ModuleRepository(
                   protocol: server.protocol, host: server.host, port: server.port
               )
+          ),
+          RepositoryProvider(
+              create: (context) => ProductRepository(
+                  protocol: server.protocol, host: server.host, port: server.port
+              )
           )
         ],
         child: MultiBlocProvider(
             providers: [
               BlocProvider(
                   create: (context) => ProductCategoryApiStatusCubit()
+              ),
+              BlocProvider(
+                  create: (context) => ProductApiStatusCubit()
               ),
               BlocProvider(
                   create: (context) => ProductCategoryCubit(
@@ -48,7 +59,22 @@ class AccountingActivity extends StatelessWidget {
               ),
               BlocProvider(
                 create: (context) => ProductCategoryConfigCubit(),
-              )
+              ),
+              BlocProvider(
+                create: (context) => ProductsCubit(
+                  repository: context.read<ProductRepository>(),
+                  connectivityStatus: context.read<ConnectivityStatusCubit>(),
+                  apiStatus: context.read<ProductApiStatusCubit>(),
+                ),
+              ),
+              BlocProvider(
+                  create: (context) => EditingProductCubit(
+                      repository: context.read<ProductRepository>(),
+                      connectivityStatus: context.read<ConnectivityStatusCubit>(),
+                      apiStatus: context.read<ProductApiStatusCubit>()
+                  )
+              ),
+              BlocProvider(create: (context) => ProductBottomNavigationCubit()),
             ],
             child: Column(
               children: [
@@ -248,37 +274,88 @@ class AccountingActivity extends StatelessWidget {
                                 controller: verticalScrollController,
                                 trackVisibility: true,
                                 thumbVisibility: true,
-                                child: GridView.count(
-                                  crossAxisCount: 4,
-                                  mainAxisSpacing: 6,
-                                  crossAxisSpacing: 4,
-                                  childAspectRatio: viewMode == ViewMode.list ? 4.2 : 1.5,
-                                  shrinkWrap: true,
-                                  controller: verticalScrollController,
-                                  physics: const BouncingScrollPhysics(),
-                                  children: List.generate(50, (index) {
-                                    return Card(
-                                      child: viewMode == ViewMode.list ? ListTile(
-                                        leading: const CircleAvatar(backgroundColor: Colors.blue),
-                                        title: Text('$index data'),
-                                        subtitle: const Text('data'),
-                                        trailing: PopupMenuButton<String>(
-                                            icon: const Icon(Icons.more_horiz),
-                                            itemBuilder: (context) {
-                                              return [
-                                                const PopupMenuItem(child: Text('Modifier')),
-                                                const PopupMenuItem(child: Text('Supprimer')),
-                                                const PopupMenuDivider(),
-                                                const PopupMenuItem(child: Text('Comptabilité')),
-                                              ];
-                                            }
-                                        ),
-                                      ) :
-                                      const Column(
-                                        children: [Text('data')],
-                                      ),
-                                    );
-                                  }),
+                                child: BlocBuilder<ProductsCubit, List<Product>>(
+                                    builder: (context, products) {
+                                      if (products.isEmpty) {
+                                        context.read<ProductsCubit>().getProducts(token: user.accessToken as String);
+                                      }
+                                      return GridView.count(
+                                        crossAxisCount: 3,
+                                        mainAxisSpacing: 6,
+                                        crossAxisSpacing: 4,
+                                        childAspectRatio: viewMode == ViewMode.list ? 4.2 : 1.5,
+                                        shrinkWrap: true,
+                                        controller: verticalScrollController,
+                                        physics: const BouncingScrollPhysics(),
+                                        children: List.generate(products.length, (index) {
+                                          return Card(
+                                            child: viewMode == ViewMode.list ? ListTile(
+                                              leading: const CircleAvatar(backgroundColor: Colors.blue),
+                                              title: Text(products[index].name),
+                                              subtitle: const Text('data'),
+                                              trailing: PopupMenuButton<String>(
+                                                  icon: const Icon(Icons.more_horiz),
+                                                  itemBuilder: (context) {
+                                                    return [
+                                                      PopupMenuItem(
+                                                          onTap: () {
+                                                            context.read<EditingProductCubit>().edit(products[index]);
+                                                            context.read<ProductBottomNavigationCubit>().navigate(0);
+                                                            showDialog(
+                                                                context: context,
+                                                                builder: (_) {
+                                                                  return ActivityDialog(
+                                                                    user: user,
+                                                                    repository: context.read<ProductRepository>(),
+                                                                    productCategoryApiStatusCubit: context.read<ProductCategoryApiStatusCubit>(),
+                                                                    productCategoryCubit: context.read<ProductCategoryCubit>(),
+                                                                    productCategoryConfigCubit: context.read<ProductCategoryConfigCubit>(),
+                                                                    organizationCurrencyCubit: context.read<OrganizationCurrencyCubit>(),
+                                                                    productApiStatusCubit: context.read<ProductApiStatusCubit>(),
+                                                                    editingProductCubit: context.read<EditingProductCubit>(),
+                                                                    productBottomNavigationCubit: context.read<ProductBottomNavigationCubit>(),
+                                                                  );
+                                                                }
+                                                            );
+                                                          },
+                                                          child: const Text('Modifier')
+                                                      ),
+                                                      const PopupMenuItem(child: Text('Supprimer')),
+                                                      const PopupMenuDivider(),
+                                                      PopupMenuItem(
+                                                          onTap: () {
+                                                            context.read<EditingProductCubit>().edit(products[index]);
+                                                            context.read<ProductBottomNavigationCubit>().navigate(1);
+                                                            showDialog(
+                                                                context: context,
+                                                                builder: (_) {
+                                                                  return ActivityDialog(
+                                                                    user: user,
+                                                                    repository: context.read<ProductRepository>(),
+                                                                    productCategoryApiStatusCubit: context.read<ProductCategoryApiStatusCubit>(),
+                                                                    productCategoryCubit: context.read<ProductCategoryCubit>(),
+                                                                    productCategoryConfigCubit: context.read<ProductCategoryConfigCubit>(),
+                                                                    organizationCurrencyCubit: context.read<OrganizationCurrencyCubit>(),
+                                                                    productApiStatusCubit: context.read<ProductApiStatusCubit>(),
+                                                                    editingProductCubit: context.read<EditingProductCubit>(),
+                                                                    productBottomNavigationCubit: context.read<ProductBottomNavigationCubit>(),
+                                                                  );
+                                                                }
+                                                            );
+                                                          },
+                                                          child: const Text('Comptabilité')
+                                                      ),
+                                                    ];
+                                                  }
+                                              ),
+                                            ) :
+                                            const Column(
+                                              children: [Text('data')],
+                                            ),
+                                          );
+                                        }),
+                                      );
+                                    }
                                 )
                             );
                           }

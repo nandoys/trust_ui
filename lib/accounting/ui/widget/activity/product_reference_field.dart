@@ -22,7 +22,7 @@ class ProductReferenceField extends StatelessWidget {
         connectivityStatus: context.read<ConnectivityStatusCubit>(),
         apiStatus: context.read<ProductApiStatusCubit>()
       ),
-      child: BlocBuilder<EditingProduct, Product?>(
+      child: BlocBuilder<EditingProductCubit, Product?>(
           builder: (context, editProduct) {
             return Padding(
               padding: const EdgeInsets.only(left: 15.0),

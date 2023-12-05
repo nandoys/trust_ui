@@ -10,7 +10,7 @@ class ProductCodebarField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<EditingProduct, Product?>(
+    return BlocBuilder<EditingProductCubit, Product?>(
         builder: (context, editProduct) {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15.0),
