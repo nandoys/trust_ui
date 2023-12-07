@@ -1,10 +1,14 @@
+import 'package:accounting_api/accounting_api.dart';
 import 'package:activity_api/activity_api.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:trust_app/accounting/ui/datagrid/activity/product_accounting/datasource_product_accounting.dart';
+
+import 'package:trust_app/accounting/ui/widget/accounting_widget.dart';
+import 'package:trust_app/accounting/logic/cubit/cubit.dart';
 
 class ProductAccountingView extends StatefulWidget {
-  ProductAccountingView({super.key});
+  const ProductAccountingView({super.key});
 
   @override
   State<ProductAccountingView> createState() => _ProductAccountingViewState();
@@ -12,14 +16,32 @@ class ProductAccountingView extends StatefulWidget {
 
 class _ProductAccountingViewState extends State<ProductAccountingView> {
   final scrollController = ScrollController();
+  final numberController = TextEditingController();
+  final nameController = TextEditingController();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
+    final accounts = List.generate(15, (index) =>
+        Account(number: "6011.000$index", name: "name $index", organization: null, accountType: null)
+    );
+    final accountDataSource = ProductAccountingDataSource(accounts: accounts);
     return BlocBuilder<EditingProductCubit, Product?>(
       builder: (context, editProduct) {
+
+        void saveAccount() {
+          // save the account to the database
+          if (formKey.currentState!.validate()) {
+
+          }
+        }
+
+        context.read<EnableNewAccountField>().disable();
+
         return Column(
           children: [
-            Flexible(
+            Expanded(
+              flex: 0,
               child: LayoutBuilder(
                   builder: (context, constraints) {
                     return Padding(
@@ -56,7 +78,8 @@ class _ProductAccountingViewState extends State<ProductAccountingView> {
                   }
               ),
             ),
-            const Flexible(
+            const Expanded(
+              flex: 0,
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
                   child: Row(
@@ -66,68 +89,62 @@ class _ProductAccountingViewState extends State<ProductAccountingView> {
                   ),
                 )
             ),
-            Flexible(
+            Expanded(
                 child: Form(
-                    child: Row(
+                    key: formKey,
+                    child: Column(
                       children: [
-                        Flexible(
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 15.0, right: 7.5),
-                              child: DropdownSearch(
-                                dropdownDecoratorProps: const DropDownDecoratorProps(
-                                    dropdownSearchDecoration: InputDecoration(
-                                      filled: true,
-                                      labelText: 'Compte*',
-                                      contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0)
+                        Expanded(
+                          flex: 0,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                                    child: AccountDropDownList(
+                                      editProduct: editProduct as Product,
+                                      onChanged: (account) {
+                                        context.read<EnableNewAccountField>().enable();
+                                      },
                                     ),
-                                ),
-                                dropdownButtonProps: const DropdownButtonProps(),
-                              ),
-                            )
-                        ),
-                        Flexible(
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 15.0),
-                              child: TextFormField(
-                                decoration: InputDecoration(
-                                  label: const Text("Numéro de compte*"),
-                                  suffixIcon: IconButton(
-                                      onPressed: () {},
-                                      icon: const Icon(Icons.send),
-                                    tooltip: "Ajouter",
                                   )
-                                ),
                               ),
-                            )
+                            ],
+                          ),
                         ),
+                        Expanded(
+                          flex: 0,
+                          child: BlocBuilder<EnableNewAccountField, bool>(
+                              builder: (context, isEnabled) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                  child: Row(
+                                    children: [
+                                      AccountNumberField(
+                                          controller: numberController,
+                                          enable: isEnabled
+                                      ),
+                                      AccountNameField(
+                                          controller: nameController,
+                                          enable: isEnabled,
+                                          saveAccount: saveAccount
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+                          ),
+                        )
                       ],
                     )
                 )
             ),
-            Flexible(
-              flex: 4,
+            Expanded(
+              flex: 2,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                  child: Scrollbar(
-                      controller: scrollController,
-                      thumbVisibility: true,
-                      trackVisibility: true,
-                      thickness: 4.0,
-                      child: SingleChildScrollView(
-                        controller: scrollController,
-                        physics: const BouncingScrollPhysics(),
-                        child: DataTable(
-                            border: const TableBorder(
-                                horizontalInside: BorderSide()
-                            ),
-                            columns: const [
-                              DataColumn(label: Text("Comptes"))
-                            ],
-                            rows: List.generate(100, (index) => const DataRow(cells: [
-                              DataCell(Text('data'))
-                            ]))
-                        ),
-                      )
+                  child: SizedBox.expand(
+                    child: AccountTable(accountingDataSource: accountDataSource,),
                   ),
                 )
             )
@@ -140,6 +157,7 @@ class _ProductAccountingViewState extends State<ProductAccountingView> {
   @override
   void dispose() {
     scrollController.dispose();
+    formKey.currentState?.dispose();
     super.dispose();
   }
 }

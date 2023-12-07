@@ -16,6 +16,8 @@ class ProductCategoryField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final productCategoryCubit = context.read<ProductCategoryCubit>();
+
     return BlocProvider(
       create: (context) => OnchangeProductCategoryCubit(),
       child: Padding(
@@ -78,19 +80,39 @@ class ProductCategoryField extends StatelessWidget {
                                 ),
                                 popupProps: PopupProps.menu(
                                   showSearchBox: true,
+                                  searchDelay: const Duration(milliseconds: 0),
                                   searchFieldProps: const TextFieldProps(
                                       autofocus: true,
                                       decoration: InputDecoration(
-                                          label: Text('Recherche ...'),
+                                          label: Text('Rechercher'),
+                                          prefixIcon: Icon(Icons.search),
                                           isDense: true,
                                           filled: true
                                       )
                                   ),
+                                  constraints: const BoxConstraints(
+                                      maxHeight: 200,
+                                  ),
+                                  scrollbarProps: const ScrollbarProps(
+                                      thumbVisibility: true,
+                                      trackVisibility: true,
+                                  ),
                                   emptyBuilder: (context, text) {
-                                    return const Center(
+                                    return Center(
                                       child: SizedBox(
-                                        height: 50.0,
-                                        child: Text('Aucune catégorie trouvée'),
+                                        height: 80.0,
+                                        child: Column(
+                                          children: [
+                                            const Text('Aucune catégorie trouvée'),
+                                            if (productCategoryCubit.state.isEmpty) TextButton.icon(
+                                                onPressed: () {
+                                                  productCategoryCubit.getCategories(user.accessToken as String);
+                                                },
+                                                icon: const Icon(Icons.refresh),
+                                                label: const Text('Rafraîchir')
+                                            )
+                                          ],
+                                        ),
                                       ),
                                     );
                                   },

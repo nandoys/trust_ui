@@ -11,12 +11,12 @@ class HomePage extends StatelessWidget {
   final User user;
 
   final List<Map<String, dynamic>> apps = [
-    {'name': 'Comptabilité', 'image': 'assets/home/accounting.png', 'route': 'accounting'},
-    {'name': 'Fiscalité', 'image': 'assets/home/tax.png', 'route': 'tax'},
-    {'name': 'Immobilisation', 'image': 'assets/home/fixed-asset.png', 'route': 'asset'},
-    {'name': 'Logistique', 'image': 'assets/home/logistic.png', 'route': 'logistic'},
-    {'name': 'Personnel', 'image': 'assets/home/human-resource.png', 'route': 'employee'},
-    {'name': 'Planning', 'image': 'assets/home/planning.png', 'route': 'planning'},
+    {'name': 'Comptabilité', 'image': 'assets/image/home/accounting.png', 'route': 'accounting'},
+    {'name': 'Fiscalité', 'image': 'assets/image/home/tax.png', 'route': 'tax'},
+    {'name': 'Immobilisation', 'image': 'assets/image/home/fixed-asset.png', 'route': 'asset'},
+    {'name': 'Logistique', 'image': 'assets/image/home/logistic.png', 'route': 'logistic'},
+    {'name': 'Personnel', 'image': 'assets/image/home/human-resource.png', 'route': 'employee'},
+    {'name': 'Planning', 'image': 'assets/image/home/planning.png', 'route': 'planning'},
   ];
 
   final List<Map<String, dynamic>> configs = [
@@ -130,7 +130,8 @@ class HomePage extends StatelessWidget {
                                                                     extra: {
                                                                       'user': user,
                                                                       'organizationContextMenuCubit': context.read<OrganizationContextMenuCubit>(),
-                                                                      'organizationCurrencyCubit': context.read<OrganizationCurrencyCubit>()
+                                                                      'currencyCubit': context.read<CurrencyCubit>(),
+                                                                      'organizationCurrencyCubit': context.read<OrganizationCurrencyCubit>(),
                                                                     }
                                                                 );
                                                               },

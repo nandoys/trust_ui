@@ -2,6 +2,7 @@ import 'package:accounting_api/accounting_api.dart';
 import 'package:activity_api/activity_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:organization_api/organization_api.dart';
 import 'package:user_api/user_api.dart';
 import 'package:trust_app/accounting/ui/widget/accounting_widget.dart';
 
@@ -27,19 +28,19 @@ class _ProductInfoViewState extends State<ProductInfoView> {
 
   @override
   Widget build(BuildContext context) {
-    final product = context.read<EditingProductCubit>().state;
+    final editingProduct = context.read<EditingProductCubit>().state;
 
     // reset the UI by removing sell, buy fields at the start
-    if (product?.id == null) {
+    if (editingProduct?.id == null) {
       context.read<ProductCategoryConfigCubit>().selectModule([]);
     } else {
-      nameController.text = (product?.name ?? product?.name)!;
-      referenceController.text = product?.reference == null ? '' : product?.reference.toString() as String;
-      barCodeController.text = product?.barCode == null ? '' : product?.barCode.toString() as String;
-      buyingPriceController.text = product?.buyPrice == null ? '' : product?.buyPrice.toString() as String;
-      sellingPriceController.text = product?.sellPrice == null ? '' : product?.sellPrice.toString() as String;
-      sellInPromoPriceController.text = product?.sellPromoPrice == null ? '' :
-      product?.sellPromoPrice.toString() as String;
+      nameController.text = (editingProduct?.name ?? editingProduct?.name)!;
+      referenceController.text = editingProduct?.reference == null ? '' : editingProduct?.reference.toString() as String;
+      barCodeController.text = editingProduct?.barCode == null ? '' : editingProduct?.barCode.toString() as String;
+      buyingPriceController.text = editingProduct?.buyPrice == null ? '' : editingProduct?.buyPrice.toString() as String;
+      sellingPriceController.text = editingProduct?.sellPrice == null ? '' : editingProduct?.sellPrice.toString() as String;
+      sellInPromoPriceController.text = editingProduct?.sellPromoPrice == null ? '' :
+      editingProduct?.sellPromoPrice.toString() as String;
     }
 
     return Form(
@@ -108,7 +109,7 @@ class _ProductInfoViewState extends State<ProductInfoView> {
                               ProductCategoryField(user: widget.user,),
                               ProductReferenceField(user: widget.user, controller: referenceController,),
                               ProductCodebarField(controller: barCodeController,),
-                              const ProductCurrencyField(),
+                              ProductCurrencyField(user: widget.user,),
                               ...List.generate(modules.length, (index) {
                                 if (modules[index].name == 'achat') {
                                   return ProductBuyPriceField(modules: modules, controller: buyingPriceController,);

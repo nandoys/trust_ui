@@ -689,18 +689,18 @@ packages:
     dependency: transitive
     description:
       name: syncfusion_flutter_core
-      sha256: "88366a5e95ccb4091feb531021567f76ed3ceddab7424de02a9ac4a335d22a44"
+      sha256: a2427697bfad5b611db78ea4c4daef82d3350b83c729a8dc37959662a31547f9
       url: "https://pub.dev"
     source: hosted
-    version: "23.2.6"
+    version: "23.2.7"
   syncfusion_flutter_datagrid:
     dependency: "direct main"
     description:
       name: syncfusion_flutter_datagrid
-      sha256: "8246db9f6c24cf01513842b29a39c0fd86aa18756b81661c99a4d2881bfa9338"
+      sha256: "9f621f6344d2ed7ea3a8d0ff5c145c174f1e227d6d8851290591ceb718e44600"
       url: "https://pub.dev"
     source: hosted
-    version: "23.2.6"
+    version: "23.2.7"
   tax_api:
     dependency: "direct main"
     description:

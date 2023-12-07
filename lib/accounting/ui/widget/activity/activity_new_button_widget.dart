@@ -1,10 +1,10 @@
 import 'package:activity_api/activity_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:organization_api/organization_api.dart';
 
 import 'package:trust_app/accounting/logic/cubit/activity/activity_cubit.dart';
-import 'package:trust_app/accounting/ui/view/view.dart';
 import 'package:user_api/user_api.dart';
 
 class ActivityNewButton extends StatelessWidget {
@@ -25,22 +25,20 @@ class ActivityNewButton extends StatelessWidget {
 
         context.read<EditingProductCubit>().edit(null);
         context.read<ProductBottomNavigationCubit>().navigate(0);
-        showDialog(
-            context: context,
-            builder: (_) {
-              return ActivityDialog(
-                user: user,
-                repository: context.read<ProductRepository>(),
-                productCategoryApiStatusCubit: context.read<ProductCategoryApiStatusCubit>(),
-                productCategoryCubit: context.read<ProductCategoryCubit>(),
-                productCategoryConfigCubit: context.read<ProductCategoryConfigCubit>(),
-                organizationCurrencyCubit: context.read<OrganizationCurrencyCubit>(),
-                productApiStatusCubit: context.read<ProductApiStatusCubit>(),
-                editingProductCubit: context.read<EditingProductCubit>(),
-                productBottomNavigationCubit: context.read<ProductBottomNavigationCubit>(),
-              );
-            }
-        );
+
+        context.goNamed('productEdit',  extra: {
+          'organizationContextMenuCubit': context.read<OrganizationContextMenuCubit>(), // need for the parent route
+          'user': user,
+          'productRepository': context.read<ProductRepository>(),
+          'productCategoryApiStatusCubit': context.read<ProductCategoryApiStatusCubit>(),
+          'productCategoryCubit': context.read<ProductCategoryCubit>(),
+          'productCategoryConfigCubit': context.read<ProductCategoryConfigCubit>(),
+          'currencyCubit': context.read<CurrencyCubit>(),
+          'organizationCurrencyCubit': context.read<OrganizationCurrencyCubit>(),
+          'productApiStatusCubit': context.read<ProductApiStatusCubit>(),
+          'editingProductCubit': context.read<EditingProductCubit>(),
+          'productBottomNavigationCubit': context.read<ProductBottomNavigationCubit>(),
+        });
       },
       style: ButtonStyle(
           backgroundColor: MaterialStateProperty.resolveWith((states) => Colors.blue.shade700),

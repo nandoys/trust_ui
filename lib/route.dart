@@ -1,3 +1,4 @@
+import 'package:activity_api/activity_api.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:organization_api/organization_api.dart';
@@ -5,7 +6,9 @@ import 'package:trust_app/planning/ui/page/dashboard.dart';
 import 'package:trust_app/tax/ui/page/dashboard.dart';
 import 'package:user_api/user_api.dart';
 
+import 'accounting/logic/cubit/activity/activity_cubit.dart';
 import 'accounting/ui/page/accounting_page.dart';
+import 'accounting/ui/view/activity/edit_product_view.dart';
 import 'asset_management/ui/page/dashboard.dart';
 import 'employee/ui/page/dashboard.dart';
 import 'home/ui/page/page.dart';
@@ -91,7 +94,7 @@ final route = GoRouter(
             );
           }
       ),
-      GoRoute(path: '/start',
+      GoRoute(path: '/app',
           name: 'start',
           pageBuilder: (context, route) {
             final Map<String, dynamic> extra = route.extra as Map<String, dynamic>;
@@ -107,61 +110,103 @@ final route = GoRouter(
                     child: HomePage(user: user,)
                 )
             );
-          }
-      ),
-      GoRoute(path: '/asset',
-          name: 'asset',
-          pageBuilder: (context, route) {
-            final User user = route.extra as User;
-            return NoTransitionPage(child: AssetDashboard(user: user,));
-          }
-      ),
-      GoRoute(path: '/accounting',
-          name: 'accounting',
-          pageBuilder: (context, route) {
-            final Map<String, dynamic> extra = route.extra as Map<String, dynamic>;
-            final User user = extra['user'] as User;
-            final OrganizationContextMenuCubit organizationContextMenuCubit =
-            extra['organizationContextMenuCubit'] as OrganizationContextMenuCubit;
-            final OrganizationCurrencyCubit organizationCurrencyCubit =
-            extra['organizationCurrencyCubit'] as OrganizationCurrencyCubit;
+          },
+          routes: [
+            GoRoute(path: 'accounting',
+              name: 'accounting',
+              routes: [
+                GoRoute(
+                    path: 'product/edit',
+                    name: 'productEdit',
+                    pageBuilder: (context, route) {
+                    final Map<String, dynamic> extra = route.extra as Map<String, dynamic>;
+                    final User user = extra['user'] as User;
+                    final ProductRepository productRepository = extra['productRepository'] as ProductRepository;
+                    final EditingProductCubit editingProductCubit = extra['editingProductCubit'] as EditingProductCubit;
+                    final ProductApiStatusCubit productApiStatusCubit = extra['productApiStatusCubit'] as ProductApiStatusCubit;
+                    final CurrencyCubit currencyCubit = extra['currencyCubit'] as CurrencyCubit;
+                    final ProductCategoryCubit productCategoryCubit = extra['productCategoryCubit'] as ProductCategoryCubit;
+                    final ProductCategoryConfigCubit productCategoryConfigCubit = extra['productCategoryConfigCubit']
+                    as ProductCategoryConfigCubit;
+                    final ProductCategoryApiStatusCubit productCategoryApiStatusCubit = extra['productCategoryApiStatusCubit']
+                    as ProductCategoryApiStatusCubit;
+                    final OrganizationCurrencyCubit organizationCurrencyCubit = extra['organizationCurrencyCubit']
+                    as OrganizationCurrencyCubit;
+                    final ProductBottomNavigationCubit productBottomNavigationCubit = extra['productBottomNavigationCubit']
+                    as ProductBottomNavigationCubit;
 
-            return NoTransitionPage(child: MultiBlocProvider(
-                providers: [
-                  BlocProvider.value(value: organizationContextMenuCubit),
-                  BlocProvider.value(value: organizationCurrencyCubit),
-                ],
-                child: Accounting(user: user,)
-            ));
-          }
+                      return NoTransitionPage(
+                          child: EditProductView(
+                            user: user,
+                            repository: productRepository,
+                            editingProductCubit: editingProductCubit,
+                            productApiStatusCubit: productApiStatusCubit,
+                            currencyCubit: currencyCubit,
+                            organizationCurrencyCubit: organizationCurrencyCubit,
+                            productCategoryCubit: productCategoryCubit,
+                            productCategoryConfigCubit: productCategoryConfigCubit,
+                            productCategoryApiStatusCubit: productCategoryApiStatusCubit,
+                            productBottomNavigationCubit: productBottomNavigationCubit,
+                          )
+                      );
+                  }
+                )
+              ],
+              pageBuilder: (context, route) {
+                final Map<String, dynamic> extra = route.extra as Map<String, dynamic>;
+                final User user = extra['user'] as User;
+                final OrganizationContextMenuCubit organizationContextMenuCubit =
+                extra['organizationContextMenuCubit'] as OrganizationContextMenuCubit;
+                final CurrencyCubit currencyCubit = extra['currencyCubit'] as CurrencyCubit;
+                final OrganizationCurrencyCubit organizationCurrencyCubit =
+                extra['organizationCurrencyCubit'] as OrganizationCurrencyCubit;
+
+                return NoTransitionPage(child: MultiBlocProvider(
+                    providers: [
+                      BlocProvider.value(value: organizationContextMenuCubit),
+                      BlocProvider.value(value: organizationCurrencyCubit),
+                      BlocProvider.value(value: currencyCubit),
+                    ],
+                    child: Accounting(user: user,)
+                ));
+              }
+          ),
+            GoRoute(path: 'asset',
+                name: 'asset',
+                pageBuilder: (context, route) {
+                  final User user = route.extra as User;
+                  return NoTransitionPage(child: AssetDashboard(user: user,));
+                }
+            ),
+            GoRoute(path: 'employee',
+                name: 'employee',
+                pageBuilder: (context, route) {
+                  final User user = route.extra as User;
+                  return NoTransitionPage(child: EmployeeDashboard(user: user,));
+                }
+            ),
+            GoRoute(path: 'logistic',
+                name: 'logistic',
+                pageBuilder: (context, route) {
+                  final User user = route.extra as User;
+                  return NoTransitionPage(child: LogisticDashboard(user: user,));
+                }
+            ),
+            GoRoute(path: 'planning',
+                name: 'planning',
+                pageBuilder: (context, route) {
+                  final User user = route.extra as User;
+                  return NoTransitionPage(child: PlanningDashboard(user: user,));
+                }
+            ),
+            GoRoute(path: 'tax',
+                name: 'tax',
+                pageBuilder: (context, route) {
+                  final User user = route.extra as User;
+                  return NoTransitionPage(child: TaxDashboard(user: user,));
+                }
+            )
+          ]
       ),
-      GoRoute(path: '/employee',
-          name: 'employee',
-          pageBuilder: (context, route) {
-            final User user = route.extra as User;
-            return NoTransitionPage(child: EmployeeDashboard(user: user,));
-          }
-      ),
-      GoRoute(path: '/logistic',
-          name: 'logistic',
-          pageBuilder: (context, route) {
-            final User user = route.extra as User;
-            return NoTransitionPage(child: LogisticDashboard(user: user,));
-          }
-      ),
-      GoRoute(path: '/planning',
-          name: 'planning',
-          pageBuilder: (context, route) {
-            final User user = route.extra as User;
-            return NoTransitionPage(child: PlanningDashboard(user: user,));
-          }
-      ),
-      GoRoute(path: '/tax',
-          name: 'tax',
-          pageBuilder: (context, route) {
-            final User user = route.extra as User;
-            return NoTransitionPage(child: TaxDashboard(user: user,));
-          }
-      )
     ]
 );

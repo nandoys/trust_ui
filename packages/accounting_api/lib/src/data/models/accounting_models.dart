@@ -55,6 +55,24 @@ class Account extends Equatable {
     );
   }
 
+  static List<Account> fromJsonList(List jsonList) {
+    final accounts = jsonList.map((json) {
+
+      final Organization? organization = json['organization'] != null ?
+      Organization.fromJson(json['organization']) : json['organization'];
+
+      final AccountType? accountType = json['account_type'] != null ?
+      AccountType.fromJson(json['account_type']) : json['account_type'];
+
+      return Account(
+          id: json['id'], number: json['number'], name: json['name'], organization: organization,
+          accountType: accountType
+      );
+    }).toList();
+
+    return accounts;
+  }
+
   final String? id;
   final String number;
   final String name;

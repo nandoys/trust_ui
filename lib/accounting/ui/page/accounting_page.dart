@@ -32,6 +32,7 @@ class Accounting extends StatelessWidget {
       create: (context) => SwitchAccountingViewCubit(),
       child: Scaffold(
         appBar: AppBar(
+          leading: const Row(),
           title: const Text('Comptabilité'),
           centerTitle: true,
           actions: [

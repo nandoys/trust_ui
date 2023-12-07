@@ -8,7 +8,7 @@ enum ProductType { bien, service, mixte }
 class ProductCategory extends Equatable {
 
   ProductCategory({required this.id, required this.name, required this.productType,
-    required this.modules, required this.accounts});
+    required this.modules, required this.accounts, required this.subAccounts});
 
   factory ProductCategory.fromJson(Map<String, dynamic> json) {
     ProductType productType = ProductType.mixte;
@@ -23,8 +23,16 @@ class ProductCategory extends Equatable {
 
     final accounts = List.from(json['config']).map((config) => Account.fromJson(config['account'])).toList();
 
+    final subAccounts = List.from(json['config']).map((config) => Account.fromJsonList(config['sub_accounts'])).toList();
+
+    List<Account> subAccountsList = [];
+    subAccounts.forEach((subAccount) {
+      subAccountsList.addAll(subAccount);
+    });
+
+
     return ProductCategory(id: json['id'], name: json['name'], productType: productType,
-        modules: modules, accounts: accounts);
+        modules: modules, accounts: accounts, subAccounts: subAccountsList);
   }
 
   Map<String, dynamic> toJson() {
@@ -39,6 +47,7 @@ class ProductCategory extends Equatable {
   final ProductType productType;
   final List<Module> modules;
   final List<Account> accounts;
+  final List<Account> subAccounts;
 
   @override
   List<Object?> get props => [name];

@@ -1,1 +1,1 @@
-export 'activity_dialog_view.dart';
+export 'edit_product_view.dart';
