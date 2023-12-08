@@ -8,9 +8,10 @@ import 'package:trust_app/accounting/logic/cubit/activity/activity_cubit.dart';
 import 'package:user_api/user_api.dart';
 
 class ActivityNewButton extends StatelessWidget {
-  const ActivityNewButton({super.key, required this.user});
+  const ActivityNewButton({super.key, required this.user, required this.openEditProductView});
 
   final User user;
+  final void Function(BuildContext context, User user) openEditProductView;
 
   @override
   Widget build(BuildContext context) {
@@ -26,19 +27,7 @@ class ActivityNewButton extends StatelessWidget {
         context.read<EditingProductCubit>().edit(null);
         context.read<ProductBottomNavigationCubit>().navigate(0);
 
-        context.goNamed('productEdit',  extra: {
-          'organizationContextMenuCubit': context.read<OrganizationContextMenuCubit>(), // need for the parent route
-          'user': user,
-          'productRepository': context.read<ProductRepository>(),
-          'productCategoryApiStatusCubit': context.read<ProductCategoryApiStatusCubit>(),
-          'productCategoryCubit': context.read<ProductCategoryCubit>(),
-          'productCategoryConfigCubit': context.read<ProductCategoryConfigCubit>(),
-          'currencyCubit': context.read<CurrencyCubit>(),
-          'organizationCurrencyCubit': context.read<OrganizationCurrencyCubit>(),
-          'productApiStatusCubit': context.read<ProductApiStatusCubit>(),
-          'editingProductCubit': context.read<EditingProductCubit>(),
-          'productBottomNavigationCubit': context.read<ProductBottomNavigationCubit>(),
-        });
+        openEditProductView.call(context, user);
       },
       style: ButtonStyle(
           backgroundColor: MaterialStateProperty.resolveWith((states) => Colors.blue.shade700),

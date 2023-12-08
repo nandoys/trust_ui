@@ -58,7 +58,6 @@ class UserRepository {
         return json[field] ?? false;
       }
       else {
-        print(response.statusCode);
         throw Exception("Quelque chose s'est mal passé");
       }
     }

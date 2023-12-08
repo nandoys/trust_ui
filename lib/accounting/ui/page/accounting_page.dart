@@ -1,6 +1,8 @@
+import 'package:accounting_api/accounting_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:server_api/server_api.dart';
 import 'package:user_api/user_api.dart';
 import 'package:trust_app/accounting/logic/cubit/cubit.dart';
 
@@ -18,6 +20,8 @@ class Accounting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final server = context.read<ActiveServerCubit>().state;
 
     final List<Widget> pages = [
       AccountingDashboard(user: user),
@@ -115,19 +119,30 @@ class Accounting extends StatelessWidget {
                         },
                       ),
                       Expanded(
-                          child: MultiBlocProvider(
+                          child: MultiRepositoryProvider(
                               providers: [
-                                BlocProvider(create: (context) => FilterProductTypeCubit()),
-                                BlocProvider(create: (context) => ActivityViewModeCubit()),
-                                BlocProvider(create: (context) => FilterPartnerCategoryCubit()),
-                                BlocProvider(create: (context) => ThirdPartyViewModeCubit()),
+                                RepositoryProvider(
+                                    create: (context) => AccountRepository(
+                                        protocol: server.protocol,
+                                        host: server.host,
+                                        port: server.port
+                                    )
+                                )
                               ],
-                              child: Card(
-                                elevation: 30,
-                                child: Container(
-                                  color: Colors.white,
-                                  child: pages[pageIndex],
-                                ),
+                              child: MultiBlocProvider(
+                                  providers: [
+                                    BlocProvider(create: (context) => FilterProductTypeCubit()),
+                                    BlocProvider(create: (context) => ActivityViewModeCubit()),
+                                    BlocProvider(create: (context) => FilterPartnerCategoryCubit()),
+                                    BlocProvider(create: (context) => ThirdPartyViewModeCubit()),
+                                  ],
+                                  child: Card(
+                                    elevation: 30,
+                                    child: Container(
+                                      color: Colors.white,
+                                      child: pages[pageIndex],
+                                    ),
+                                  )
                               )
                           )
                       )

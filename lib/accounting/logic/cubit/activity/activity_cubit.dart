@@ -96,8 +96,17 @@ class OnchangeProductCategoryCubit extends Cubit<ProductCategory?> {
 
 }
 
-class EnableNewAccountField extends Cubit<bool> {
-  EnableNewAccountField() : super(false);
+class OnchangeProductCategoryAccountCubit extends Cubit<Account?> {
+  OnchangeProductCategoryAccountCubit() : super(null);
+
+  void change(Account? productCategoryAccount) {
+    emit(productCategoryAccount);
+  }
+
+}
+
+class NewAccountField extends Cubit<bool> {
+  NewAccountField() : super(false);
 
   void enable() {
     emit(true);

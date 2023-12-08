@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import 'package:accounting_api/accounting_api.dart';
+import 'package:organization_api/organization_api.dart';
 
 class ModuleRepository {
   ModuleRepository({required this.protocol, required this.host, required this.port});
@@ -58,5 +59,43 @@ class ModuleRepository {
     }
 
     return [];
+  }
+}
+
+class AccountRepository {
+  AccountRepository({required this.protocol, required this.host, required this.port});
+
+  final String? protocol;
+  final String? host;
+  final int? port;
+
+  Future<bool> checkAccount(Organization organization, String number, String token) async {
+    if (protocol != null && host != null && port != null) {
+
+      final uri = Uri(
+          scheme: protocol?.toLowerCase(),
+          host: host,
+          port: port,
+          path: '/api/accounting/account/exist',
+          queryParameters: {'org_id': organization.id, 'number': number}
+      );
+
+      http.Response response = await http.get(uri,
+        headers: {
+        'Authorization':  'Trust $token'
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final bool json = jsonDecode(utf8.decode(response.bodyBytes));
+        return json;
+      }
+      else {
+        print(response.statusCode);
+        throw Exception("Quelque chose s'est mal passé");
+      }
+    }
+
+    return false;
   }
 }

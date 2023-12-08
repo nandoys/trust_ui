@@ -54,6 +54,7 @@ class ProductCategoryField extends StatelessWidget {
 
                               return DropdownSearch<ProductCategory>(
                                 items: productCategories,
+                                enabled: editProduct?.accounts?.isEmpty ?? true,
                                 itemAsString: (ProductCategory productCategory) => productCategory.name,
                                 validator: (value) {
                                   if(value == null) {

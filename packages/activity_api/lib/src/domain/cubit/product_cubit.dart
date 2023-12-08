@@ -55,12 +55,16 @@ class EditingProductCubit extends Cubit<Product?> {
   final ConnectivityStatusCubit connectivityStatus;
   final ProductApiStatusCubit apiStatus;
 
-  void createProduct(Product product, String token) async {
+  void createProduct({required Product product, required String token, required ProductsCubit productsCubit}) async {
     try {
+      apiStatus.isUpdating = false;
       apiStatus.changeStatus(ApiStatus.requesting);
       Product? response = await repository.add(product, token);
       emit(response);
-      if (response?.id != null) apiStatus.changeStatus(ApiStatus.succeeded);
+      if (response?.id != null) {
+        apiStatus.changeStatus(ApiStatus.succeeded);
+        productsCubit.addProduct(response!);
+      }
 
       if (connectivityStatus.state == ConnectivityStatus.disconnected){
         connectivityStatus.changeStatus(ConnectivityStatus.connected);
@@ -109,6 +113,7 @@ class ProductsCubit extends Cubit<List<Product>> {
 
   void getProducts({String? filters, required String token}) async {
     try {
+      apiStatus.isUpdating = null;
       apiStatus.changeStatus(ApiStatus.requesting);
       List<Product> response = await repository.get(filters, token);
       emit(response);
@@ -125,5 +130,10 @@ class ProductsCubit extends Cubit<List<Product>> {
     catch (e) {
       apiStatus.changeStatus(ApiStatus.failed);
     }
+  }
+
+  void addProduct(Product product) {
+    state.add(product);
+    emit(state);
   }
 }

@@ -1,3 +1,4 @@
+import 'package:accounting_api/accounting_api.dart';
 import 'package:activity_api/activity_api.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -122,10 +123,12 @@ final route = GoRouter(
                     final Map<String, dynamic> extra = route.extra as Map<String, dynamic>;
                     final User user = extra['user'] as User;
                     final ProductRepository productRepository = extra['productRepository'] as ProductRepository;
+                    final AccountRepository accountRepository = extra['accountRepository'] as AccountRepository;
                     final EditingProductCubit editingProductCubit = extra['editingProductCubit'] as EditingProductCubit;
                     final ProductApiStatusCubit productApiStatusCubit = extra['productApiStatusCubit'] as ProductApiStatusCubit;
                     final CurrencyCubit currencyCubit = extra['currencyCubit'] as CurrencyCubit;
                     final ProductCategoryCubit productCategoryCubit = extra['productCategoryCubit'] as ProductCategoryCubit;
+                    final ProductsCubit productsCubit = extra['productsCubit'] as ProductsCubit;
                     final ProductCategoryConfigCubit productCategoryConfigCubit = extra['productCategoryConfigCubit']
                     as ProductCategoryConfigCubit;
                     final ProductCategoryApiStatusCubit productCategoryApiStatusCubit = extra['productCategoryApiStatusCubit']
@@ -139,11 +142,13 @@ final route = GoRouter(
                           child: EditProductView(
                             user: user,
                             repository: productRepository,
+                            accountRepository: accountRepository,
                             editingProductCubit: editingProductCubit,
                             productApiStatusCubit: productApiStatusCubit,
                             currencyCubit: currencyCubit,
                             organizationCurrencyCubit: organizationCurrencyCubit,
                             productCategoryCubit: productCategoryCubit,
+                            productsCubit: productsCubit,
                             productCategoryConfigCubit: productCategoryConfigCubit,
                             productCategoryApiStatusCubit: productCategoryApiStatusCubit,
                             productBottomNavigationCubit: productBottomNavigationCubit,

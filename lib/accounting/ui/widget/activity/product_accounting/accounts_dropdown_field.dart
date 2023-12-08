@@ -6,14 +6,14 @@ import 'package:flutter/material.dart';
 class AccountDropDownList extends StatelessWidget {
   const AccountDropDownList({super.key, required this.editProduct, this.onChanged});
 
-  final Product editProduct;
+  final Product? editProduct;
   final void Function(Account?)? onChanged;
 
   @override
   Widget build(BuildContext context) {
     return DropdownSearch<Account>(
       autoValidateMode: AutovalidateMode.onUserInteraction,
-      items: editProduct.productCategory.subAccounts,
+      items: editProduct?.productCategory.subAccounts ?? [],
       itemAsString: (account) => '${account.number} ${account.name}',
       validator: (value) {
         if(value == null) {

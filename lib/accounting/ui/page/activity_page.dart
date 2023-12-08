@@ -64,7 +64,7 @@ class AccountingActivity extends StatelessWidget {
                   repository: context.read<ProductRepository>(),
                   connectivityStatus: context.read<ConnectivityStatusCubit>(),
                   apiStatus: context.read<ProductApiStatusCubit>(),
-                ),
+                )..getProducts(token: user.accessToken as String),
               ),
               BlocProvider(
                   create: (context) => EditingProductCubit(
@@ -83,7 +83,7 @@ class AccountingActivity extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const ActivityTitleWidget(),
-                      ActivityNewButton(user: user,)
+                      ActivityNewButton(user: user, openEditProductView: _openEditProductView,)
                     ],
                   ),
                 ),
@@ -161,7 +161,8 @@ class AccountingActivity extends StatelessWidget {
                                     width: 250,
                                     child: TextField(
                                       decoration: InputDecoration(
-                                          label: Text("Recherche"),
+                                          label: Text("Rechercher"),
+                                          prefixIcon: Icon(Icons.search),
                                           isDense: true,
                                           contentPadding: EdgeInsets.all(2)
                                       ),
@@ -273,7 +274,6 @@ class AccountingActivity extends StatelessWidget {
                               builder: (context, products) {
 
                                 if (products.isEmpty) {
-                                  context.read<ProductsCubit>().getProducts(token: user.accessToken as String);
                                   return Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -305,7 +305,7 @@ class AccountingActivity extends StatelessWidget {
                                           child: viewMode == ViewMode.list ? ListTile(
                                             leading: const CircleAvatar(backgroundColor: Colors.blue),
                                             title: Text(products[index].name),
-                                            subtitle: const Text('data'),
+                                            subtitle: Text(products[index].productCategory.name),
                                             trailing: PopupMenuButton<String>(
                                                 icon: const Icon(Icons.more_horiz),
                                                 itemBuilder: (context) {
@@ -314,19 +314,7 @@ class AccountingActivity extends StatelessWidget {
                                                         onTap: () {
                                                           context.read<EditingProductCubit>().edit(products[index]);
                                                           context.read<ProductBottomNavigationCubit>().navigate(0);
-                                                          context.goNamed('productEdit',  extra: {
-                                                            'organizationContextMenuCubit': context.read<OrganizationContextMenuCubit>(), // need for the parent route
-                                                            'user': user,
-                                                            'productRepository': context.read<ProductRepository>(),
-                                                            'productCategoryApiStatusCubit': context.read<ProductCategoryApiStatusCubit>(),
-                                                            'productCategoryCubit': context.read<ProductCategoryCubit>(),
-                                                            'productCategoryConfigCubit': context.read<ProductCategoryConfigCubit>(),
-                                                            'currencyCubit': context.read<CurrencyCubit>(),
-                                                            'organizationCurrencyCubit': context.read<OrganizationCurrencyCubit>(),
-                                                            'productApiStatusCubit': context.read<ProductApiStatusCubit>(),
-                                                            'editingProductCubit': context.read<EditingProductCubit>(),
-                                                            'productBottomNavigationCubit': context.read<ProductBottomNavigationCubit>(),
-                                                          });
+                                                          _openEditProductView(context, user);
                                                         },
                                                         child: const Text('Modifier')
                                                     ),
@@ -336,19 +324,7 @@ class AccountingActivity extends StatelessWidget {
                                                         onTap: () {
                                                           context.read<EditingProductCubit>().edit(products[index]);
                                                           context.read<ProductBottomNavigationCubit>().navigate(1);
-                                                          context.goNamed('productEdit',  extra: {
-                                                            'organizationContextMenuCubit': context.read<OrganizationContextMenuCubit>(), // need for the parent route
-                                                            'user': user,
-                                                            'productRepository': context.read<ProductRepository>(),
-                                                            'productCategoryApiStatusCubit': context.read<ProductCategoryApiStatusCubit>(),
-                                                            'productCategoryCubit': context.read<ProductCategoryCubit>(),
-                                                            'productCategoryConfigCubit': context.read<ProductCategoryConfigCubit>(),
-                                                            'currencyCubit': context.read<CurrencyCubit>(),
-                                                            'organizationCurrencyCubit': context.read<OrganizationCurrencyCubit>(),
-                                                            'productApiStatusCubit': context.read<ProductApiStatusCubit>(),
-                                                            'editingProductCubit': context.read<EditingProductCubit>(),
-                                                            'productBottomNavigationCubit': context.read<ProductBottomNavigationCubit>(),
-                                                          });
+                                                          _openEditProductView(context, user);
                                                         },
                                                         child: const Text('Comptabilité')
                                                     ),
@@ -375,4 +351,22 @@ class AccountingActivity extends StatelessWidget {
     );
   }
 
+}
+
+void _openEditProductView(BuildContext context, User user) {
+  context.goNamed('productEdit',  extra: {
+    'organizationContextMenuCubit': context.read<OrganizationContextMenuCubit>(),
+    'user': user,// needed for the parent route
+    'productRepository': context.read<ProductRepository>(),
+    'accountRepository': context.read<AccountRepository>(),
+    'productCategoryApiStatusCubit': context.read<ProductCategoryApiStatusCubit>(),
+    'productCategoryCubit': context.read<ProductCategoryCubit>(),
+    'productsCubit': context.read<ProductsCubit>(),
+    'productCategoryConfigCubit': context.read<ProductCategoryConfigCubit>(),
+    'currencyCubit': context.read<CurrencyCubit>(),
+    'organizationCurrencyCubit': context.read<OrganizationCurrencyCubit>(),
+    'productApiStatusCubit': context.read<ProductApiStatusCubit>(),
+    'editingProductCubit': context.read<EditingProductCubit>(),
+    'productBottomNavigationCubit': context.read<ProductBottomNavigationCubit>(),
+  });
 }
