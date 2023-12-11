@@ -57,7 +57,9 @@ class EditingProductCubit extends Cubit<Product?> {
 
   void createProduct({required Product product, required String token, required ProductsCubit productsCubit}) async {
     try {
-      apiStatus.isUpdating = false;
+      apiStatus.action = Actions.create;
+      apiStatus.view = 'productInfo';
+
       apiStatus.changeStatus(ApiStatus.requesting);
       Product? response = await repository.add(product, token);
       emit(response);
@@ -80,7 +82,8 @@ class EditingProductCubit extends Cubit<Product?> {
 
   void updateByField(Product product, String field, dynamic value, String token) async {
     try {
-      apiStatus.isUpdating = true;
+      apiStatus.action = Actions.update;
+      apiStatus.view = 'productInfo';
       apiStatus.changeStatus(ApiStatus.requesting);
       Product? response = await repository.updateByField(product, field, value, token);
       emit(response);
@@ -101,6 +104,31 @@ class EditingProductCubit extends Cubit<Product?> {
   void edit(Product? product) {
     emit(product);
   }
+
+  Future<void> createAccount({
+    required Product product, required String number, required String name, required Account account,
+    required String token
+  }) async {
+    try {
+      apiStatus.changeStatus(ApiStatus.requesting);
+      Product? response = await repository.createAccount(product, number, name, account, token);
+      emit(response);
+      if (response?.id != null) {
+        apiStatus.changeStatus(ApiStatus.succeeded);
+      }
+
+      if (connectivityStatus.state == ConnectivityStatus.disconnected){
+        connectivityStatus.changeStatus(ConnectivityStatus.connected);
+      }
+    }
+    on http.ClientException {
+      connectivityStatus.changeStatus(ConnectivityStatus.disconnected);
+    }
+    catch (e) {
+      apiStatus.changeStatus(ApiStatus.failed);
+      throw e;
+    }
+  }
 }
 
 
@@ -113,7 +141,8 @@ class ProductsCubit extends Cubit<List<Product>> {
 
   void getProducts({String? filters, required String token}) async {
     try {
-      apiStatus.isUpdating = null;
+      apiStatus.action = Actions.read;
+      apiStatus.view = 'productPage';
       apiStatus.changeStatus(ApiStatus.requesting);
       List<Product> response = await repository.get(filters, token);
       emit(response);

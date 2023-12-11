@@ -1,5 +1,7 @@
 enum ApiStatus {succeeded, failed, requesting }
 
+enum Actions { create, read, update, delete }
+
 enum ViewMode {grid, list, table }
 
 enum CalculationMode { percent, fix }

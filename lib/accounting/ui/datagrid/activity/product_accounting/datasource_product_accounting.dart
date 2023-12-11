@@ -23,12 +23,10 @@ class ProductAccountingDataSource extends DataGridSource {
 
   @override
   DataGridRowAdapter? buildRow(DataGridRow row) {
+
     return DataGridRowAdapter(
         cells: row.getCells().map<Widget>((dataGridCell) {
           return Container(
-            alignment: (dataGridCell.columnName == 'id' || dataGridCell.columnName == 'salary')
-                ? Alignment.centerRight
-                : Alignment.centerLeft,
             padding: const EdgeInsets.all(16.0),
             child: Text(dataGridCell.value.toString()),
           );

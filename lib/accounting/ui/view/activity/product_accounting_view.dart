@@ -25,19 +25,31 @@ class _ProductAccountingViewState extends State<ProductAccountingView> {
 
   @override
   Widget build(BuildContext context) {
-    final accounts = List.generate(15, (index) =>
-        Account(number: "6011.000$index", name: "name $index", organization: null, accountType: null)
-    );
-    final accountDataSource = ProductAccountingDataSource(accounts: accounts);
-    
+
     return BlocProvider(
       create: (context) => OnchangeProductCategoryAccountCubit(),
       child: BlocBuilder<EditingProductCubit, Product?>(
         builder: (context, editProduct) {
+          final accountDataSource = ProductAccountingDataSource(
+              accounts: editProduct?.accounts ?? []
+          );
 
           void saveAccount() {
             // save the account to the database
             if (formKey.currentState!.validate()) {
+              final Account? categoryAccount =  context.read<OnchangeProductCategoryAccountCubit>().state;
+              final editProductCubit = context.read<EditingProductCubit>();
+              editProductCubit.createAccount(
+                  product: editProduct as Product,
+                  account: categoryAccount as Account,
+                  number: numberController.text,
+                  name: nameController.text,
+                  token: widget.user.accessToken as String
+              ).then((data) {
+                formKey.currentState!.reset();
+              }).catchError((onError) {
+                print(onError);
+              });
 
             }
           }
@@ -110,7 +122,6 @@ class _ProductAccountingViewState extends State<ProductAccountingView> {
                                         onChanged: (account) {
                                           context.read<OnchangeProductCategoryAccountCubit>().change(account);
                                           context.read<NewAccountField>().enable();
-                                          //FocusScope.of(context).nextFocus();
                                         },
                                       ),
                                     )

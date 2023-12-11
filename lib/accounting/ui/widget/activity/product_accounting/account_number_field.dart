@@ -37,7 +37,7 @@ class AccountNumberField extends StatelessWidget {
                       onFocusChange: (focus){
                         if(!focus) {
                           if(controller.text.isNotEmpty) {
-                            final accountToCheck = '${account?.number}${controller.text}';
+                            final accountToCheck = '${account?.number}.${controller.text}';
                             context.read<CheckAccountCubit>().checkAccount(
                                 organization: user.organization,
                                 number: accountToCheck,
@@ -56,7 +56,7 @@ class AccountNumberField extends StatelessWidget {
                                   requiredMessage: 'Numéro de compte obligatoire'
                               ).regExp(RegExp(r'^[0-9]+$'), 'Numéro invalide').add((value) {
                                 if (accountExist) {
-                                  return "Cette adresse email existe déjà";
+                                  return "Ce compte existe déjà";
                                 }
                                 return null;
                               }).build(),

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:accounting_api/accounting_api.dart';
 import 'package:activity_api/src/data/models/activity_models.dart';
 import 'package:http/http.dart' as http;
 import 'package:organization_api/organization_api.dart';
@@ -98,6 +99,45 @@ class ProductRepository {
         final dynamic json = jsonDecode(utf8.decode(response.bodyBytes));
         return Product.fromJson(json);
       } else {
+
+        throw Exception("Quelque chose s'est mal passé");
+      }
+    }
+
+    return null;
+  }
+
+  Future<Product?> createAccount(Product product, String number, String name, Account account, String token) async {
+    if (protocol != null && host != null && port != null) {
+
+      final uri = Uri(
+          scheme: protocol?.toLowerCase(),
+          host: host,
+          port: port,
+          path: '/api/product/account'
+      );
+
+      http.Response response = await http.post(uri,
+        body: jsonEncode({
+          'product_id': product.id,
+          'account_id': account.id,
+          'account_number': number,
+          'account_name': name,
+        }), headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          'Authorization':  'Trust $token'
+        },
+      );
+
+      if (response.statusCode == 201) {
+        final dynamic json = jsonDecode(utf8.decode(response.bodyBytes));
+        return Product.fromJson(json);
+      }
+      else if (response.statusCode == 500) {
+        final dynamic json = jsonDecode(utf8.decode(response.bodyBytes));
+        throw Exception(json);
+      }
+      else {
 
         throw Exception("Quelque chose s'est mal passé");
       }

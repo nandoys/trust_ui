@@ -11,7 +11,7 @@ import 'package:trust_app/accounting/ui/view/activity/product_info_view.dart';
 import 'package:trust_app/accounting/ui/view/activity/product_taxes_view.dart';
 import 'package:user_api/user_api.dart';
 import 'package:trust_app/home/ui/widget/widget.dart';
-import 'package:utils/utils.dart';
+import 'package:utils/utils.dart' as helper;
 
 class EditProductView extends StatelessWidget {
   EditProductView({super.key, required this.user, required this.productCategoryApiStatusCubit, required this.productsCubit,
@@ -71,11 +71,13 @@ class EditProductView extends StatelessWidget {
                           create: (context) => NewAccountField()
                       )
                     ],
-                    child: BlocListener<ProductApiStatusCubit, ApiStatus>(
+                    child: BlocListener<ProductApiStatusCubit, helper.ApiStatus>(
                       listener: (BuildContext context, apiStatus) {
-                        final isUpdating = context.read<ProductApiStatusCubit>().isUpdating;
+                        final action = context.read<ProductApiStatusCubit>().action;
+                        final view = context.read<ProductApiStatusCubit>().view;
 
-                        if(apiStatus == ApiStatus.succeeded && isUpdating == false) {
+                        if(apiStatus == helper.ApiStatus.succeeded && action == helper.Actions.create
+                            && view == 'productInfo') {
                           SnackBar notif = FloatingSnackBar(
                               color: Colors.green,
                               message: "Votre produit a été ajouté!"
@@ -83,14 +85,15 @@ class EditProductView extends StatelessWidget {
                           context.read<ProductBottomNavigationCubit>().navigate(1);
                           ScaffoldMessenger.of(context).showSnackBar(notif);
                         }
-                        else if(apiStatus == ApiStatus.succeeded && isUpdating == true) {
+                        else if(apiStatus == helper.ApiStatus.succeeded && action == helper.Actions.update
+                        && view == 'productInfo') {
                           SnackBar notif = FloatingSnackBar(
                               color: Colors.green,
                               message: "Votre produit a été modifié avec succès!"
                           );
                           ScaffoldMessenger.of(context).showSnackBar(notif);
                         }
-                        else if(apiStatus == ApiStatus.failed && isUpdating == false) {
+                        else if(apiStatus == helper.ApiStatus.failed && action == null && view == 'productInfo') {
                           SnackBar notif = FloatingSnackBar(
                               color: Colors.red,
                               message: "Votre produit n'a été ajouté! quelque chose s'est mal passé"

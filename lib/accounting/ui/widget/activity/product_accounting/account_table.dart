@@ -14,6 +14,7 @@ class AccountTable extends StatelessWidget {
       columnWidthMode: ColumnWidthMode.fill,
       selectionMode: SelectionMode.single,
       navigationMode: GridNavigationMode.cell,
+      verticalScrollPhysics: const BouncingScrollPhysics(),
       allowSorting: true,
       allowEditing: true,
       columns: [
@@ -32,6 +33,9 @@ class AccountTable extends StatelessWidget {
                   'Intitulé de compte',
                 ))),
       ],
+      footer: accountingDataSource.rows.isEmpty ? const Center(
+          child: Text('Aucun compte pour ce produit')
+      ) : null,
     );
   }
 }
