@@ -46,7 +46,7 @@ class AccountDropDownList extends StatelessWidget {
             maxHeight: 200
         ),
         scrollbarProps: const ScrollbarProps(
-            thumbVisibility: true
+            thumbVisibility: true,
         ),
         emptyBuilder: (context, text) {
           return Center(
@@ -55,7 +55,7 @@ class AccountDropDownList extends StatelessWidget {
               child: Column(
                 children: [
                   const Text('Aucun compte trouvé'),
-                  TextButton.icon(
+                  if (editProduct?.productCategory.subAccounts == null) TextButton.icon(
                       onPressed: () {},
                       icon: const Icon(Icons.refresh),
                       label: const Text('Rafraîchir')
@@ -65,6 +65,9 @@ class AccountDropDownList extends StatelessWidget {
             ),
           );
         },
+        listViewProps: const ListViewProps(
+          physics: BouncingScrollPhysics()
+        )
       ),
     );
   }

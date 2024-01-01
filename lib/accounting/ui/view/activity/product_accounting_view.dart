@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:accounting_api/accounting_api.dart';
 import 'package:activity_api/activity_api.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +9,8 @@ import 'package:trust_app/accounting/ui/datagrid/activity/product_accounting/dat
 import 'package:trust_app/accounting/ui/widget/accounting_widget.dart';
 import 'package:trust_app/accounting/logic/cubit/cubit.dart';
 import 'package:user_api/user_api.dart';
+
+import 'package:trust_app/home/ui/widget/floating_snack_bar.dart';
 
 class ProductAccountingView extends StatefulWidget {
   const ProductAccountingView({super.key, required this.user});
@@ -22,9 +26,18 @@ class _ProductAccountingViewState extends State<ProductAccountingView> {
   final numberController = TextEditingController();
   final nameController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final focusAccountNumber = FocusNode();
+  bool loadingSave = false;
+  bool isEnabled = false;
 
   @override
   Widget build(BuildContext context) {
+
+    if (isEnabled) {
+      Future.delayed(const Duration(milliseconds: 2), () {
+        focusAccountNumber.requestFocus();
+      });
+    }
 
     return BlocProvider(
       create: (context) => OnchangeProductCategoryAccountCubit(),
@@ -36,9 +49,15 @@ class _ProductAccountingViewState extends State<ProductAccountingView> {
 
           void saveAccount() {
             // save the account to the database
+            formKey.currentState!.save();
             if (formKey.currentState!.validate()) {
               final Account? categoryAccount =  context.read<OnchangeProductCategoryAccountCubit>().state;
               final editProductCubit = context.read<EditingProductCubit>();
+
+              setState(() {
+                loadingSave = true;
+              });
+
               editProductCubit.createAccount(
                   product: editProduct as Product,
                   account: categoryAccount as Account,
@@ -46,10 +65,26 @@ class _ProductAccountingViewState extends State<ProductAccountingView> {
                   name: nameController.text,
                   token: widget.user.accessToken as String
               ).then((data) {
-                formKey.currentState!.reset();
+
+                setState(() {
+                  loadingSave = false;
+                });
+
               }).catchError((onError) {
-                print(onError);
+                Timer(const Duration(seconds: 2), () {
+                  setState(() {
+                    loadingSave = false;
+                  });
+                  SnackBar notif = FloatingSnackBar(
+                      color: Colors.red,
+                      message: onError.toString()
+                  );
+
+                  ScaffoldMessenger.of(context).showSnackBar(notif);
+                });
               });
+
+              formKey.currentState!.reset();
 
             }
           }
@@ -121,7 +156,9 @@ class _ProductAccountingViewState extends State<ProductAccountingView> {
                                         editProduct: editProduct,
                                         onChanged: (account) {
                                           context.read<OnchangeProductCategoryAccountCubit>().change(account);
-                                          context.read<NewAccountField>().enable();
+                                          setState(() {
+                                            isEnabled = true;
+                                          });
                                         },
                                       ),
                                     )
@@ -131,26 +168,24 @@ class _ProductAccountingViewState extends State<ProductAccountingView> {
                           ),
                           Expanded(
                             flex: 1,
-                            child: BlocBuilder<NewAccountField, bool>(
-                                builder: (context, isEnabled) {
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                    child: Row(
-                                      children: [
-                                        AccountNumberField(
-                                          controller: numberController,
-                                          enable: isEnabled,
-                                          user: widget.user,
-                                        ),
-                                        AccountNameField(
-                                            controller: nameController,
-                                            enable: isEnabled,
-                                            saveAccount: saveAccount
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                }
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8.0),
+                              child: Row(
+                                children: [
+                                  AccountNumberField(
+                                    controller: numberController,
+                                    enable: isEnabled,
+                                    user: widget.user,
+                                    focus: focusAccountNumber,
+                                  ),
+                                  AccountNameField(
+                                      controller: nameController,
+                                      enable: isEnabled,
+                                      isLoading: loadingSave,
+                                      saveAccount: saveAccount
+                                  ),
+                                ],
+                              ),
                             ),
                           )
                         ],
@@ -177,6 +212,7 @@ class _ProductAccountingViewState extends State<ProductAccountingView> {
   void dispose() {
     scrollController.dispose();
     formKey.currentState?.dispose();
+    focusAccountNumber.dispose();
     super.dispose();
   }
 }

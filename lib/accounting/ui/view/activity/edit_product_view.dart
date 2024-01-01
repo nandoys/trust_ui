@@ -67,9 +67,6 @@ class EditProductView extends StatelessWidget {
                       BlocProvider(create: (context) => SwitchPerishableCubit()),
                       BlocProvider(create: (context) => SwitchInPromoCubit()),
                       BlocProvider(create: (context) => SaveProductFormCubit(user: user)),
-                      BlocProvider(
-                          create: (context) => NewAccountField()
-                      )
                     ],
                     child: BlocListener<ProductApiStatusCubit, helper.ApiStatus>(
                       listener: (BuildContext context, apiStatus) {
@@ -81,6 +78,15 @@ class EditProductView extends StatelessWidget {
                           SnackBar notif = FloatingSnackBar(
                               color: Colors.green,
                               message: "Votre produit a été ajouté!"
+                          );
+                          context.read<ProductBottomNavigationCubit>().navigate(1);
+                          ScaffoldMessenger.of(context).showSnackBar(notif);
+                        }
+                        else if(apiStatus == helper.ApiStatus.succeeded && action == helper.Actions.create
+                            && view == 'productAccount') {
+                          SnackBar notif = FloatingSnackBar(
+                              color: Colors.green,
+                              message: "Le compte  a été ajouté!"
                           );
                           context.read<ProductBottomNavigationCubit>().navigate(1);
                           ScaffoldMessenger.of(context).showSnackBar(notif);
@@ -157,7 +163,6 @@ class EditProductView extends StatelessWidget {
                             ),
                             bottomNavigationBar: BottomNavigationBar(
                                 onTap: editingProduct != null ? (index) {
-                                  context.read<NewAccountField>().disable();
                                   bottomNavigation.navigate(index);
                                 } : null,
                                 currentIndex: viewIndex,

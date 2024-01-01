@@ -135,7 +135,7 @@ class ProductRepository {
       }
       else if (response.statusCode == 500) {
         final dynamic json = jsonDecode(utf8.decode(response.bodyBytes));
-        throw Exception(json);
+        throw json['account'];
       }
       else {
 

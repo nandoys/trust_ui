@@ -8,9 +8,11 @@ import 'package:trust_app/accounting/logic/cubit/activity/activity_cubit.dart';
 import 'package:user_api/user_api.dart';
 
 class AccountNumberField extends StatelessWidget {
-  const AccountNumberField({super.key, required this.controller, required this.enable, required this.user});
+  const AccountNumberField({super.key, required this.controller, required this.enable, required this.user,
+    required this.focus});
 
   final TextEditingController controller;
+  final FocusNode focus;
   final bool enable;
   final User user;
 
@@ -33,40 +35,39 @@ class AccountNumberField extends StatelessWidget {
             padding: const EdgeInsets.only(left: 15.0),
             child: BlocBuilder<OnchangeProductCategoryAccountCubit, Account?>(
                 builder: (context, account) {
-                  return Focus(
-                      onFocusChange: (focus){
-                        if(!focus) {
-                          if(controller.text.isNotEmpty) {
-                            final accountToCheck = '${account?.number}.${controller.text}';
-                            context.read<CheckAccountCubit>().checkAccount(
-                                organization: user.organization,
-                                number: accountToCheck,
-                                token: user.accessToken as String
-                            );
-                          }
-                        }
-                      },
-                      child: BlocBuilder<CheckAccountCubit, bool>(
-                          builder: (context, accountExist) {
-                            return TextFormField(
-                              autovalidateMode: AutovalidateMode.onUserInteraction,
-                              enabled: enable,
-                              controller: controller,
-                              validator: ValidationBuilder(
-                                  requiredMessage: 'Numéro de compte obligatoire'
-                              ).regExp(RegExp(r'^[0-9]+$'), 'Numéro invalide').add((value) {
-                                if (accountExist) {
-                                  return "Ce compte existe déjà";
-                                }
-                                return null;
-                              }).build(),
-                              decoration: InputDecoration(
-                                  label: const Text("Numéro de compte*"),
-                                  prefix: Text(account?.number ?? '')
-                              ),
-                            );
-                          }
-                      )
+                  return BlocBuilder<CheckAccountCubit, bool>(
+                      builder: (context, accountExist) {
+
+                        return TextFormField(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          enabled: enable,
+                          focusNode: focus,
+                          controller: controller,
+                          validator: ValidationBuilder(
+                              requiredMessage: 'Numéro de compte obligatoire'
+                          ).regExp(RegExp(r'^[0-9]+$'), 'Numéro invalide').add((value) {
+                            if (accountExist) {
+                              return "Ce compte est déjà utilisé";
+                            }
+                            return null;
+                          }).build(),
+                          onSaved: (value) {
+                            if(controller.text.isNotEmpty) {
+                              final accountToCheck = '${account?.number}.${controller.text}';
+
+                              context.read<CheckAccountCubit>().checkAccount(
+                                  organization: user.organization,
+                                  number: accountToCheck,
+                                  token: user.accessToken as String
+                              );
+                            }
+                          },
+                          decoration: InputDecoration(
+                              label: const Text("Numéro de compte*"),
+                              prefix: Text('${account?.number}.' ?? '')
+                          ),
+                        );
+                      }
                   );
                 }
             ),

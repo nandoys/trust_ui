@@ -110,6 +110,9 @@ class EditingProductCubit extends Cubit<Product?> {
     required String token
   }) async {
     try {
+      apiStatus.action = Actions.create;
+      apiStatus.view = 'productAccount';
+
       apiStatus.changeStatus(ApiStatus.requesting);
       Product? response = await repository.createAccount(product, number, name, account, token);
       emit(response);
@@ -125,6 +128,7 @@ class EditingProductCubit extends Cubit<Product?> {
       connectivityStatus.changeStatus(ConnectivityStatus.disconnected);
     }
     catch (e) {
+      apiStatus.view = 'productAccount';
       apiStatus.changeStatus(ApiStatus.failed);
       throw e;
     }
