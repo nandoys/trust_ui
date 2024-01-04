@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:native_context_menu/native_context_menu.dart';
 
 import 'package:server_api/server_api.dart';
+import 'package:syncfusion_localizations/syncfusion_localizations.dart';
 import 'route.dart';
 
 class MyApp extends StatelessWidget {
@@ -44,10 +45,12 @@ class MyApp extends StatelessWidget {
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
+              SfGlobalLocalizations.delegate
             ],
             supportedLocales: const [
               Locale('fr'),
             ],
+            locale: const Locale('fr'),
             routerConfig: route,
             theme: ThemeData(
                 useMaterial3: true,

@@ -48,6 +48,7 @@ dependencies:
     sdk: flutter
   intl: any
   image_field: ^0.0.8
+  image_picker: ^1.0.4
   scaled_list: ^2.0.0
   rxdart: ^0.27.7
   meta: ^1.10.0
@@ -55,6 +56,8 @@ dependencies:
   dropdown_search: ^5.0.6
   font_awesome_flutter: ^10.6.0
   flag: ^7.0.0
+  syncfusion_flutter_datagrid: ^23.2.7
+  syncfusion_localizations: ^23.2.7
   window_manager: ^0.3.7
   accounting_api:
     path: packages/accounting_api
@@ -72,8 +75,6 @@ dependencies:
     path: packages/user_api
   utils:
     path: packages/utils
-  image_picker: ^1.0.4
-  syncfusion_flutter_datagrid: ^23.2.7
 
 dev_dependencies:
   flutter_test:

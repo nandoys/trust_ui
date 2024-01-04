@@ -15,8 +15,10 @@ class AccountTable extends StatelessWidget {
       selectionMode: SelectionMode.single,
       navigationMode: GridNavigationMode.cell,
       verticalScrollPhysics: const BouncingScrollPhysics(),
-      allowSorting: true,
       allowEditing: true,
+      allowFiltering: true,
+      onCellSecondaryTap: (detail) {
+      },
       columns: [
         GridColumn(
             columnName: 'number',
@@ -24,7 +26,8 @@ class AccountTable extends StatelessWidget {
                 padding: const EdgeInsets.all(16.0),
                 child: const Text(
                   'Numéro de compte',
-                ))),
+                )),
+        ),
         GridColumn(
             columnName: 'name',
             label: Container(
