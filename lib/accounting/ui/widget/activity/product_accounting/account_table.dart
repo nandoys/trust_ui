@@ -16,6 +16,7 @@ class AccountTable extends StatelessWidget {
       navigationMode: GridNavigationMode.cell,
       verticalScrollPhysics: const BouncingScrollPhysics(),
       allowEditing: true,
+      allowSorting: true,
       allowFiltering: true,
       onCellSecondaryTap: (detail) {
       },
@@ -35,6 +36,18 @@ class AccountTable extends StatelessWidget {
                 child: const Text(
                   'Intitulé de compte',
                 ))),
+        GridColumn(
+            columnName: 'action',
+            width: 80.0,
+            label: Container(
+                padding: const EdgeInsets.all(16.0),
+                child: const Text(
+                  'Action',
+                )),
+            allowEditing: false,
+            allowSorting: false,
+            allowFiltering: false
+        ),
       ],
       footer: accountingDataSource.rows.isEmpty ? const Center(
           child: Text('Aucun compte pour ce produit')

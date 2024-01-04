@@ -43,7 +43,7 @@ dependencies:
   equatable: ^2.0.5
   bloc: ^8.1.2
   breathing_collection: ^1.0.0+3
-  go_router: ^12.1.1
+  go_router: ^13.0.1
   flutter_localizations:
     sdk: flutter
   intl: any
@@ -56,8 +56,8 @@ dependencies:
   dropdown_search: ^5.0.6
   font_awesome_flutter: ^10.6.0
   flag: ^7.0.0
-  syncfusion_flutter_datagrid: ^23.2.7
-  syncfusion_localizations: ^23.2.7
+  syncfusion_flutter_datagrid: ^24.1.44
+  syncfusion_localizations: ^24.1.44
   window_manager: ^0.3.7
   accounting_api:
     path: packages/accounting_api
@@ -75,6 +75,7 @@ dependencies:
     path: packages/user_api
   utils:
     path: packages/utils
+  syncfusion_flutter_datagrid_export: ^24.1.44
 
 dev_dependencies:
   flutter_test:

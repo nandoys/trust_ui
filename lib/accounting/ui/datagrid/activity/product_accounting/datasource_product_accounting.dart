@@ -9,11 +9,12 @@ import 'package:trust_app/home/ui/widget/widget.dart';
 
 class ProductAccountingDataSource extends DataGridSource {
   ProductAccountingDataSource({List<Account> accounts = const [], required this.updateAccountCubit, required this.user,
-  required this.checkAccountCubit}) {
+  required this.checkAccountCubit, required this.context}) {
     accountsData = accounts;
     _accounts = accounts.map<DataGridRow>((account) => DataGridRow(cells: [
       DataGridCell<String>(columnName: 'number', value: account.number),
       DataGridCell<String>(columnName: 'name', value: account.name),
+      DataGridCell<String>(columnName: 'action', value: account.id),
     ])).toList();
   }
 
@@ -23,7 +24,7 @@ class ProductAccountingDataSource extends DataGridSource {
   final User user;
   final CheckAccountCubit checkAccountCubit;
   final UpdateAccountCubit updateAccountCubit;
-
+  final BuildContext context;
   dynamic newCellValue;
 
   @override
@@ -34,9 +35,69 @@ class ProductAccountingDataSource extends DataGridSource {
 
     return DataGridRowAdapter(
         cells: row.getCells().map<Widget>((dataGridCell) {
+          if (dataGridCell.columnName == "action") {
+            return Container(
+              padding: const EdgeInsets.all(16.0),
+              child: FittedBox(
+                child: IconButton(
+                  onPressed: (){
+
+                    final Account account = accountsData.firstWhere((account) => account.id == dataGridCell.value);
+
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            backgroundColor: Colors.white,
+                            title: const Text('Confirmation'),
+                            content: SizedBox(
+                              height: 50.0,
+                              width: 300.0,
+                              child: Column(
+                                children: [
+                                  const Text(
+                                    'Voulez-vous vraiment supprimer ce compte ?'
+                                  ),
+                                  Text(
+                                    "${account.number} | ${account.name}",
+                                    style: const TextStyle(fontWeight: FontWeight.w600),
+                                  )
+                                ],
+                              ),
+                            ),
+                            actions: [
+                              ElevatedButton(
+                                onPressed: (){},
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.resolveWith((states) => Colors.red),
+                                ),
+                                child: const Text('Oui, je le veux!',
+                                style: TextStyle(
+                                    color: Colors.white
+                                ),),
+                              )
+                            ],
+                          );
+                        }
+                    );
+                  },
+                  icon: const Icon(Icons.delete),
+                  tooltip: "Supprimer le compte",
+                  hoverColor: Colors.red,
+                  highlightColor: Colors.white,
+                  iconSize: 80.0,
+                ),
+              ),
+            );
+          }
+
           return Container(
             padding: const EdgeInsets.all(16.0),
-            child: Text(dataGridCell.value.toString()),
+            child: Tooltip(
+              message: "double-clic pour modifier",
+              waitDuration: const Duration(milliseconds: 80),
+              child: Text(dataGridCell.value.toString()),
+            ),
           );
         }).toList());
   }

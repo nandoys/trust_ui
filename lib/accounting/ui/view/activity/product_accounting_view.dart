@@ -73,7 +73,8 @@ class _ProductAccountingViewState extends State<ProductAccountingView> {
               accounts: editProduct?.accounts ?? [],
               updateAccountCubit: context.read<UpdateAccountCubit>(),
               user: widget.user,
-              checkAccountCubit: checkAccountCubitOnUpdate
+              checkAccountCubit: checkAccountCubitOnUpdate,
+              context: context
           );
 
           void saveAccount() {
