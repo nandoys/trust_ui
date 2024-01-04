@@ -43,6 +43,14 @@ class _ProductAccountingViewState extends State<ProductAccountingView> {
 
     return MultiBlocProvider(
       providers: [
+        BlocProvider(create: (context) => CheckAccountApiStatusCubit()),
+        BlocProvider(
+          create: (context) => CheckAccountCubit(
+              repository: context.read<AccountRepository>(),
+              connectivityStatus: context.read<ConnectivityStatusCubit>(),
+              apiStatus: context.read<CheckAccountApiStatusCubit>()
+          ),
+        ),
         BlocProvider(create: (context) => OnchangeProductCategoryAccountCubit()),
         BlocProvider(create: (context) => UpdateAccountApiStatusCubit()),
         BlocProvider(create: (context) => UpdateAccountCubit(
@@ -53,10 +61,19 @@ class _ProductAccountingViewState extends State<ProductAccountingView> {
       ],
       child: BlocBuilder<EditingProductCubit, Product?>(
         builder: (context, editProduct) {
+          // this bloc's instance is used on update account number
+          // it's used to separate this bloc from the the one used on creation
+          final checkAccountCubitOnUpdate = CheckAccountCubit(
+              repository: context.read<AccountRepository>(),
+              connectivityStatus: context.read<ConnectivityStatusCubit>(),
+              apiStatus: context.read<CheckAccountApiStatusCubit>()
+          );
+
           final accountDataSource = ProductAccountingDataSource(
               accounts: editProduct?.accounts ?? [],
               updateAccountCubit: context.read<UpdateAccountCubit>(),
-              token: widget.user.accessToken as String
+              user: widget.user,
+              checkAccountCubit: checkAccountCubitOnUpdate
           );
 
           void saveAccount() {
@@ -152,6 +169,18 @@ class _ProductAccountingViewState extends State<ProductAccountingView> {
                       }
                       context.read<UpdateAccountCubit>().setNull();
                     }
+                ),
+                BlocListener<CheckAccountCubit, bool>(
+                  listener: (context, accountExist) {
+                    if (accountExist) {
+                      SnackBar notif = FloatingSnackBar(
+                          color: Colors.red,
+                          message: "Le numéro de compte existe déjà!"
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(notif);
+                    }
+                  },
+                  bloc: checkAccountCubitOnUpdate,
                 )
               ],
               child: Column(

@@ -16,7 +16,7 @@ class CheckAccountCubit extends Cubit<bool> {
   final ConnectivityStatusCubit connectivityStatus;
   final CheckAccountApiStatusCubit apiStatus;
 
-  void checkAccount({required Organization organization, required String number, required String token}) async {
+  Future<void> checkAccount({required Organization organization, required String number, required String token}) async {
     if (connectivityStatus.state == ConnectivityStatus.connected) {
 
       try {

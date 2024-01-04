@@ -19,64 +19,52 @@ class AccountNumberField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return MultiBlocProvider(
-        providers: [
-          BlocProvider(create: (context) => CheckAccountApiStatusCubit()),
-          BlocProvider(
-            create: (context) => CheckAccountCubit(
-                repository: context.read<AccountRepository>(),
-                connectivityStatus: context.read<ConnectivityStatusCubit>(),
-                apiStatus: context.read<CheckAccountApiStatusCubit>()
-            ),
-          )
-        ],
-        child: Flexible(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 15.0),
-            child: BlocBuilder<OnchangeProductCategoryAccountCubit, Account?>(
-                builder: (context, account) {
-                  return Focus(
-                    onFocusChange: (isFocused) {
-                      if(!isFocused) {
-                        if(controller.text.isNotEmpty) {
-                          final accountToCheck = '${account?.number}.${controller.text}';
+    return Flexible(
+      child: Padding(
+        padding: const EdgeInsets.only(left: 15.0),
+        child: BlocBuilder<OnchangeProductCategoryAccountCubit, Account?>(
+            builder: (context, account) {
+              return Focus(
+                  onFocusChange: (isFocused) {
+                    if(!isFocused) {
+                      if(controller.text.isNotEmpty) {
+                        final accountToCheck = '${account?.number}.${controller.text}';
 
-                          context.read<CheckAccountCubit>().checkAccount(
-                              organization: user.organization,
-                              number: accountToCheck,
-                              token: user.accessToken as String
-                          );
-                        }
+                        context.read<CheckAccountCubit>().checkAccount(
+                            organization: user.organization,
+                            number: accountToCheck,
+                            token: user.accessToken as String
+                        );
                       }
-                    },
-                      child: BlocBuilder<CheckAccountCubit, bool>(
-                          builder: (context, accountExist) {
+                    }
+                  },
+                  child: BlocBuilder<CheckAccountCubit, bool>(
+                      builder: (context, accountExist) {
 
-                            return TextFormField(
-                              autovalidateMode: AutovalidateMode.onUserInteraction,
-                              enabled: enable,
-                              focusNode: focus,
-                              controller: controller,
-                              validator: ValidationBuilder(
-                                  requiredMessage: 'Numéro de compte obligatoire'
-                              ).regExp(RegExp(r'^[0-9]+$'), 'Numéro invalide').add((value) {
-                                if (accountExist) {
-                                  return "Ce compte est déjà utilisé";
-                                }
-                                return null;
-                              }).build(),
-                              decoration: InputDecoration(
-                                  label: const Text("Numéro de compte*"),
-                                  prefix: Text('${account?.number}.' ?? '')
-                              ),
-                            );
-                          }
-                      )
-                  );
-                }
-            ),
-          ),
-        )
+                        return TextFormField(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          enabled: enable,
+                          focusNode: focus,
+                          controller: controller,
+                          validator: ValidationBuilder(
+                              requiredMessage: 'Numéro de compte obligatoire'
+                          ).regExp(RegExp(r'^[0-9]+$'), 'Numéro invalide').add((value) {
+                            if (accountExist) {
+                              return "Ce compte est déjà utilisé";
+                            }
+                            return null;
+                          }).build(),
+                          decoration: InputDecoration(
+                              label: const Text("Numéro de compte*"),
+                              prefix: Text('${account?.number}.' ?? '')
+                          ),
+                        );
+                      }
+                  )
+              );
+            }
+        ),
+      ),
     );
   }
 }

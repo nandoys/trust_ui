@@ -1,9 +1,15 @@
+import 'dart:async';
+
 import 'package:accounting_api/accounting_api.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
+import 'package:user_api/user_api.dart';
+import 'package:trust_app/home/ui/widget/widget.dart';
 
 class ProductAccountingDataSource extends DataGridSource {
-  ProductAccountingDataSource({List<Account> accounts = const [], required this.updateAccountCubit, required this.token}) {
+  ProductAccountingDataSource({List<Account> accounts = const [], required this.updateAccountCubit, required this.user,
+  required this.checkAccountCubit}) {
     accountsData = accounts;
     _accounts = accounts.map<DataGridRow>((account) => DataGridRow(cells: [
       DataGridCell<String>(columnName: 'number', value: account.number),
@@ -14,8 +20,9 @@ class ProductAccountingDataSource extends DataGridSource {
   List<DataGridRow>  _accounts = [];
   List  accountsData = [];
   TextEditingController editingController = TextEditingController();
+  final User user;
+  final CheckAccountCubit checkAccountCubit;
   final UpdateAccountCubit updateAccountCubit;
-  final String token;
 
   dynamic newCellValue;
 
@@ -52,11 +59,13 @@ class ProductAccountingDataSource extends DataGridSource {
           alignment: Alignment.centerRight,
           child: TextField(
             autofocus: true,
-            controller: editingController..text = displayText,
+            controller: editingController..text = displayText.split('.')[1],
             textAlign: TextAlign.right,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
                 border: InputBorder.none,
-                isDense: true),
+                prefix: Text('${displayText.split('.')[0]}.' ?? ''),
+                isDense: true
+            ),
             onChanged: (String value) {
               if (value.isNotEmpty) {
                 newCellValue = value;
@@ -98,7 +107,6 @@ class ProductAccountingDataSource extends DataGridSource {
           ));
     }
 
-
     return null;
   }
 
@@ -117,23 +125,45 @@ class ProductAccountingDataSource extends DataGridSource {
     }
 
     if (column.columnName == 'number') {
-      rows[dataRowIndex].getCells()[rowColumnIndex.columnIndex] =
-          DataGridCell (columnName: 'number', value: newCellValue);
+      final mainAccount = accountsData[dataRowIndex].number.toString().split('.')[0];
+      final accountToCheck = '$mainAccount.$newCellValue';
 
-      // Save the new cell value to model collection also.
-      accountsData[dataRowIndex].number = newCellValue;
+      await checkAccountCubit.checkAccount(
+          organization: user.organization,
+          number: accountToCheck,
+          token: user.accessToken as String
+      );
+
+      if(!checkAccountCubit.state) {
+
+        final oldCellValue = accountsData[dataRowIndex].number;
+        accountsData[dataRowIndex].number = accountToCheck;
+
+        await updateAccountCubit.update(field: 'number', account: accountsData[dataRowIndex],
+            token: user.accessToken as String).then(
+                (value) {
+              rows[dataRowIndex].getCells()[rowColumnIndex.columnIndex] =
+                  DataGridCell (columnName: 'number', value: accountToCheck);
+            }
+        ).onError((error, stackTrace) {
+          accountsData[dataRowIndex].number = oldCellValue;
+        });
+      }
+
     }
 
     if (column.columnName == 'name') {
+      final oldCellValue = accountsData[dataRowIndex].name;
+      accountsData[dataRowIndex].name = newCellValue;
 
-      await updateAccountCubit.update(field: 'name', account: accountsData[dataRowIndex], token: token).then(
+      await updateAccountCubit.update(field: 'name', account: accountsData[dataRowIndex],
+          token: user.accessToken as String).then(
               (value) {
                 rows[dataRowIndex].getCells()[rowColumnIndex.columnIndex] = DataGridCell (columnName: 'name', value: newCellValue);
-
-                // Save the new cell value to model collection also.
-                accountsData[dataRowIndex].name = newCellValue;
               }
-      ).onError((error, stackTrace) => null);
+      ).onError((error, stackTrace) {
+        accountsData[dataRowIndex].name = oldCellValue;
+      });
     }
 
     // To reset the new cell value after successfully updated to DataGridRow
