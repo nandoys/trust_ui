@@ -98,4 +98,42 @@ class AccountRepository {
 
     return false;
   }
+
+  Future<Account?> updateAccount(String field, Account account, String token) async {
+    if (protocol != null && host != null && port != null) {
+
+      final uri = Uri(
+          scheme: protocol?.toLowerCase(),
+          host: host,
+          port: port,
+          path: '/api/accounting/account/${account.id}/update'
+      );
+
+      http.Response response = await http.patch(uri,
+        body: jsonEncode({
+          'field': field,
+          'account_number': account.number,
+          'account_name': account.name,
+        }), headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          'Authorization':  'Trust $token'
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final dynamic json = jsonDecode(utf8.decode(response.bodyBytes));
+        return Account.fromJson(json);
+      }
+      else if (response.statusCode == 500) {
+        final dynamic json = jsonDecode(utf8.decode(response.bodyBytes));
+        throw json;
+      }
+      else {
+
+        throw Exception("Quelque chose s'est mal passé");
+      }
+    }
+
+    return null;
+  }
 }

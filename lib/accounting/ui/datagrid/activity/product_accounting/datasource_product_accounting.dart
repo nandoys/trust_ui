@@ -1,10 +1,9 @@
 import 'package:accounting_api/accounting_api.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 class ProductAccountingDataSource extends DataGridSource {
-  ProductAccountingDataSource({List<Account> accounts = const []}) {
+  ProductAccountingDataSource({List<Account> accounts = const [], required this.updateAccountCubit, required this.token}) {
     accountsData = accounts;
     _accounts = accounts.map<DataGridRow>((account) => DataGridRow(cells: [
       DataGridCell<String>(columnName: 'number', value: account.number),
@@ -15,6 +14,8 @@ class ProductAccountingDataSource extends DataGridSource {
   List<DataGridRow>  _accounts = [];
   List  accountsData = [];
   TextEditingController editingController = TextEditingController();
+  final UpdateAccountCubit updateAccountCubit;
+  final String token;
 
   dynamic newCellValue;
 
@@ -124,18 +125,20 @@ class ProductAccountingDataSource extends DataGridSource {
     }
 
     if (column.columnName == 'name') {
-      rows[dataRowIndex].getCells()[rowColumnIndex.columnIndex] =
-          DataGridCell (columnName: 'name', value: newCellValue);
 
-      // Save the new cell value to model collection also.
-      accountsData[dataRowIndex].name = newCellValue;
+      await updateAccountCubit.update(field: 'name', account: accountsData[dataRowIndex], token: token).then(
+              (value) {
+                rows[dataRowIndex].getCells()[rowColumnIndex.columnIndex] = DataGridCell (columnName: 'name', value: newCellValue);
+
+                // Save the new cell value to model collection also.
+                accountsData[dataRowIndex].name = newCellValue;
+              }
+      ).onError((error, stackTrace) => null);
     }
 
     // To reset the new cell value after successfully updated to DataGridRow
     //and underlying mode.
     newCellValue = null;
   }
-
-
 
 }

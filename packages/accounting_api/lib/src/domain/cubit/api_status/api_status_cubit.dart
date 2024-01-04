@@ -10,3 +10,12 @@ class CheckAccountApiStatusCubit extends Cubit<ApiStatus> {
 
 }
 
+class UpdateAccountApiStatusCubit extends Cubit<ApiStatus> {
+  UpdateAccountApiStatusCubit() : super(ApiStatus.requesting);
+
+  void changeStatus(ApiStatus status) {
+    emit(status);
+  }
+
+}
+

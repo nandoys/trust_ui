@@ -4,7 +4,7 @@ import 'package:organization_api/organization_api.dart';
 import 'package:trust_app/home/ui/widget/widget.dart';
 
 class CreateUserAdminForm extends StatefulWidget {
-  CreateUserAdminForm({super.key, required this.organization});
+  const CreateUserAdminForm({super.key, required this.organization});
 
   final Organization organization;
 

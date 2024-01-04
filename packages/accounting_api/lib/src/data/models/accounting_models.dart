@@ -74,8 +74,8 @@ class Account extends Equatable {
   }
 
   final String? id;
-  final String number;
-  final String name;
+  String number;
+  String name;
   final Organization? organization;
   final AccountType? accountType;
 

@@ -24,9 +24,15 @@ class AccountNameField extends StatelessWidget {
           ).build(),
           decoration: InputDecoration(
               label: const Text("Intitulé de compte*"),
-              suffixIcon: isLoading ? CircularProgressIndicator(
-                color: Colors.blue.shade700,
-                strokeWidth: 3,
+              suffixIcon: isLoading ? FittedBox(
+                child: SizedBox(
+                  width: 15.0,
+                  height: 15.0,
+                  child: CircularProgressIndicator(
+                    color: Colors.blue.shade700,
+                    strokeWidth: 1.0,
+                  ),
+                ),
               ) : IconButton(
                 onPressed: saveAccount,
                 icon: const Icon(Icons.send),

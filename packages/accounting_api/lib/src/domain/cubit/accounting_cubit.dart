@@ -33,3 +33,40 @@ class CheckAccountCubit extends Cubit<bool> {
 
   }
 }
+
+class UpdateAccountCubit extends Cubit<bool?> {
+  UpdateAccountCubit({required this.repository, required this.connectivityStatus, required this.apiStatus})
+      : super(null);
+
+  final AccountRepository repository;
+  final ConnectivityStatusCubit connectivityStatus;
+  final UpdateAccountApiStatusCubit apiStatus;
+
+  Future<void> update({required String field, required Account account, required String token}) async {
+    apiStatus.changeStatus(ApiStatus.requesting);
+    if (connectivityStatus.state == ConnectivityStatus.connected) {
+
+      try {
+        final Account? response = await repository.updateAccount(field, account, token);
+        apiStatus.changeStatus(ApiStatus.succeeded);
+        emit(response != null);
+      }
+      on http.ClientException {
+        connectivityStatus.changeStatus(ConnectivityStatus.disconnected);
+        apiStatus.changeStatus(ApiStatus.failed);
+      }
+      catch (e) {
+        apiStatus.changeStatus(ApiStatus.failed);
+      }
+    }
+    else if (connectivityStatus.state == ConnectivityStatus.disconnected) {
+      apiStatus.changeStatus(ApiStatus.failed);
+      throw Exception('Aucune connexion');
+    }
+
+  }
+
+  void setNull() {
+    emit(null);
+  }
+}
