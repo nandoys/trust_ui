@@ -19,3 +19,11 @@ class UpdateAccountApiStatusCubit extends Cubit<ApiStatus> {
 
 }
 
+class DeleteAccountApiStatusCubit extends Cubit<ApiStatus> {
+  DeleteAccountApiStatusCubit() : super(ApiStatus.requesting);
+
+  void changeStatus(ApiStatus status) {
+    emit(status);
+  }
+
+}

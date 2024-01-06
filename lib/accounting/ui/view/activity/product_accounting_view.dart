@@ -53,10 +53,16 @@ class _ProductAccountingViewState extends State<ProductAccountingView> {
         ),
         BlocProvider(create: (context) => OnchangeProductCategoryAccountCubit()),
         BlocProvider(create: (context) => UpdateAccountApiStatusCubit()),
+        BlocProvider(create: (context) => DeleteAccountApiStatusCubit()),
         BlocProvider(create: (context) => UpdateAccountCubit(
             repository: context.read<AccountRepository>(),
             connectivityStatus: context.read<ConnectivityStatusCubit>(),
             apiStatus: context.read<UpdateAccountApiStatusCubit>()
+        )),
+        BlocProvider(create: (context) => DeleteAccountCubit(
+            repository: context.read<AccountRepository>(),
+            connectivityStatus: context.read<ConnectivityStatusCubit>(),
+            apiStatus: context.read<DeleteAccountApiStatusCubit>()
         )),
       ],
       child: BlocBuilder<EditingProductCubit, Product?>(

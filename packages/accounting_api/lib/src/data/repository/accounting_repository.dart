@@ -69,7 +69,7 @@ class AccountRepository {
   final String? host;
   final int? port;
 
-  Future<bool> checkAccount(Organization organization, String number, String token) async {
+  Future<bool> check(Organization organization, String number, String token) async {
     if (protocol != null && host != null && port != null) {
 
       final uri = Uri(
@@ -99,14 +99,14 @@ class AccountRepository {
     return false;
   }
 
-  Future<Account?> updateAccount(String field, Account account, String token) async {
+  Future<Account?> update(String field, Account account, String token) async {
     if (protocol != null && host != null && port != null) {
 
       final uri = Uri(
           scheme: protocol?.toLowerCase(),
           host: host,
           port: port,
-          path: '/api/accounting/account/${account.id}/update'
+          path: '/api/accounting/account/${account.id}'
       );
 
       http.Response response = await http.patch(uri,
@@ -135,5 +135,42 @@ class AccountRepository {
     }
 
     return null;
+  }
+
+  Future<bool> delete(Account account, String token) async {
+    if (protocol != null && host != null && port != null) {
+
+      final uri = Uri(
+          scheme: protocol?.toLowerCase(),
+          host: host,
+          port: port,
+          path: '/api/accounting/account/${account.id}'
+      );
+
+      http.Response response = await http.delete(uri,
+        body: jsonEncode({
+          'account_id': account.id,
+        }), headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          'Authorization':  'Trust $token'
+        },
+      );
+
+      if (response.statusCode == 204) {
+        final dynamic json = jsonDecode(utf8.decode(response.bodyBytes));
+        return json;
+      }
+      else if (response.statusCode == 423) {
+        // account deletion protected
+        final dynamic json = jsonDecode(utf8.decode(response.bodyBytes));
+        throw json;
+      }
+      else {
+
+        throw Exception("Quelque chose s'est mal passé");
+      }
+    }
+
+    return false;
   }
 }

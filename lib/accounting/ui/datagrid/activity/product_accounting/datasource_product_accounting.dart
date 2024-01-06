@@ -43,6 +43,9 @@ class ProductAccountingDataSource extends DataGridSource {
                   onPressed: (){
 
                     final Account account = accountsData.firstWhere((account) => account.id == dataGridCell.value);
+                    void delete() {
+                      context.read<DeleteAccountCubit>().delete(account: account, token: user.accessToken as String);
+                    }
 
                     showDialog(
                         context: context,
@@ -67,7 +70,7 @@ class ProductAccountingDataSource extends DataGridSource {
                             ),
                             actions: [
                               ElevatedButton(
-                                onPressed: (){},
+                                onPressed: delete,
                                 style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.resolveWith((states) => Colors.red),
                                 ),

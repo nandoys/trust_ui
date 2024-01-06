@@ -20,7 +20,7 @@ class CheckAccountCubit extends Cubit<bool> {
     if (connectivityStatus.state == ConnectivityStatus.connected) {
 
       try {
-        final bool isAccountExist = await repository.checkAccount(organization, number, token);
+        final bool isAccountExist = await repository.check(organization, number, token);
         emit(isAccountExist);
       }
       on http.ClientException {
@@ -47,7 +47,7 @@ class UpdateAccountCubit extends Cubit<bool?> {
     if (connectivityStatus.state == ConnectivityStatus.connected) {
 
       try {
-        final Account? response = await repository.updateAccount(field, account, token);
+        final Account? response = await repository.update(field, account, token);
         apiStatus.changeStatus(ApiStatus.succeeded);
         emit(response != null);
       }
@@ -57,6 +57,44 @@ class UpdateAccountCubit extends Cubit<bool?> {
       }
       catch (e) {
         apiStatus.changeStatus(ApiStatus.failed);
+      }
+    }
+    else if (connectivityStatus.state == ConnectivityStatus.disconnected) {
+      apiStatus.changeStatus(ApiStatus.failed);
+      throw Exception('Aucune connexion');
+    }
+
+  }
+
+  void setNull() {
+    emit(null);
+  }
+}
+
+class DeleteAccountCubit extends Cubit<bool?> {
+  DeleteAccountCubit({required this.repository, required this.connectivityStatus, required this.apiStatus})
+      : super(null);
+
+  final AccountRepository repository;
+  final ConnectivityStatusCubit connectivityStatus;
+  final DeleteAccountApiStatusCubit apiStatus;
+
+  Future<void> delete({required Account account, required String token}) async {
+    apiStatus.changeStatus(ApiStatus.requesting);
+    if (connectivityStatus.state == ConnectivityStatus.connected) {
+
+      try {
+        final bool response = await repository.delete(account, token);
+        apiStatus.changeStatus(ApiStatus.succeeded);
+        emit(response);
+      }
+      on http.ClientException {
+        connectivityStatus.changeStatus(ConnectivityStatus.disconnected);
+        apiStatus.changeStatus(ApiStatus.failed);
+      }
+      catch (e) {
+        apiStatus.changeStatus(ApiStatus.failed);
+        print(e);
       }
     }
     else if (connectivityStatus.state == ConnectivityStatus.disconnected) {
